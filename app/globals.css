@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/montserrat';
+@import '@fontsource/ubuntu/400.css';
+@import '@fontsource/ubuntu/500.css';
+@import '@fontsource/ubuntu/700.css';
+@import '@fontsource/libre-baskerville/400.css';
+@import '@fontsource/libre-baskerville/400-italic.css';
+@import '@fontsource/libre-baskerville/700.css';
+
+@theme {
+  --color-gold: #eabf31;
+  --color-gold-soft: #f6e08a;
+  --color-gold-deep: #a97e0c;
+  --color-terra: #c94c27;
+  --color-terra-deep: #9e3a1c;
+  --color-ink: #1a1a1a;
+  --color-ink-soft: #3f3a38;
+  --color-cream: #f8ede8;
+  --color-paper: #fbf8f3;
+  --font-sans: 'Ubuntu', 'Segoe UI', system-ui, sans-serif;
+  --font-serif: 'Libre Baskerville', 'Iowan Old Style', Georgia, serif;
+  --font-display: 'Montserrat Variable', 'Helvetica Neue', Arial, sans-serif;
+  --font-brand: 'Montserrat Variable', 'Helvetica Neue', Arial, sans-serif;
+}
+
+html { background: var(--color-paper); color: var(--color-ink); }
+body { font-family: var(--font-sans); }
+
+.kicker { font-family: var(--font-brand); letter-spacing: .13em; text-transform: uppercase; color: var(--color-terra-deep); font-size: .7rem; font-weight: 600; }
+.display-title { font-family: var(--font-display); text-transform: uppercase; letter-spacing: -.015em; font-weight: 900; line-height: .98; }
+
+/* Texte rédigé dans l'éditeur riche */
+.prose-jogoo { font-family: var(--font-sans); color: var(--color-ink-soft); line-height: 1.7; }
+.prose-jogoo p { text-align: justify; hyphens: auto; margin: 0 0 1.15em; white-space: pre-line; }
+.prose-jogoo strong { color: var(--color-ink); font-weight: 700; }
+.prose-jogoo em { font-style: italic; }
+.prose-jogoo h1, .prose-jogoo h2 { font-family: var(--font-display); text-transform: uppercase; color: var(--color-terra); letter-spacing: -.01em; margin: 2em 0 .7em; font-size: 1.45rem; font-weight: 800; line-height: 1.15; }
+.prose-jogoo h3 { font-family: var(--font-display); text-transform: uppercase; color: var(--color-terra); margin: 1.8em 0 .6em; font-size: 1.15rem; font-weight: 800; }
+.prose-jogoo h4, .prose-jogoo h5 { color: var(--color-terra-deep); margin: 1.5em 0 .4em; font-size: 1.02rem; font-weight: 700; }
+.prose-jogoo a { color: var(--color-terra-deep); text-decoration: underline; text-underline-offset: 2px; }
+.prose-jogoo blockquote { font-family: var(--font-serif); border-left: 3px solid var(--color-terra); color: var(--color-ink); margin: 1.4em 0; padding-left: 1rem; font-style: italic; }
+.prose-jogoo ul { margin: 0 0 1.05em; padding: 0; list-style: none; }
+.prose-jogoo ul > li { margin: .35em 0; padding-left: 1.4rem; position: relative; }
+.prose-jogoo ul > li::before { content: '✳'; color: var(--color-terra); font-size: .9em; position: absolute; top: .05em; left: 0; }
+.prose-jogoo ol { margin: 0 0 1.05em; padding-left: 1.4rem; list-style: decimal; }
+.prose-jogoo ol > li { margin: .35em 0; }
+.prose-jogoo img { display: block; max-width: 100%; height: auto; margin: 1.6em auto; border: 1px solid rgb(26 26 26 / .08); }
+.prose-jogoo hr { border: 0; border-top: 1px solid rgb(26 26 26 / .15); margin: 2em 0; }
+.prose-jogoo table { width: 100%; border-collapse: collapse; margin: 1.4em 0; font-size: .95em; }
+.prose-jogoo th, .prose-jogoo td { border: 1px solid rgb(26 26 26 / .12); padding: .5em .7em; text-align: left; vertical-align: top; }
+.prose-jogoo th { background: var(--color-cream); color: var(--color-ink); }
+.prose-jogoo code { background: var(--color-cream); padding: .1em .3em; font-size: .9em; }
