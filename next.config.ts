@@ -5,7 +5,9 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     '/**/*': ['./content/**/*', './design/fragments/**/*'],
     '/revue/pdf/[file]': ['./revue-pdf/**/*'],
-      '/magazine/pdf/[file]': ['./magazine-pdf/**/*'],
+    '/magazine/pdf/[file]': ['./magazine-pdf/**/*'],
+    '/podcasts/rss.xml': ['./public/medias/podcasts/**/*'],
+    '/og': ['./lib/og/**/*'],
   },
   async redirects() {
     return [

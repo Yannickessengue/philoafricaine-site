@@ -1,4 +1,5 @@
 import { BarreSousSites } from '@/components/BarreSousSites';
+import { BandeauCookies } from '@/components/Consentement';
 import { Dock } from '@/components/Dock';
 import { Html } from '@/components/Html';
 import { Interactif } from '@/components/Interactif';
@@ -15,6 +16,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <Html html={fragment('footer')} />
       <Interactif />
       <Dock />
+      <BandeauCookies />
     </>
   );
 }

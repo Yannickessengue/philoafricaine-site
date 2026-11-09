@@ -447,6 +447,12 @@ export function Interactif() {
               </li>
             ))}
             <li className="border-t border-ink/10 px-4 pb-1 pt-2 text-[0.68rem] leading-snug text-ink/45">Traduction automatique</li>
+            <li className="border-t border-ink/10">
+              <a href="/en" hrefLang="en" className="flex w-full items-center justify-between gap-6 px-4 py-2.5 text-left text-sm font-semibold text-terra-deep hover:bg-cream">
+                <span>English edition</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </li>
           </ul>
         </>
       )}

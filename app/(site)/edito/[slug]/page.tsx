@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation';
+import { SITE } from '@/lib/site';
+import { partage } from '@/lib/apercu';
 import { reader, getEditos, dateFr, motsCles, sansEmail } from '@/lib/content';
 import { decouper, rendre, versNoeud, type Classes } from '@/components/Prose';
 import { Partage } from '@/components/Partage';
@@ -11,7 +13,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const e = await reader.collections.editos.read((await params).slug);
-  return e ? { title: e.titre, description: e.accroche?.replace(/\*/g, '').slice(0, 200), openGraph: { images: e.image ? [e.image] : [] } } : {};
+  return e ? { title: e.titre, description: e.accroche?.replace(/\*/g, '').slice(0, 200), ...partage(e.titre, e.accroche, 'L’édito de la semaine', e.image) } : {};
 }
 
 const JUSTIFIE = '[text-align:justify] [hyphens:auto]';
@@ -47,7 +49,7 @@ export default async function Edito({ params }: { params: Promise<{ slug: string
   const pos = tous.findIndex((x) => x.slug === slug);
   const precedent = tous[pos + 1];
   const suivant = pos > 0 ? tous[pos - 1] : undefined;
-  const url = `https://www.philoafricaine.org/edito/${slug}`;
+  const url = `${SITE}/edito/${slug}`;
   const partage = { url, titre: e.titre, accroche: e.accroche ?? undefined, hashtags: motsCles(e.motsCles), pdf: e.pdf ?? null };
   const refs = (e.references ?? '').split(/\n\s*\n/).map((r) => r.trim()).filter(Boolean);
   const conclusion = e.conclusion ? decouper(versNoeud(e.conclusion)).chapeau : [];

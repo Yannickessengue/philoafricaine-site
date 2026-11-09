@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { Externe } from './Consentement';
 import { Assistant } from '@/components/Assistant';
 
 /* Barre flottante présente sur tout le site : JOGOO AI, page Facebook, lettre d'information, partage.
@@ -39,7 +40,7 @@ export function Dock() {
 
   useEffect(() => {
     setOuvert(null);
-    setUrl(window.location.href.replace(/^https?:\/\/[^/]+/, 'https://www.philoafricaine.org'));
+    setUrl(window.location.href);
     setTitre(document.title);
   }, [pathname]);
   useEffect(() => {
@@ -136,6 +137,7 @@ export function Dock() {
             )}
             {ouvert === 'facebook' && (
               <div className="flex flex-col items-center gap-3 p-4">
+                <Externe service="Facebook" lien={FACEBOOK}>
                 <iframe
                   title="Page Facebook du Groupe JOGOO"
                   src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(FACEBOOK)}&tabs=timeline&width=340&height=440&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true`}
@@ -145,6 +147,7 @@ export function Dock() {
                   loading="lazy"
                   allow="encrypted-media; clipboard-write; web-share"
                 />
+                </Externe>
                 <a href={FACEBOOK} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#1877f2] px-4 py-2.5 font-brand text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-[#0f5fc9]">
                   <Ico d={I.fb} fill size={16} /> Suivre la page
                 </a>

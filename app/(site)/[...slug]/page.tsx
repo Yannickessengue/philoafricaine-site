@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { partage } from '@/lib/apercu';
 import { getPages, getPageByPath } from '@/lib/content';
 import { Prose } from '@/components/Prose';
 import { Html } from '@/components/Html';
@@ -16,9 +17,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }) {
   const adresse = '/' + (await params).slug.join('/');
   const s = pageStatique(adresse);
-  if (s) return { title: s.titre, description: s.description };
+  if (s) return { title: s.titre, description: s.description, ...partage(s.titre, s.description, 'Groupe JOGOO', null, null, 'website') };
   const p = await getPageByPath(adresse);
-  return p ? { title: p.entry.titre, description: p.entry.description ?? undefined } : {};
+  return p ? { title: p.entry.titre, description: p.entry.description ?? undefined, ...partage(p.entry.titre, p.entry.description, 'Groupe JOGOO', null, null, 'website') } : {};
 }
 
 export default async function PageFixe({ params }: { params: Promise<{ slug: string[] }> }) {

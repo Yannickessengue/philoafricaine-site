@@ -1,4 +1,7 @@
 import { notFound } from 'next/navigation';
+import { SITE } from '@/lib/site';
+import { Partage } from '@/components/Partage';
+import { partage } from '@/lib/apercu';
 import { reader, getRevue, sousEmbargo, finEmbargo, dateFr, motsCles } from '@/lib/content';
 import { Prose } from '@/components/Prose';
 import { Html } from '@/components/Html';
@@ -19,7 +22,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const a = await reader.collections.revue.read(slug);
-  if (a) return { title: `${a.titre} · Revue JOGOO`, description: a.resume ?? undefined };
+  if (a) return { title: `${a.titre} · Revue JOGOO`, description: a.resume ?? undefined, ...partage(a.titre, a.resume, 'Revue JOGOO · N° 1', null, a.auteurs) };
   const s = pageStatique(`/sous-sites/revue-jogoo/${slug}`);
   return s ? { title: s.titre, description: s.description } : {};
 }
@@ -77,6 +80,7 @@ export default async function RevuePage({ params }: { params: Promise<{ slug: st
             <p className="font-brand text-[0.95rem] font-bold text-ink">{a.auteurs}</p>
             {a.affiliation && <p className="text-sm italic text-ink/60">{a.affiliation}</p>}
           </div>
+          <Partage url={`${SITE}/sous-sites/revue-jogoo/${slug}`} titre={a.titre} accroche={a.auteurs ?? undefined} hashtags={['RevueJOGOO', 'PhilosophieAfricaine']} commentaires={false} className="mt-6" />
         </div>
       </header>
       <nav aria-label="Sections de l’article" className="border-b border-ink/10 bg-cream/40">

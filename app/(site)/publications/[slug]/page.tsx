@@ -1,4 +1,7 @@
 import { notFound } from 'next/navigation';
+import { SITE } from '@/lib/site';
+import { Partage } from '@/components/Partage';
+import { partage } from '@/lib/apercu';
 import { reader, getPublications, motsCles, extrait } from '@/lib/content';
 import { corpsBrut } from '@/lib/raw';
 import { toutesLesNotes } from '@/lib/notes';
@@ -13,7 +16,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const p = await reader.collections.publications.read(slug);
-  return p ? { title: p.titre, description: p.resume || extrait(corpsBrut('publications', slug), 160) } : {};
+  if (!p) return {};
+  const description = p.resume || extrait(corpsBrut('publications', slug), 160);
+  return { title: p.titre, description, ...partage(p.titre, description, 'Publications') };
 }
 
 export default async function Publication({ params }: { params: Promise<{ slug: string }> }) {
@@ -51,6 +56,7 @@ export default async function Publication({ params }: { params: Promise<{ slug: 
           </ul>
         </div>
         <Prose node={node} className="mt-8" />
+        <Partage url={`${SITE}/publications/${slug}`} titre={p.titre} accroche={sousTitre || undefined} hashtags={['PhilosophieAfricaine']} commentaires={false} className="mt-10" />
         {p.lienUrl && (
           <a className="mt-8 inline-flex items-center gap-2 bg-ink px-6 py-3 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-terra" href={p.lienUrl} target="_blank" rel="noreferrer">
             Lire ou se procurer l’ouvrage

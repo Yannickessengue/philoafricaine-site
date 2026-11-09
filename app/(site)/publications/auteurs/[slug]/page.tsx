@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { partage } from '@/lib/apercu';
 import { reader } from '@/lib/content';
 import { toutesLesNotes } from '@/lib/notes';
 import { EnTete } from '@/components/ui';
@@ -11,7 +12,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const a = await reader.collections.auteurs.read((await params).slug);
-  return a ? { title: a.nom } : {};
+  return a ? { title: a.nom, ...partage(a.nom, null, 'Auteurs') } : {};
 }
 
 export default async function Auteur({ params }: { params: Promise<{ slug: string }> }) {

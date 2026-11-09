@@ -34,6 +34,13 @@ export function Commentaires({ edito }: { edito: string }) {
 
   const envoyer = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!ouvert) {
+      // Publication en ligne pas encore activée : le commentaire part par e-mail vers la rédaction.
+      const corps = `Commentaire sur l’édito « ${edito} »\n\nNom ou pseudonyme : ${nom}\n\n${texte}\n\n— Envoyé depuis ${window.location.href}`;
+      window.location.href = `mailto:philoafricaine@gmail.com?subject=${encodeURIComponent('Commentaire — ' + edito)}&body=${encodeURIComponent(corps)}`;
+      setEtat('mail');
+      return;
+    }
     setEtat('envoi');
     const r = await fetch('/api/commentaires', {
       method: 'POST',
@@ -83,15 +90,23 @@ export function Commentaires({ edito }: { edito: string }) {
             className="mt-3 w-full resize-none overflow-hidden border border-ink/20 bg-white px-3 py-2 text-sm leading-relaxed outline-none focus:border-terra"
           />
           <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-            <span className={`text-xs ${etat && etat !== 'envoi' && etat !== 'ok' ? 'text-terra' : 'text-ink/40'}`}>
-              {etat === 'ok' ? 'Merci, votre commentaire est publié.' : etat && etat !== 'envoi' ? etat : ouvert ? 'Publié sous pseudonymat, modéré ensuite.' : 'Les commentaires seront bientôt ouverts.'}
+            <span className={`max-w-md text-xs ${etat && etat !== 'envoi' && etat !== 'ok' && etat !== 'mail' ? 'text-terra' : 'text-ink/50'}`}>
+              {etat === 'ok'
+                ? 'Merci, votre commentaire est publié.'
+                : etat === 'mail'
+                  ? 'Votre messagerie s’ouvre : envoyez le message, la rédaction publiera votre commentaire après relecture.'
+                  : etat && etat !== 'envoi'
+                    ? etat
+                    : ouvert
+                      ? 'Publié sous pseudonymat, modéré ensuite.'
+                      : 'Votre commentaire sera transmis à la rédaction, qui le publiera après relecture.'}
             </span>
             <button
               type="submit"
               disabled={nom.trim().length < 2 || texte.trim().length < 3 || etat === 'envoi'}
               className="h-10 bg-ink px-5 text-xs font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-terra disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {etat === 'envoi' ? 'Envoi…' : 'Publier le commentaire'}
+              {etat === 'envoi' ? 'Envoi…' : ouvert ? 'Publier le commentaire' : 'Envoyer le commentaire'}
             </button>
           </div>
         </form>

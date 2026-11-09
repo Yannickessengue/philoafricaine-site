@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation';
+import { SITE } from '@/lib/site';
+import { partage } from '@/lib/apercu';
 import { reader, getActualites, dateFr, extrait, sansEmail } from '@/lib/content';
 import { corpsBrut } from '@/lib/raw';
 import { Prose } from '@/components/Prose';
@@ -14,7 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const a = await reader.collections.actualites.read(slug);
   if (!a) return {};
-  return { title: a.titre, description: a.resume || extrait(corpsBrut('actualites', slug), 160), openGraph: { images: a.image ? [a.image] : [] } };
+  const description = a.resume || extrait(corpsBrut('actualites', slug), 160);
+  return { title: a.titre, description, ...partage(a.titre, description, 'Actualités', a.image) };
 }
 
 export default async function Actualite({ params }: { params: Promise<{ slug: string }> }) {
@@ -23,7 +26,7 @@ export default async function Actualite({ params }: { params: Promise<{ slug: st
   if (!a) notFound();
   const { node } = await a.contenu();
   const autres = toutes.filter((x) => x.slug !== slug).slice(0, 3);
-  const partage = { url: `https://www.philoafricaine.org/actualites/${slug}`, titre: a.titre, accroche: a.resume ?? undefined, commentaires: false };
+  const partage = { url: `${SITE}/actualites/${slug}`, titre: a.titre, accroche: a.resume ?? undefined, commentaires: false };
   return (
     <article className="edito-doc mx-auto max-w-6xl px-5 py-14 lg:py-16">
       <header className="mx-auto max-w-3xl text-center">

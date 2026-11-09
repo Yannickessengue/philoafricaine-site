@@ -199,9 +199,14 @@ export default async function Accueil() {
                 <p className="kicker">Falsafa ya Africa</p>
                 <h2 className="display-title mt-2 text-3xl text-ink sm:text-4xl">Voir et écouter</h2>
               </div>
-              <a className="text-sm font-semibold uppercase tracking-wide text-terra-deep hover:text-terra" href="/mediatheque">
-                Toute la médiathèque →
-              </a>
+              <div className="flex flex-wrap gap-x-6 gap-y-2">
+                <a className="text-sm font-semibold uppercase tracking-wide text-terra-deep hover:text-terra" href="/mediatheque">
+                  Toutes les vidéos →
+                </a>
+                <a className="text-sm font-semibold uppercase tracking-wide text-terra-deep hover:text-terra" href="/podcasts">
+                  Tous les podcasts →
+                </a>
+              </div>
             </div>
             <div className="mt-8 grid items-stretch gap-8 lg:grid-cols-2">
               <MosaiqueVideos videos={videosTriees.map((v) => ({ titre: v.entry.titre, url: v.entry.url ?? '', rubrique: v.entry.rubrique }))} />

@@ -156,3 +156,23 @@ for nom in ('home-04-colonnes.html', 'home-04.html'):
     h = h.replace('<span class="flex h-10 w-12 shrink-0 items-center justify-center">', '<span class="flex h-16 w-20 shrink-0 items-center justify-center">')
     h = h.replace('class="h-auto max-h-10 w-auto max-w-12 object-contain"', 'class="h-auto max-h-16 w-auto max-w-20 object-contain"')
     open(f, 'w').write(h)
+# Images recompressées : PNG sans transparence devenus JPEG (scripts/compresser-images.py)
+import json as _json, os as _os
+_ren = _json.load(open(_os.path.join(_os.path.dirname(__file__), 'images-renommees.json')))
+for f in _g.glob(OUT + '/*.html'):
+    h = open(f).read(); h0 = h
+    for a, b in _ren.items(): h = h.replace(a, b)
+    if h != h0: open(f, 'w').write(h)
+# Pied de page : lien de réglage des cookies (demande du 9 nov. 2026, 17 h 35)
+f = OUT + '/footer.html'
+h = open(f).read()
+if 'data-action="cookies"' not in h:
+    h = h.replace('<a class="hover:text-gold" href="/credits">Crédits</a>', '<a class="hover:text-gold" href="/credits">Crédits</a><button type="button" class="uppercase tracking-[inherit] hover:text-gold" data-action="cookies">Cookies</button>', 1)
+    open(f, 'w').write(h)
+# Mentions légales : précisions sur les cookies et le consentement
+f = OUT + '/page__mentions-legales.html'
+h = open(f).read()
+_ancre = 'peut être adressée à <a href="mailto:philoafricaine@gmail.com">philoafricaine@gmail.com</a>.</p>'
+if _ancre in h and 'Contenus extérieurs' not in h:
+    h = h.replace(_ancre, _ancre + '<p class="mt-3">Le site ne dépose aucun cookie publicitaire ni de mesure d’audience. Les cookies essentiels mémorisent seulement la langue, l’introduction déjà vue et votre choix de cookies. <strong>Contenus extérieurs</strong> : les vidéos (YouTube, WebTV de l’université de Rouen) et la page Facebook ne se chargent qu’après votre accord, car ces services peuvent déposer leurs propres cookies. Votre choix est conservé six mois ; vous pouvez le modifier à tout moment : <button type="button" data-action="cookies" class="font-semibold text-terra-deep underline underline-offset-2 hover:text-terra">régler les cookies</button>.</p>', 1)
+    open(f, 'w').write(h)

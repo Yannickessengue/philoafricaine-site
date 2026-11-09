@@ -1,5 +1,6 @@
 'use client';
 
+import { Externe } from './Consentement';
 import { useEffect, useState } from 'react';
 
 const idYoutube = (u: string) => u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/)?.[1];
@@ -50,13 +51,15 @@ export function ListeVideos({ videos }: { videos: Video[] }) {
               </button>
             </div>
             <div className="relative aspect-video w-full bg-black">
-              <iframe
-                className="absolute inset-0 h-full w-full"
-                src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`}
-                title={ouverte.titre}
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                allowFullScreen
-              />
+              <Externe service="YouTube" lien={ouverte.url}>
+                <iframe
+                  className="absolute inset-0 h-full w-full"
+                  src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`}
+                  title={ouverte.titre}
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                  allowFullScreen
+                />
+              </Externe>
             </div>
           </div>
         </div>
@@ -111,7 +114,9 @@ export function GrilleVideos({ videos }: { videos: (Video & { rubrique?: string 
               <button type="button" onClick={() => setOuverte(null)} className="inline-flex h-9 w-9 items-center justify-center border border-paper/30 hover:bg-paper hover:text-ink" aria-label="Fermer">✕</button>
             </div>
             <div className="relative aspect-video w-full bg-black">
-              <iframe className="absolute inset-0 h-full w-full" src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`} title={ouverte.titre} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+              <Externe service="YouTube" lien={ouverte.url}>
+                <iframe className="absolute inset-0 h-full w-full" src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`} title={ouverte.titre} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+              </Externe>
             </div>
           </div>
         </div>

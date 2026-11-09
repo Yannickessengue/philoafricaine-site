@@ -1,14 +1,16 @@
 import type { Metadata, Viewport } from 'next';
+import { SITE } from '@/lib/site';
+import { partage } from '@/lib/apercu';
 import './globals.css';
 import './fonds.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.philoafricaine.org'),
+  metadataBase: new URL(SITE),
   title: { default: 'Groupe JOGOO · Philosophie africaine. Débats & questions', template: '%s · Groupe JOGOO' },
   description:
     'Portail du Groupe JOGOO : philosophie africaine, débats et questions. Éditos, actualités, publications, Revue JOGOO, Fonds Eboussi Boulaga.',
   icons: { icon: '/medias/site/icon.png' },
-  openGraph: { siteName: 'Groupe JOGOO', locale: 'fr_FR', type: 'website' },
+  ...partage('Philosophie africaine. Débats & questions', 'Portail du Groupe JOGOO : éditos, actualités, publications, revues, Fonds Eboussi Boulaga, JOGOO AI.', 'Groupe JOGOO', null, null, 'website'),
 };
 export const viewport: Viewport = { themeColor: '#eabf31' };
 

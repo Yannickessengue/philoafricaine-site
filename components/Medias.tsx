@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Externe } from './Consentement';
 
 const idYoutube = (url: string) => url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)?.[1];
 /** Adresse intégrable : YouTube (sans cookies) ou WebTV de l’université de Rouen (permaliens UbiCast). */
@@ -34,14 +35,18 @@ export function MosaiqueVideos({ videos }: { videos: VideoAccueil[] }) {
     <div className="flex h-full flex-col gap-3">
       <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-ink shadow-[0_24px_50px_-28px_rgba(0,0,0,0.7)]">
         {lecture && src ? (
-          <iframe
-            key={src}
-            className="absolute inset-0 h-full w-full"
-            src={src}
-            title={v.titre}
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowFullScreen
-          />
+          <div className="absolute inset-0">
+            <Externe service={id ? 'YouTube' : 'la WebTV de l’université de Rouen'} lien={v.url}>
+              <iframe
+                key={src}
+                className="absolute inset-0 h-full w-full"
+                src={src}
+                title={v.titre}
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                allowFullScreen
+              />
+            </Externe>
+          </div>
         ) : (
           <button type="button" onClick={() => (src ? setLecture(true) : window.open(v.url, '_blank', 'noopener'))} className="group absolute inset-0 block text-left" aria-label={`Lire la vidéo : ${v.titre}`}>
             <Repli />
@@ -96,7 +101,7 @@ const horloge = (s: number) => {
 };
 
 /** Lecteur de podcast : épisode en cours, barre de progression, vitesse, liste des épisodes. */
-export function LecteurPodcast({ episodes }: { episodes: Episode[] }) {
+export function LecteurPodcast({ episodes, complet = false }: { episodes: Episode[]; complet?: boolean }) {
   const audio = useRef<HTMLAudioElement>(null);
   const [n, setN] = useState(0);
   const [joue, setJoue] = useState(false);
@@ -140,7 +145,7 @@ export function LecteurPodcast({ episodes }: { episodes: Episode[] }) {
   const VITESSES = [1, 1.25, 1.5, 0.75];
 
   return (
-    <div className="flex h-full flex-col bg-ink text-left text-paper shadow-none [&_p]:text-left [&_p]:hyphens-none sm:shadow-[0_24px_50px_-28px_rgba(0,0,0,0.7)]">
+    <div className={`bg-ink text-left text-paper [&_p]:text-left [&_p]:hyphens-none ${complet ? 'grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]' : 'flex h-full flex-col shadow-none sm:shadow-[0_24px_50px_-28px_rgba(0,0,0,0.7)]'}`}>
       <audio
         ref={audio}
         src={ep.audio}
@@ -151,8 +156,9 @@ export function LecteurPodcast({ episodes }: { episodes: Episode[] }) {
         onLoadedMetadata={(e) => setTotal(e.currentTarget.duration)}
         onEnded={() => (n < episodes.length - 1 ? choisir(n + 1) : setJoue(false))}
       />
-      <div className="relative overflow-hidden p-5 sm:p-6">
+      <div className={`relative overflow-hidden p-5 sm:p-6 ${complet ? 'lg:sticky lg:top-20 lg:self-start lg:p-10' : ''}`}>
         <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-terra/30 blur-3xl" aria-hidden="true" />
+        {complet && <img src="/medias/podcasts/couverture-podcast.jpg" alt="" className="relative mb-6 w-28 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.8)] sm:w-36" />}
         <p className="relative flex items-center gap-2 font-brand text-[0.62rem] font-bold uppercase tracking-[0.2em] text-gold">
           <span className={`flex h-3 items-end gap-[2px] ${joue ? '' : 'opacity-50'}`} aria-hidden="true">
             {[0, 1, 2, 3].map((b) => (
@@ -210,14 +216,14 @@ export function LecteurPodcast({ episodes }: { episodes: Episode[] }) {
         </div>
       </div>
 
-      <ol className="max-h-[14.5rem] flex-1 overflow-y-auto border-t border-white/10 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin]">
+      <ol className={`${complet ? 'border-t lg:border-l lg:border-t-0' : 'max-h-[14.5rem] flex-1 overflow-y-auto border-t'} border-white/10`} style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.2) transparent' }}>
         {episodes.map((e, i) => (
           <li key={e.audio}>
             <button
               type="button"
               onClick={() => choisir(i)}
               aria-current={i === n ? 'true' : undefined}
-              className={`flex w-full items-center gap-3 px-5 py-3 text-left transition-colors sm:px-6 ${i === n ? 'bg-white/[0.07]' : 'hover:bg-white/[0.04]'}`}
+              className={`flex w-full ${complet ? 'items-start py-5' : 'items-center py-3'} gap-3 px-5 text-left transition-colors sm:px-6 ${i === n ? 'bg-white/[0.07]' : 'hover:bg-white/[0.04]'}`}
             >
               <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${i === n ? 'bg-gold text-ink' : 'bg-white/10 text-paper/70'}`} aria-hidden="true">
                 {i === n && joue ? (
@@ -227,7 +233,9 @@ export function LecteurPodcast({ episodes }: { episodes: Episode[] }) {
                 )}
               </span>
               <span className="min-w-0 flex-1">
-                <span className={`line-clamp-2 block font-brand text-[0.8rem] font-semibold leading-snug ${i === n ? 'text-gold' : 'text-paper/85'}`}>{e.titre}</span>
+                <span className={`${complet ? 'text-[0.95rem]' : 'line-clamp-2 text-[0.8rem]'} block font-brand font-semibold leading-snug ${i === n ? 'text-gold' : 'text-paper/85'}`}>{e.titre}</span>
+                {complet && e.description && <span className="mt-1.5 block text-[0.84rem] leading-relaxed text-paper/60">{e.description}</span>}
+                {complet && e.source && <span className="mt-1 block font-serif text-[0.78rem] italic text-paper/40">{e.source}</span>}
               </span>
               {e.duree && <span className="shrink-0 font-brand text-[0.66rem] tabular-nums text-paper/45">{e.duree}</span>}
             </button>
