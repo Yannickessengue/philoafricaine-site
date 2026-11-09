@@ -10,7 +10,7 @@ import { corpus, rechercher } from '@/lib/corpus';
 const B = S.base;
 const PAGES = ['', 'interroger', 'bibliotheque', 'philosophes', 'concepts', 'ressources', 'a-propos'] as const;
 const TITRES: Record<string, string> = {
-  '': 'JOGOO AI — Assistant de recherche en philosophies africaines',
+  '': 'JOGOO AI — Assistant de recherche en philosophie africaine',
   interroger: 'Interroger JOGOO AI',
   bibliotheque: 'Bibliothèque',
   philosophes: 'Philosophes',
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ page?: st
   return TITRES[p]
     ? {
         title: p ? `${TITRES[p]} · JOGOO AI` : TITRES[''],
-        description: 'Explorez les philosophies africaines avec JOGOO AI : interroger des textes, découvrir des auteurs, clarifier des concepts, avec des sources vérifiables.',
+        description: 'Explorez la philosophie africaine avec JOGOO AI : interroger des textes, découvrir des auteurs, clarifier des concepts, avec des sources vérifiables.',
       }
     : {};
 }

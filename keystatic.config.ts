@@ -261,6 +261,23 @@ export default config({
       },
     }),
 
+    podcasts: collection({
+      label: 'Podcasts (accueil)',
+      slugField: 'titre',
+      path: 'content/podcasts/*',
+      format: { data: 'yaml' },
+      columns: ['titre', 'ordre'],
+      schema: {
+        titre: fields.slug({ name: { label: 'Titre de l’épisode' } }),
+        serie: fields.text({ label: 'Série ou ouvrage', description: 'Ex. : Marcien Towa, Identité et transcendance' }),
+        ordre: fields.integer({ label: 'Ordre', defaultValue: 0 }),
+        audio: fields.file({ label: 'Fichier audio (m4a ou mp3)', directory: 'public/medias/podcasts', publicPath: '/medias/podcasts/' }),
+        duree: fields.text({ label: 'Durée affichée', description: 'Ex. : 7 min 58' }),
+        description: fields.text({ label: 'Descriptif', multiline: true }),
+        source: fields.text({ label: 'Référence du texte', description: 'Ouvrage, éditeur, année, pages.' }),
+      },
+    }),
+
     magazine: collection({
       label: 'Philo Africaine Magazine — numéros',
       slugField: 'numero',

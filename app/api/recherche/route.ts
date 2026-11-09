@@ -27,7 +27,7 @@ export async function GET() {
   revue.forEach((r) => items.push({ t: r.entry.titre, u: `/sous-sites/revue-jogoo/${r.slug}`, k: 'Revue JOGOO', x: `${r.entry.auteurs ?? ''} ${r.entry.motsCles ?? ''} ${r.entry.resume ?? ''}` }));
   flashs.forEach((f) => items.push({ t: f.entry.titre, u: `/flash#${f.slug}`, k: 'Flash', x: `${f.entry.auteur ?? ''} ${f.entry.lieu ?? ''} ${corps('flash', f.slug, 800)}` }));
   const NOUVEAUX: [string, string, string][] = [
-    ['/sous-sites/jogoo-ai', 'JOGOO AI — Assistant de recherche en philosophies africaines', 'Intelligence artificielle, assistant, IA, interroger des textes, bibliothèque, philosophes, concepts, ressources.'],
+    ['/sous-sites/jogoo-ai', 'JOGOO AI — Assistant de recherche en philosophie africaine', 'Intelligence artificielle, assistant, IA, interroger des textes, bibliothèque, philosophes, concepts, ressources.'],
     ['/sous-sites/jogoo-ai/bibliotheque', 'Bibliothèque JOGOO AI', 'Notices d’ouvrages, articles, notes de lecture, archives, filtres par auteur, langue, accès.'],
     ['/sous-sites/fonds-eboussi-boulaga/eboussi-studies', 'Revue Eboussi Studies', 'Revue du Fonds Eboussi Boulaga, n° 1 Reprise de soi et décolonisation des savoirs.'],
     ['/sous-sites/philo-africaine-magazine', 'Philo Africaine Magazine', 'Du philosophique au philosophant 2.0. Numéro inaugural : Mythologies africaines et pensée philosophique. Rubriques, contribuer, acheter et s’abonner.'],

@@ -12,7 +12,7 @@ export default function PlanDuSite() {
     )
     .replace(
       '<li><a class="text-ink underline underline-offset-2 hover:text-terra" href="/sous-sites/fonds-eboussi-boulaga/eboussi-studies">Revue Eboussi Studies</a> <span class="text-sm text-ink/50">, Revue scientifique, plurilingue et annuelle</span></li>',
-      '<li><a class="text-ink underline underline-offset-2 hover:text-terra" href="/sous-sites/jogoo-ai">JOGOO AI</a> <span class="text-sm text-ink/50">, Assistant de recherche en philosophies africaines</span></li><li class="pl-4"><a class="text-ink-soft underline underline-offset-2 hover:text-terra" href="/sous-sites/fonds-eboussi-boulaga/eboussi-studies">Revue Eboussi Studies</a> <span class="text-sm text-ink/50">, dans le Fonds Eboussi Boulaga</span></li>',
+      '<li><a class="text-ink underline underline-offset-2 hover:text-terra" href="/sous-sites/jogoo-ai">JOGOO AI</a> <span class="text-sm text-ink/50">, Assistant de recherche en philosophie africaine</span></li><li class="pl-4"><a class="text-ink-soft underline underline-offset-2 hover:text-terra" href="/sous-sites/fonds-eboussi-boulaga/eboussi-studies">Revue Eboussi Studies</a> <span class="text-sm text-ink/50">, dans le Fonds Eboussi Boulaga</span></li>',
     )
     .replace(
       'href="/recherche/appels-a-postes">Appels à postes</a></li>',

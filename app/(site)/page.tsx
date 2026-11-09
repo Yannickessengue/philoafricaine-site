@@ -2,7 +2,7 @@ import { getEditos, getActualites, getAgenda, reader, dateFr, extrait, sansEmail
 import { corpsBrut } from '@/lib/raw';
 import { Html } from '@/components/Html';
 import { CarrouselFlash } from '@/components/CarrouselFlash';
-import { GrilleVideos } from '@/components/Lecteur';
+import { LecteurPodcast, MosaiqueVideos } from '@/components/Medias';
 import { SOUS_SITES } from '@/lib/liste-sous-sites';
 import { fragment } from '@/lib/gabarits';
 
@@ -12,14 +12,16 @@ export const revalidate = 3600;
 const Fleche = () => <span className="ml-1 inline-block transition-transform group-hover:translate-x-1">→</span>;
 
 export default async function Accueil() {
-  const [editos, actus, agenda, flashs, postes, videos] = await Promise.all([
+  const [editos, actus, agenda, flashs, postes, videos, podcastsBruts] = await Promise.all([
     getEditos(),
     getActualites(),
     getAgenda(),
     reader.collections.flash.all(),
     reader.collections.postes.all(),
     reader.collections.videos.all(),
+    reader.collections.podcasts.all(),
   ]);
+  const podcasts = podcastsBruts.filter((p) => p.entry.audio).sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0));
   const videosTriees = videos.sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0)).slice(0, 6);
   const edito = editos[0];
   const precedents = editos.slice(1, 10);
@@ -188,21 +190,31 @@ export default async function Accueil() {
         </div>
       </section>
 
-      {/* Vidéos de la médiathèque */}
-      {videosTriees.length > 0 && (
+      {/* Vidéos et podcasts */}
+      {(videosTriees.length > 0 || podcasts.length > 0) && (
         <section className="bg-cream/60">
           <div className="mx-auto max-w-6xl px-5 py-16">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="kicker">Falsafa ya Africa</p>
-                <h2 className="display-title mt-2 text-3xl text-ink sm:text-4xl">En vidéo</h2>
+                <h2 className="display-title mt-2 text-3xl text-ink sm:text-4xl">Voir et écouter</h2>
               </div>
               <a className="text-sm font-semibold uppercase tracking-wide text-terra-deep hover:text-terra" href="/mediatheque">
                 Toute la médiathèque →
               </a>
             </div>
-            <div className="mt-8">
-              <GrilleVideos videos={videosTriees.map((v) => ({ titre: v.entry.titre, url: v.entry.url ?? '', rubrique: v.entry.rubrique }))} />
+            <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.6fr_1fr]">
+              <MosaiqueVideos videos={videosTriees.map((v) => ({ titre: v.entry.titre, url: v.entry.url ?? '', rubrique: v.entry.rubrique }))} />
+              <LecteurPodcast
+                episodes={podcasts.map((p) => ({
+                  titre: p.entry.titre,
+                  serie: p.entry.serie,
+                  audio: p.entry.audio ?? '',
+                  duree: p.entry.duree,
+                  description: p.entry.description,
+                  source: p.entry.source,
+                }))}
+              />
             </div>
           </div>
         </section>

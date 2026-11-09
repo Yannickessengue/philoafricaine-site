@@ -154,7 +154,7 @@ export function Assistant({
         {vide && accueil && !sombre && (
           <div className="flex flex-col items-center py-4 text-center">
             <img src="/medias/site/jogoo/picto-jogoo-ai.png" alt="" className={compact ? 'h-16 w-auto' : 'h-24 w-auto'} />
-            <p className={`mt-3 font-serif ${compact ? 'text-base' : 'text-xl'} ${t.titre}`}>Une question sur les philosophies africaines ?</p>
+            <p className={`mt-3 font-serif ${compact ? 'text-base' : 'text-xl'} ${t.titre}`}>Une question sur la philosophie africaine ?</p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               {EXEMPLES.slice(0, compact ? 3 : 4).map((e) => (
                 <button key={e} type="button" onClick={() => poser(e)} className={`px-3 py-2 text-left text-[0.82rem] transition-colors ${t.puce}`}>
@@ -246,7 +246,7 @@ export function Assistant({
           }}
           rows={1}
           maxLength={1200}
-          placeholder="Posez votre question sur les philosophies africaines…"
+          placeholder="Posez votre question sur la philosophie africaine…"
           aria-label="Votre question"
           className={`max-h-40 min-h-[2.75rem] flex-1 resize-none px-4 py-2.5 text-[0.95rem] outline-none ${sombre ? 'bg-white/[0.07] text-[#f9f5ec] placeholder:text-[#e9e2d0]/45 focus:bg-white/[0.11]' : 'bg-white/95 text-[#0d1b2a] placeholder:text-[#333]/45 focus:bg-white'}`}
         />

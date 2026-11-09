@@ -193,3 +193,12 @@ main :is(div, article, li, a):is([class~='border']):is([class*='border-ink/1'], 
 }
 .ai-lignes::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 3px); }
 @media (prefers-reduced-motion: reduce) { .ai-tour, .ai-tour-lent, .ai-tour-inverse, .ai-scan, .ai-flux, .ai-pouls, .ai-glitch { animation: none !important } }
+
+/* Lecteur de podcast (accueil) */
+@keyframes podcast-barre { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+.podcast-barre { animation: podcast-barre 0.9s ease-in-out infinite; }
+.podcast-barre-lecture { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; cursor: pointer;
+  background: linear-gradient(to right, var(--color-gold) var(--p, 0%), rgba(255,255,255,0.15) var(--p, 0%)); }
+.podcast-barre-lecture::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgba(217,154,14,0.35); }
+.podcast-barre-lecture::-moz-range-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: #fff; }
+@media (prefers-reduced-motion: reduce) { .podcast-barre { animation: none; height: 8px; } }

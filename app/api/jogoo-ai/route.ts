@@ -10,7 +10,7 @@ import { rechercher } from '@/lib/corpus';
 const AUCUNE_SOURCE =
   'Je ne dispose pas, dans le corpus consultable, de sources suffisantes pour répondre avec précision. Essayez une autre formulation ou consultez la bibliothèque.';
 
-const SYSTEME = `Tu es JOGOO AI, l'assistant de recherche en philosophies africaines du Groupe JOGOO (philoafricaine.org).
+const SYSTEME = `Tu es JOGOO AI, l'assistant de recherche en philosophie africaine du Groupe JOGOO (philoafricaine.org).
 Règles impératives :
 - Réponds en français (ou dans la langue de la question), avec rigueur, clarté et sans jargon inutile.
 - Appuie-toi UNIQUEMENT sur les documents fournis entre balises <documents>. Signale chaque appui par son numéro entre crochets, par exemple [1] ou [2][3].
