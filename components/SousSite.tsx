@@ -30,6 +30,7 @@ export type Site = {
   logo: string;
   logoAlt: string;
   logoClasse: string;
+  nomVisible?: string; // classes du nom écrit à côté du logo (facultatif)
   mention: string;
   onglets: [string, string][]; // [slug relatif, libellé]
   cta: [string, string]; // [href, libellé]
@@ -57,6 +58,7 @@ export function Bandeau({ site, actif }: { site: Site; actif: string }) {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <a className="flex items-center gap-5" href={site.base}>
             <img alt={site.logoAlt} src={site.logo} className={`w-auto shrink-0 ${site.logoClasse}`} />
+            {site.nomVisible && <span className={site.nomVisible}>{site.nom}</span>}
             <span className="hidden min-w-0 border-l border-current/15 pl-5 md:block">
               <span className="block font-serif text-[0.95rem] italic leading-snug opacity-75">{site.devise}</span>
             </span>

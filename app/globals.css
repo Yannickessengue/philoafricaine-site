@@ -163,3 +163,33 @@ main :is(div, article, li, a):is([class~='border']):is([class*='border-ink/1'], 
 /* Citations : sans filet, en grand guillemet */
 .prose-jogoo blockquote { border-left: 0 !important; padding-left: 2.2rem !important; position: relative; }
 .prose-jogoo blockquote::before { content: '«'; position: absolute; left: 0; top: -0.35em; font-family: var(--font-serif); font-size: 2.6em; line-height: 1; color: var(--color-terra); opacity: 0.55; font-style: normal; }
+
+/* ——— JOGOO AI : espace afrofuturiste ——— */
+@keyframes ai-tour { to { transform: rotate(360deg) } }
+@keyframes ai-tour-inverse { to { transform: rotate(-360deg) } }
+@keyframes ai-scan { 0% { transform: translateY(-110%) } 100% { transform: translateY(110%) } }
+@keyframes ai-flux { to { stroke-dashoffset: -40 } }
+@keyframes ai-pouls { 0%, 100% { opacity: .55; transform: scale(1) } 50% { opacity: 1; transform: scale(1.04) } }
+@keyframes ai-glitch {
+  0%, 92%, 100% { transform: none; filter: none }
+  93% { transform: translate(2px, -1px) skewX(-2deg); filter: hue-rotate(25deg) saturate(1.6) }
+  95% { transform: translate(-2px, 1px); filter: drop-shadow(3px 0 0 rgba(255,201,74,.7)) drop-shadow(-3px 0 0 rgba(106,13,13,.8)) }
+  97% { transform: none; filter: none }
+}
+.ai-tour { animation: ai-tour 38s linear infinite }
+.ai-tour-lent { animation: ai-tour 80s linear infinite }
+.ai-tour-inverse { animation: ai-tour-inverse 52s linear infinite }
+.ai-scan { animation: ai-scan 3.6s cubic-bezier(.45,0,.55,1) infinite }
+.ai-flux { stroke-dasharray: 4 6; animation: ai-flux 1.6s linear infinite }
+.ai-pouls { animation: ai-pouls 3.2s ease-in-out infinite }
+.ai-glitch { animation: ai-glitch 7s steps(1) infinite }
+.ai-motif {
+  background-image:
+    linear-gradient(rgba(217,154,14,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(217,154,14,.06) 1px, transparent 1px),
+    repeating-linear-gradient(45deg, rgba(106,13,13,.08) 0 2px, transparent 2px 22px),
+    repeating-linear-gradient(-45deg, rgba(217,154,14,.05) 0 2px, transparent 2px 22px);
+  background-size: 48px 48px, 48px 48px, auto, auto;
+}
+.ai-lignes::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 3px); }
+@media (prefers-reduced-motion: reduce) { .ai-tour, .ai-tour-lent, .ai-tour-inverse, .ai-scan, .ai-flux, .ai-pouls, .ai-glitch { animation: none !important } }

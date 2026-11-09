@@ -39,7 +39,7 @@ export function Bibliotheque({ fiches }: { fiches: Fiche[] }) {
     });
   }, [fiches, q, type, langue, acces, periode]);
 
-  const choix = 'h-11 bg-white px-3 text-sm text-[#0d1b2a] shadow-[0_1px_2px_rgba(13,27,42,0.08)] outline-none focus:ring-2 focus:ring-[#d99a0e]/50';
+  const choix = 'h-11 bg-white/[0.07] px-3 text-sm text-[#f9f5ec] outline-none placeholder:text-[#e9e2d0]/40 focus:bg-white/[0.11] focus:ring-1 focus:ring-[#d99a0e]/60 [&>option]:bg-[#0b1626]';
   return (
     <div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
@@ -70,25 +70,25 @@ export function Bibliotheque({ fiches }: { fiches: Fiche[] }) {
           ))}
         </select>
       </div>
-      <p className="mt-5 font-brand text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[#333]/55">
+      <p className="mt-5 font-brand text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[#e9e2d0]/55">
         {liste.length} notice{liste.length > 1 ? 's' : ''}
       </p>
       <ul className="mt-3 grid gap-4 md:grid-cols-2">
         {liste.map((f) => (
           <li key={f.id} className="flash-fade">
-            <a href={f.url} className="group flex h-full flex-col bg-white p-6 shadow-[0_1px_2px_rgba(13,27,42,0.05),0_16px_36px_-24px_rgba(13,27,42,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_2px_4px_rgba(13,27,42,0.06),0_26px_46px_-26px_rgba(13,27,42,0.45)]">
+            <a href={f.url} className="group flex h-full flex-col bg-white/[0.045] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.08] hover:shadow-[0_0_40px_-12px_rgba(255,201,74,0.35)]">
               <span className="flex flex-wrap items-center gap-2">
                 <span className="bg-[#6a0d0d] px-2 py-0.5 font-brand text-[0.6rem] font-bold uppercase tracking-[0.12em] text-white">{f.type}</span>
-                <span className={`px-2 py-0.5 font-brand text-[0.6rem] font-bold uppercase tracking-[0.12em] ${f.acces === 'Résumé seul (embargo)' ? 'bg-[#0d1b2a]/8 text-[#0d1b2a]/70' : 'bg-[#d99a0e]/15 text-[#8a5a00]'}`}>{f.acces}</span>
-                {f.langue !== 'Français' && <span className="font-brand text-[0.6rem] font-bold uppercase tracking-[0.12em] text-[#333]/45">{f.langue}</span>}
+                <span className={`px-2 py-0.5 font-brand text-[0.6rem] font-bold uppercase tracking-[0.12em] ${f.acces === 'Résumé seul (embargo)' ? 'bg-white/10 text-[#e9e2d0]/70' : 'bg-[#d99a0e]/20 text-[#ffc94a]'}`}>{f.acces}</span>
+                {f.langue !== 'Français' && <span className="font-brand text-[0.6rem] font-bold uppercase tracking-[0.12em] text-[#e9e2d0]/45">{f.langue}</span>}
               </span>
-              <span className="mt-3 font-serif text-lg font-bold leading-snug text-[#0d1b2a] group-hover:text-[#6a0d0d]">{f.titre}</span>
-              <span className="mt-1 text-sm text-[#333]/70">{[f.auteur, f.annee, f.source].filter(Boolean).join(' · ')}</span>
-              {f.resume && <span className="mt-3 line-clamp-3 text-[0.9rem] leading-relaxed text-[#333]/85">{f.resume}</span>}
+              <span className="mt-3 font-serif text-lg font-bold leading-snug text-[#f9f5ec] group-hover:text-[#ffc94a]">{f.titre}</span>
+              <span className="mt-1 text-sm text-[#e9e2d0]/60">{[f.auteur, f.annee, f.source].filter(Boolean).join(' · ')}</span>
+              {f.resume && <span className="mt-3 line-clamp-3 text-[0.9rem] leading-relaxed text-[#e9e2d0]/80">{f.resume}</span>}
               {f.motsCles.length > 0 && (
                 <span className="mt-auto flex flex-wrap gap-1.5 pt-4">
                   {f.motsCles.slice(0, 5).map((m) => (
-                    <span key={m} className="bg-[#f9f5ec] px-2 py-0.5 text-[0.7rem] text-[#333]/75">
+                    <span key={m} className="bg-white/[0.06] px-2 py-0.5 text-[0.7rem] text-[#e9e2d0]/70">
                       {m}
                     </span>
                   ))}

@@ -2,20 +2,32 @@ import { getEditos, getActualites, getAgenda, reader, dateFr, extrait, sansEmail
 import { corpsBrut } from '@/lib/raw';
 import { Html } from '@/components/Html';
 import { CarrouselFlash } from '@/components/CarrouselFlash';
+import { GrilleVideos } from '@/components/Lecteur';
 import { fragment } from '@/lib/gabarits';
 
 export const revalidate = 3600;
 
+const SOUS_SITES: [string, string, string][] = [
+  ['/sous-sites/revue-jogoo', 'Revue JOGOO', '/medias/site/jogoo/logo-revue-jogoo.png'],
+  ['/sous-sites/editions-jogoo', 'Éditions JOGOO', '/medias/site/jogoo/logo-editions-jogoo.png'],
+  ['/sous-sites/fonds-eboussi-boulaga', 'Fonds Eboussi Boulaga', '/medias/site/jogoo/logo-fonds-eboussi.png'],
+  ['/sous-sites/jogoo-ai', 'JOGOO AI', '/medias/site/jogoo/picto-jogoo-ai.png'],
+  ['/sous-sites/sankofa-communications', 'Sankofa Communications', '/medias/site/jogoo/logo-sankofa-full.png'],
+  ['/sous-sites/philo-africaine-magazine', 'Philo Africaine Magazine', '/medias/site/jogoo/logo-philo-africaine-magazine.png'],
+];
+
 const Fleche = () => <span className="ml-1 inline-block transition-transform group-hover:translate-x-1">→</span>;
 
 export default async function Accueil() {
-  const [editos, actus, agenda, flashs, postes] = await Promise.all([
+  const [editos, actus, agenda, flashs, postes, videos] = await Promise.all([
     getEditos(),
     getActualites(),
     getAgenda(),
     reader.collections.flash.all(),
     reader.collections.postes.all(),
+    reader.collections.videos.all(),
   ]);
+  const videosTriees = videos.sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0)).slice(0, 6);
   const edito = editos[0];
   const precedents = editos.slice(1, 10);
   const actu = actus[0];
@@ -165,8 +177,43 @@ export default async function Accueil() {
         </div>
       </section>
 
-      {/* Les sous-sites */}
-      <Html html={fragment('home-06')} />
+      {/* Les sous-sites : logos et noms seulement */}
+      <section className="mx-auto max-w-6xl px-5 py-16">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h2 className="display-title text-3xl text-terra sm:text-4xl">Les sous-sites</h2>
+          <a className="text-sm font-semibold uppercase tracking-wide text-terra-deep hover:text-terra" href="/plan-du-site">
+            Plan du site →
+          </a>
+        </div>
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {SOUS_SITES.map(([href, nom, logo]) => (
+            <a key={href} href={href} className="group flex aspect-square flex-col items-center justify-center gap-3 bg-white p-4 text-center shadow-[0_1px_2px_rgba(26,26,26,0.04),0_14px_34px_-22px_rgba(26,26,26,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_2px_4px_rgba(26,26,26,0.05),0_24px_44px_-24px_rgba(26,26,26,0.4)]">
+              <img src={logo} alt="" loading="lazy" className="h-16 w-auto max-w-[80%] object-contain transition-transform duration-500 group-hover:scale-105 sm:h-20" />
+              <span className="font-brand text-[0.78rem] font-bold leading-tight text-ink group-hover:text-terra">{nom}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* Vidéos de la médiathèque */}
+      {videosTriees.length > 0 && (
+        <section className="bg-cream/60">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="kicker">Falsafa ya Africa</p>
+                <h2 className="display-title mt-2 text-3xl text-ink sm:text-4xl">En vidéo</h2>
+              </div>
+              <a className="text-sm font-semibold uppercase tracking-wide text-terra-deep hover:text-terra" href="/mediatheque">
+                Toute la médiathèque →
+              </a>
+            </div>
+            <div className="mt-8">
+              <GrilleVideos videos={videosTriees.map((v) => ({ titre: v.entry.titre, url: v.entry.url ?? '', rubrique: v.entry.rubrique }))} />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Agenda et recherche */}
       <section className="bg-ink text-paper">

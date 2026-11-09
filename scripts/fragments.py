@@ -136,3 +136,16 @@ open(f, 'w').write(h)
 idx = json.load(open(OUT + '/index.json'))
 idx.pop('/sous-sites/eboussi-studies', None)
 json.dump(idx, open(OUT + '/index.json', 'w'), ensure_ascii=False, indent=1)
+
+# Plus de traits de couleur au-dessus des blocs (demande du 9 nov. 2026, 16 h 26)
+for f in _g.glob(OUT + '/*.html'):
+    h = open(f).read(); h0 = h
+    h = re.sub(r'<span class="block h-1 w-full bg-(terra|ink|gold)"></span>', '', h)
+    h = h.replace('<div class="h-1 bg-[linear-gradient(90deg,var(--color-terra-deep)_0%,var(--color-terra)_45%,var(--color-gold)_100%)]"></div>', '')
+    h = re.sub(r'<span (aria-hidden="true" )?class="mt-3 block h-0.5 w-10 bg-terra"></span>', '', h)
+    if h != h0: open(f, 'w').write(h)
+# Accueil, colonne « Les sous-sites » : noms seuls, sans sous-titres
+f = OUT + '/home-04-colonnes.html'
+h = open(f).read()
+h = re.sub(r'(<span class="display-title block text-base text-ink group-hover:text-terra">[^<]*</span>)<span class="block text-xs text-ink-soft">[^<]*</span>', r'\1', h)
+open(f, 'w').write(h)
