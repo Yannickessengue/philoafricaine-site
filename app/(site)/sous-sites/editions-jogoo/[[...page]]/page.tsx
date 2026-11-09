@@ -71,7 +71,7 @@ const PROJETS: { titre: string; statut: string; collection?: string; texte: stri
 
 const PERIODIQUES = [
   { titre: 'L’être africain', revue: 'Revue JOGOO · N° 1', texte: 'Sommaire et contributions de la revue de philosophie africaine et de culture.', href: '/sous-sites/revue-jogoo', logo: '/medias/site/jogoo/logo-revue-jogoo.png' },
-  { titre: 'Reprise de soi et décolonisation des savoirs', revue: 'Eboussi Studies · N° 1', texte: 'Revue scientifique du Groupe JOGOO adossée au Fonds Eboussi Boulaga.', href: '/sous-sites/eboussi-studies', logo: '/medias/site/jogoo/logo-eboussi-studies.png' },
+  { titre: 'Reprise de soi et décolonisation des savoirs', revue: 'Eboussi Studies · N° 1', texte: 'Revue scientifique du Groupe JOGOO adossée au Fonds Eboussi Boulaga.', href: '/sous-sites/fonds-eboussi-boulaga/eboussi-studies', logo: '/medias/site/jogoo/logo-eboussi-studies.png' },
 ];
 
 /** Couverture « en vitrine » : un livre à venir, aux couleurs de sa collection. */

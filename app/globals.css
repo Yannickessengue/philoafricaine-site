@@ -129,3 +129,37 @@ input[type='search']::-webkit-search-cancel-button { -webkit-appearance: none; d
 @keyframes tourne-avant { 0% { opacity: 0; transform: perspective(1600px) rotateY(-14deg) translateX(28px); transform-origin: left center } to { opacity: 1; transform: none } }
 @keyframes tourne-arriere { 0% { opacity: 0; transform: perspective(1600px) rotateY(14deg) translateX(-28px); transform-origin: right center } to { opacity: 1; transform: none } }
 @media (prefers-reduced-motion: reduce) { [class*='tourne-'] { animation: none !important } }
+
+/* ——— Finition « premium » (demande du 9 nov. 2026) ———
+   Plus de traits colorés au bord des blocs de texte ni de contours de cartes :
+   les blocs se détachent par le fond et une ombre très douce. */
+main :is(div, article, aside, section, li, p, a, figure, blockquote, span, dl, ol, ul, header, footer, details, form, h2, dd, dt):is(
+  [class~='border-l'], [class~='border-l-2'], [class~='border-l-4'], [class~='border-l-[3px]'], [class*=':border-l'],
+  [class~='border-t-2'], [class~='border-y-2'], [class~='border-b-[3px]'], [class~='border-b-2']
+):not(nav *, nav, [role='tablist'] *) {
+  border-left-width: 0 !important;
+  border-top-width: 0 !important;
+  border-bottom-width: 0 !important;
+}
+main :is(div, article, aside, section, li, a, figure, form, details, dl):is([class~='border'], [class~='border-y'], [class~='border-x']):is(
+  [class*='bg-white'], [class*='bg-cream'], [class*='bg-paper'], [class*='bg-[#f'], [class*='bg-[#faf6f0]'], [class*='bg-ink'], [class*='bg-terra'], [class*='bg-[#1a1714]']
+):not(nav *, input, textarea, select, [class*='rounded-full']) {
+  border-color: transparent !important;
+  box-shadow: 0 1px 2px rgba(26, 26, 26, 0.04), 0 14px 34px -22px rgba(26, 26, 26, 0.28);
+}
+main a:is([class~='border']):is([class*='bg-white'], [class*='bg-cream'], [class*='bg-paper']):not(nav *) {
+  transition: box-shadow 0.35s ease, transform 0.35s ease, background-color 0.35s ease;
+}
+main a:is([class~='border']):is([class*='bg-white'], [class*='bg-cream'], [class*='bg-paper']):not(nav *):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(26, 26, 26, 0.05), 0 24px 44px -24px rgba(26, 26, 26, 0.38);
+}
+/* Cartes sans fond explicite : fond blanc pour remplacer le contour */
+main :is(div, article, li, a):is([class~='border']):is([class*='border-ink/1'], [class*='border-ink/2']):not([class*='bg-']):is([class*=' p-'], [class^='p-'], [class*='px-'], [class*=' p-5'], [class*=' p-6']):not(nav *, [class*='rounded-full'], [class*='inline-flex'], [class*='h-9'], [class*='h-10'], [class*='h-11'], [class*='h-8']) {
+  border-color: transparent !important;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(26, 26, 26, 0.04), 0 14px 34px -22px rgba(26, 26, 26, 0.28);
+}
+/* Citations : sans filet, en grand guillemet */
+.prose-jogoo blockquote { border-left: 0 !important; padding-left: 2.2rem !important; position: relative; }
+.prose-jogoo blockquote::before { content: '«'; position: absolute; left: 0; top: -0.35em; font-family: var(--font-serif); font-size: 2.6em; line-height: 1; color: var(--color-terra); opacity: 0.55; font-style: normal; }

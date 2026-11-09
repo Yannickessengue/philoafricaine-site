@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "@fontsource-variable/montserrat": "^5.3.0",
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/eb-garamond": "^5.3.0",
+    "@fontsource/jost": "^5.3.0",
     "@fontsource/libre-baskerville": "^5.3.0",
     "@fontsource/ubuntu": "^5.3.0",
     "@keystatic/core": "^0.6.9",

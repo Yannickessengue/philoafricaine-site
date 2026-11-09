@@ -14,7 +14,7 @@ export function Illustration({ image, description, legende, credit, position = '
   if (!image) return null;
   return (
     <figure className={`illustration ${placeImage[position] ?? placeImage.pleine}`}>
-      <img src={image} alt={description || legende || ''} loading="lazy" className="!my-0 block h-auto w-full border border-ink/10 !bg-transparent" />
+      <img src={image} alt={description || legende || ''} loading="lazy" className="!my-0 block h-auto w-full !bg-transparent" />
       {(legende || credit) && (
         <figcaption className="!mt-2 !text-left text-[0.8rem] italic leading-snug text-ink/60">
           {legende && typo(legende)}
@@ -26,10 +26,10 @@ export function Illustration({ image, description, legende, credit, position = '
 }
 
 const styles: Record<string, string> = {
-  sable: 'border-l-4 border-gold bg-cream',
-  terra: 'border-l-4 border-terra bg-terra/[0.07]',
+  sable: 'bg-cream shadow-[0_14px_34px_-24px_rgba(26,26,26,0.3)]',
+  terra: 'bg-terra/[0.07]',
   sombre: 'bg-ink text-paper [&_p]:!text-paper/85 [&_li]:!text-paper/85 [&_a]:!text-gold [&_strong]:!text-paper',
-  filet: 'border-y-2 border-terra',
+  filet: 'bg-white shadow-[0_14px_34px_-22px_rgba(26,26,26,0.3)]',
 };
 const placeEncadre: Record<string, string> = {
   pleine: 'my-8 clear-both',
@@ -49,7 +49,7 @@ export function Encadre({ titre, style = 'sable', position = 'pleine', children 
 export function Citation({ texte, auteur }: { texte?: string; auteur?: string }) {
   if (!texte) return null;
   return (
-    <figure className="clear-both my-10 border-y border-ink/15 py-6 text-center">
+    <figure className="clear-both my-10 py-4 text-center">
       <blockquote className="!m-0 !border-0 !p-0 font-serif text-[1.35rem] italic leading-snug !text-ink sm:text-[1.6rem]">« {typo(texte)} »</blockquote>
       {auteur && <figcaption className="!mt-3 !text-center font-brand text-[0.72rem] font-semibold uppercase tracking-[0.13em] text-terra-deep">{typo(auteur)}</figcaption>}
     </figure>

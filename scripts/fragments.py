@@ -89,12 +89,50 @@ j=h.find('<section class="mt-16 bg-terra-deep text-paper">'); open(OUT+'/revue-p
 a=h.find('<section class="mx-auto max-w-6xl px-6 py-14"><div class="grid gap-5 lg:grid-cols-3">')
 b=h.find('</section>',a)+len('</section>')
 open(OUT+'/revue-accueil-avant.html','w').write(h[:a]); open(OUT+'/revue-accueil-apres.html','w').write(h[b:])
-# Accueil : le coq regarde vers la gauche (demande du 9 nov. 2026), image chargée tout de suite
+# Accueil : coq du visuel à son orientation d'origine ; coq de l'intro animée tourné vers la gauche (demande du 9 nov. 2026)
 h=open(OUT+'/home-01.html').read()
-h=h.replace('class="block h-auto w-full -scale-x-100"','class="block h-auto w-full"').replace('loading="lazy"','loading="eager"')
+h=h.replace('loading="lazy"','loading="eager"')
 open(OUT+'/home-01.html','w').write(h)
+h=open(OUT+'/home-00.html').read()
+h=h.replace('class="jogoo-loader-watermark pointer-events-none','class="jogoo-loader-watermark -scale-x-100 pointer-events-none')
+open(OUT+'/home-00.html','w').write(h)
 # Sous-sites d'origine découpés en sections (réutilisées dans les nouveaux sous-sites)
 for nom, f in [('magazine', 'page__sous-sites__philo-africaine-magazine'), ('numero', 'page__sous-sites__philo-africaine-magazine__numero-001'), ('editions', 'page__sous-sites__editions-jogoo'), ('sankofa', 'page__sous-sites__sankofa-communications')]:
     s = BeautifulSoup(open(f'{OUT}/{f}.html').read(), 'html.parser')
     for i, c in enumerate([c for c in s.children if getattr(c, 'name', None)]):
         open(f'{OUT}/ancien-{nom}-{i}.html', 'w').write(str(c))
+
+# ——— Eboussi Studies rejoint le Fonds Eboussi Boulaga ; JOGOO AI prend sa place (demande du 9 nov. 2026) ———
+import glob as _g
+ES = '/sous-sites/fonds-eboussi-boulaga/eboussi-studies'
+CARTE_AI = ('<a class="group flex h-full flex-col border border-ink/12 bg-white transition-all hover:-translate-y-1 hover:border-ink/20 hover:shadow-[0_12px_28px_-12px_rgba(0,0,0,0.25)]" href="/sous-sites/jogoo-ai">'
+  '<span class="block h-1 w-full bg-terra"></span><div class="flex h-full flex-col p-6"><div class="flex items-start justify-between gap-3">'
+  '<span class="flex h-14 items-center"><img alt="Logo de JOGOO AI" class="w-auto object-contain object-left max-h-14 max-w-[170px]" loading="lazy" decoding="async" src="/medias/site/jogoo/picto-jogoo-ai.png"/></span>'
+  '<span class="kicker mt-1 shrink-0">B.4</span></div><span class="display-title mt-4 text-xl text-ink group-hover:text-terra">JOGOO AI</span>'
+  '<span class="mt-1 text-xs uppercase tracking-wide text-ink/45">Assistant de recherche en philosophie africaine</span>'
+  '<span class="mt-3 font-serif text-sm italic text-ink/70">Explorer. Comprendre. Analyser. Citer.</span>'
+  '<span class="mt-3 line-clamp-4 text-sm leading-relaxed text-ink-soft">Interroger des textes, découvrir des auteurs, clarifier des concepts et construire ses pistes de recherche, avec un assistant documentaire qui privilégie les sources vérifiables.</span>'
+  '<span class="mt-auto pt-5 text-sm font-semibold text-terra-deep">Découvrir le sous-site<span class="ml-1 inline-block transition-transform group-hover:translate-x-1">→</span></span></div></a>')
+LI_AI = ('<a class="group flex flex-1 items-center gap-4 px-6 py-3 transition-colors hover:bg-cream/50" href="/sous-sites/jogoo-ai"><span class="flex h-10 w-12 shrink-0 items-center justify-center">'
+  '<img alt="Logo de JOGOO AI" class="h-auto max-h-10 w-auto max-w-12 object-contain" loading="lazy" decoding="async" src="/medias/site/jogoo/picto-jogoo-ai.png"/></span>'
+  '<span class="min-w-0"><span class="display-title block text-base text-ink group-hover:text-terra">JOGOO AI</span><span class="block text-xs text-ink-soft">Assistant de recherche en philosophie africaine</span></span></a>')
+for f in _g.glob(OUT + '/*.html'):
+    h = open(f).read(); h0 = h
+    nom = os.path.basename(f)
+    if nom == 'home-06.html':
+        h = re.sub(r'<a class="group flex h-full flex-col[^"]*" href="/sous-sites/eboussi-studies">.*?</a>', CARTE_AI, h, count=1, flags=re.S)
+    if nom in ('home-04-colonnes.html', 'home-04.html'):
+        h = re.sub(r'<a class="group flex flex-1 items-center[^"]*" href="/sous-sites/eboussi-studies">.*?</a>', LI_AI, h, count=1, flags=re.S)
+    # listes de sous-sites (pied du portail, colophon du Fonds)
+    h = re.sub(r'(<a[^>]*?)href="/sous-sites/eboussi-studies"([^>]*)>(Revue )?Eboussi Studies</a>', r'\1href="/sous-sites/jogoo-ai"\2>JOGOO AI</a>', h) if nom in ('footer.html',) or 'fonds-eboussi' in nom else h
+    # tout autre lien : la revue, désormais dans le Fonds
+    h = h.replace('href="/sous-sites/eboussi-studies"', f'href="{ES}"')
+    if h != h0: open(f, 'w').write(h)
+# La page autonome de la revue disparaît (redirection 301 vers le Fonds) ; bouton devenu inutile retiré
+f = OUT + '/page__sous-sites__fonds-eboussi-boulaga__eboussi-studies.html'
+h = open(f).read()
+h = h.replace('<a class="btn" href="/sous-sites/fonds-eboussi-boulaga/eboussi-studies">Sous-site de la revue</a>', '')
+open(f, 'w').write(h)
+idx = json.load(open(OUT + '/index.json'))
+idx.pop('/sous-sites/eboussi-studies', None)
+json.dump(idx, open(OUT + '/index.json', 'w'), ensure_ascii=False, indent=1)

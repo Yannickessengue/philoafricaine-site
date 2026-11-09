@@ -417,7 +417,7 @@ function APropos() {
           colonnes={2}
           items={[
             { titre: 'Revue JOGOO', texte: 'Publie des recherches en philosophie africaine et en culture.', href: '/sous-sites/revue-jogoo' },
-            { titre: 'Eboussi Studies', texte: 'Consacrée à Fabien Eboussi Boulaga et aux recherches suscitées par son œuvre.', href: '/sous-sites/eboussi-studies' },
+            { titre: 'Eboussi Studies', texte: 'Consacrée à Fabien Eboussi Boulaga et aux recherches suscitées par son œuvre.', href: '/sous-sites/fonds-eboussi-boulaga/eboussi-studies' },
           ]}
         />
         <Boutons site={S} liens={[[`mailto:${S.email}?subject=Philo%20Africaine%20Magazine`, 'Contacter la rédaction']]} />

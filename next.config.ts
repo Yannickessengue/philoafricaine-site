@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
     return [
       { source: '/admin', destination: '/keystatic', permanent: false },
       { source: '/admin/:path*', destination: '/keystatic', permanent: false },
+      // Eboussi Studies est désormais une rubrique du Fonds Eboussi Boulaga (redirections permanentes 301)
+      { source: '/sous-sites/eboussi-studies', destination: '/sous-sites/fonds-eboussi-boulaga/eboussi-studies', statusCode: 301 },
+      { source: '/sous-sites/eboussi-studies/:path*', destination: '/sous-sites/fonds-eboussi-boulaga/eboussi-studies', statusCode: 301 },
     ];
   },
 };

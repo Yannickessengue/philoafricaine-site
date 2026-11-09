@@ -4,7 +4,7 @@ import { Prose } from '@/components/Prose';
 import { Html } from '@/components/Html';
 import { adressesStatiques, pageStatique } from '@/lib/gabarits';
 
-const geresAilleurs = /^\/sous-sites\/(revue-jogoo(\/[^/]+)?|philo-africaine-magazine|editions-jogoo|sankofa-communications)(\/.*)?$/;
+const geresAilleurs = /^\/sous-sites\/(revue-jogoo(\/[^/]+)?|philo-africaine-magazine|editions-jogoo|sankofa-communications|jogoo-ai|eboussi-studies)(\/.*)?$/;
 
 export async function generateStaticParams() {
   const adresses = new Set([...adressesStatiques(), ...(await getPages()).map((p) => p.entry.adresse ?? '')]);

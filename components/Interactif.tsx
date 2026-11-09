@@ -55,6 +55,34 @@ function chargerTraducteur() {
   document.body.appendChild(s);
 }
 
+/** Bibliographie du Fonds Eboussi Boulaga : filtre par domaine, type et texte. */
+function filtrerBibliographie() {
+  const outils = document.querySelector('.fonds .bib-tools');
+  if (!outils) return;
+  const groupes = outils.querySelectorAll('.chips');
+  const actif = (g?: Element) => g?.querySelector('[aria-pressed="true"]')?.childNodes[0]?.textContent?.trim() ?? '';
+  const domaine = actif(groupes[0]);
+  const type = actif(groupes[1]);
+  const sans = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const q = sans(outils.querySelector<HTMLInputElement>('input[type="search"]')?.value ?? '').trim();
+  let total = 0;
+  document.querySelectorAll<HTMLElement>('.fonds .bib-out section').forEach((sec) => {
+    const okDomaine = !domaine || domaine === 'Tout' || sec.getAttribute('aria-label') === domaine;
+    let n = 0;
+    sec.querySelectorAll<HTMLElement>('li').forEach((li) => {
+      const k = li.querySelector('.k')?.textContent?.trim() ?? '';
+      const okType = !type || type === 'Tous les types' || sans(type).startsWith(sans(k).slice(0, 5));
+      const ok = okDomaine && okType && (!q || sans(li.textContent ?? '').includes(q));
+      li.style.display = ok ? '' : 'none';
+      if (ok) n++;
+    });
+    sec.style.display = n ? '' : 'none';
+    total += n;
+  });
+  const c = outils.querySelector('.count');
+  if (c) c.textContent = `${total} référence${total > 1 ? 's' : ''}`;
+}
+
 export function Interactif() {
   const pathname = usePathname();
   const router = useRouter();
@@ -73,6 +101,44 @@ export function Interactif() {
     if (langueCourante() !== 'fr') chargerTraducteur();
     const clic = (e: MouseEvent) => {
       const cible = e.target as HTMLElement;
+      // Fonds : agrandir une image (galerie, accueil)
+      const agrandir = cible.closest<HTMLButtonElement>('.fonds figure > button[aria-label^="Agrandir"]');
+      if (agrandir) {
+        const img = agrandir.querySelector('img');
+        if (!img) return;
+        const legende = agrandir.parentElement?.querySelector('figcaption')?.textContent ?? img.alt;
+        const fond = document.createElement('div');
+        fond.className = 'fixed inset-0 z-[95] flex flex-col items-center justify-center gap-3 bg-black/90 p-4 flash-fade';
+        fond.setAttribute('role', 'dialog');
+        fond.setAttribute('aria-modal', 'true');
+        fond.innerHTML = `<img src="${img.getAttribute('src')}" alt="" class="max-h-[82vh] max-w-full object-contain shadow-2xl"/><p class="max-w-2xl text-center text-sm text-white/80"></p><button type="button" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center border border-white/30 text-white hover:bg-white hover:text-black" aria-label="Fermer">✕</button>`;
+        (fond.querySelector('img') as HTMLImageElement).alt = img.alt;
+        fond.querySelector('p')!.textContent = legende;
+        const fermer = () => { fond.remove(); document.body.style.overflow = ''; window.removeEventListener('keydown', esc); };
+        const esc = (k: KeyboardEvent) => k.key === 'Escape' && fermer();
+        fond.addEventListener('click', fermer);
+        window.addEventListener('keydown', esc);
+        document.body.style.overflow = 'hidden';
+        document.body.appendChild(fond);
+        return;
+      }
+      // Fonds : filtres de la bibliographie
+      const puce = cible.closest<HTMLButtonElement>('.fonds .bib-tools .chip');
+      if (puce) {
+        puce.parentElement?.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === puce)));
+        filtrerBibliographie();
+        return;
+      }
+      const copie = cible.closest<HTMLButtonElement>('.fonds .cpy');
+      if (copie) {
+        const texte = copie.previousElementSibling?.textContent?.trim() ?? '';
+        navigator.clipboard?.writeText(texte).then(() => {
+          const avant = copie.textContent;
+          copie.textContent = 'Copié ✓';
+          window.setTimeout(() => (copie.textContent = avant), 1800);
+        });
+        return;
+      }
       const bouton = cible.closest<HTMLElement>('[data-action]');
       if (bouton) {
         const a = bouton.dataset.action;
@@ -98,9 +164,48 @@ export function Interactif() {
       e.preventDefault();
       router.push(href);
     };
+    // Commande d'Eboussi Studies (Fonds Eboussi Boulaga) : total en direct et brouillon d'e-mail
+    const totalCommande = (form: HTMLFormElement) => {
+      const radios = form.querySelectorAll<HTMLInputElement>('input[name="fmt"]');
+      const papier = radios[1]?.checked;
+      const n = Math.max(1, Math.min(50, Number(form.querySelector<HTMLInputElement>('input[type="number"]')?.value) || 1));
+      const devise = form.querySelector<HTMLSelectElement>('select')?.value ?? 'FCFA';
+      const eur = (papier ? 10 : 5000 / 655.957) * n;
+      const fcfa = (papier ? 10 * 655.957 : 5000) * n;
+      const f = (x: number, d = 0) => x.toLocaleString('fr-FR', { maximumFractionDigits: d, minimumFractionDigits: d });
+      const texte = devise === 'EUR' ? `${f(eur, 2)} € (${f(Math.round(fcfa))} FCFA)` : `${f(Math.round(fcfa))} FCFA (${f(eur, 2)} €)`;
+      const b = form.querySelector('[aria-live] b');
+      if (b) b.textContent = texte.split(' (')[0];
+      const p = form.querySelector('[aria-live]');
+      if (p && b && p.lastChild && p.lastChild !== b) p.lastChild.textContent = ` (${texte.split(' (')[1]}`;
+      return { papier, n, texte };
+    };
+    const changeCommande = (e: Event) => {
+      const el = e.target as HTMLElement;
+      if (el.closest('.fonds .bib-tools')) return filtrerBibliographie();
+      const form = el.closest<HTMLFormElement>('.fonds form.o-form');
+      if (form) totalCommande(form);
+    };
+    document.addEventListener('input', changeCommande);
+    document.addEventListener('change', changeCommande);
+
     // Lettre d'information (formulaire d'origine de l'accueil)
     const envoi = async (e: SubmitEvent) => {
       const form = e.target as HTMLFormElement;
+      if (form.matches('.fonds form.o-form')) {
+        e.preventDefault();
+        const { papier, n, texte } = totalCommande(form);
+        const champs = form.querySelectorAll<HTMLInputElement>('input[type="text"], input[type="email"]');
+        const nom = champs[0]?.value.trim() ?? '';
+        const mail = champs[1]?.value.trim() ?? '';
+        if (!nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
+          (nom ? champs[1] : champs[0])?.focus();
+          return;
+        }
+        const corps = `Bonjour,\n\nJe souhaite commander Eboussi Studies n° 1 (« Reprise de soi et décolonisation des savoirs »).\n\nVersion : ${papier ? 'papier' : 'PDF intégral'}\nExemplaires : ${n}\nTotal indiqué : ${texte}${papier ? ' (hors frais d’envoi)' : ''}\n\nNom : ${nom}\nE-mail : ${mail}\n${papier ? '\nAdresse de livraison :\n\n' : ''}\nMerci.`;
+        window.location.href = `mailto:fondseboussi@gmail.com?subject=${encodeURIComponent('Commande — Eboussi Studies n° 1')}&body=${encodeURIComponent(corps)}`;
+        return;
+      }
       const champEmail = form.querySelector<HTMLInputElement>('#nl-email, [data-newsletter] input[type="email"]') ?? (form.matches('[data-newsletter]') ? form.querySelector<HTMLInputElement>('input[type="email"]') : null);
       if (!champEmail) return;
       e.preventDefault();
@@ -125,7 +230,7 @@ export function Interactif() {
     };
     document.addEventListener('click', clic);
     document.addEventListener('submit', envoi);
-    return () => { document.removeEventListener('click', clic); document.removeEventListener('submit', envoi); };
+    return () => { document.removeEventListener('click', clic); document.removeEventListener('submit', envoi); document.removeEventListener('input', changeCommande); document.removeEventListener('change', changeCommande); };
   }, [router]);
 
   /* ——— À chaque page : lien actif, ombre de l'en-tête, apparitions, intro, compte à rebours ——— */
@@ -307,7 +412,7 @@ export function Interactif() {
               ['/sous-sites/revue-jogoo', 'Revue JOGOO'],
               ['/sous-sites/editions-jogoo', 'Éditions JOGOO'],
               ['/sous-sites/fonds-eboussi-boulaga', 'Fonds Eboussi Boulaga'],
-              ['/sous-sites/eboussi-studies', 'Eboussi Studies'],
+              ['/sous-sites/jogoo-ai', 'JOGOO AI'],
               ['/sous-sites/sankofa-communications', 'Sankofa'],
               ['/sous-sites/philo-africaine-magazine', 'Philo Africaine Magazine'],
             ].map(([h, l]) => (
