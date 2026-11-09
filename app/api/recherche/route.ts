@@ -27,6 +27,7 @@ export async function GET() {
   revue.forEach((r) => items.push({ t: r.entry.titre, u: `/sous-sites/revue-jogoo/${r.slug}`, k: 'Revue JOGOO', x: `${r.entry.auteurs ?? ''} ${r.entry.motsCles ?? ''} ${r.entry.resume ?? ''}` }));
   flashs.forEach((f) => items.push({ t: f.entry.titre, u: `/flash#${f.slug}`, k: 'Flash', x: `${f.entry.auteur ?? ''} ${f.entry.lieu ?? ''} ${corps('flash', f.slug, 800)}` }));
   const NOUVEAUX: [string, string, string][] = [
+    ['/la-minute-du-chant-du-coq', 'La minute du chant du coq', 'Rubrique vidéo : un concept de philosophie africaine expliqué par un philosophe en cinq minutes.'],
     ['/podcasts', 'Podcasts — Écouter la philosophie africaine', 'Audio, podcast, Marcien Towa, Identité et transcendance, Essai sur la problématique philosophique dans l’Afrique actuelle, libération.'],
     ['/sous-sites/jogoo-ai', 'JOGOO AI — Assistant de recherche en philosophie africaine', 'Intelligence artificielle, assistant, IA, interroger des textes, bibliothèque, philosophes, concepts, ressources.'],
     ['/sous-sites/jogoo-ai/bibliotheque', 'Bibliothèque JOGOO AI', 'Notices d’ouvrages, articles, notes de lecture, archives, filtres par auteur, langue, accès.'],

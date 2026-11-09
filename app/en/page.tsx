@@ -62,9 +62,11 @@ export default async function Accueil() {
           <p className="kicker">Six autonomous projects</p>
           <h2 className="display-title mt-2 text-3xl text-ink sm:text-4xl">What we do</h2>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {SOUS_SITES.map(([href, nom, logo]) => (
+            {SOUS_SITES.map(([href, nom, logo, e]) => (
               <a key={href} href={href} className="group flex flex-col bg-white p-6 shadow-[0_1px_2px_rgba(26,26,26,0.04),0_14px_34px_-22px_rgba(26,26,26,0.28)] transition-all duration-300 hover:-translate-y-1">
-                <img src={logo} alt="" className="h-20 w-auto self-start object-contain" />
+                <span className="flex h-24 items-center">
+                  <img src={logo} alt="" style={{ ['--e' as string]: e }} className="h-[calc(5rem*var(--e))] w-auto max-w-[14rem] object-contain" />
+                </span>
                 <span className="mt-5 font-brand text-lg font-bold text-ink group-hover:text-terra">{nom}</span>
                 <span className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{BLURBS[nom]}</span>
                 <span className="mt-4 font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] text-terra-deep">

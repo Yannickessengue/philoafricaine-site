@@ -202,3 +202,40 @@ main :is(div, article, li, a):is([class~='border']):is([class*='border-ink/1'], 
 .podcast-barre-lecture::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgba(217,154,14,0.35); }
 .podcast-barre-lecture::-moz-range-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: #fff; }
 @media (prefers-reduced-motion: reduce) { .podcast-barre { animation: none; height: 8px; } }
+
+/* ——— Accueil : titre « Philosophie africaine » ——— */
+.titre-accueil { display: flex; flex-direction: column; align-items: flex-start; line-height: 0.92; }
+.titre-philo {
+  font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em;
+  font-size: clamp(2.5rem, 7.2vw, 5.4rem); color: var(--color-ink);
+  animation: titre-monte 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.titre-afr {
+  position: relative; font-family: var(--font-serif); font-style: italic; font-weight: 700; letter-spacing: -0.01em;
+  font-size: clamp(2.8rem, 8.2vw, 6.2rem); line-height: 1.08; padding-right: 0.08em; margin-top: -0.02em;
+  background: linear-gradient(100deg, #6d1a0c 0%, #a8361b 30%, #d2552d 44%, #fff1c9 50%, #d2552d 56%, #a8361b 70%, #6d1a0c 100%);
+  background-size: 260% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: titre-monte 0.9s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both, titre-reflet 9s 1.2s ease-in-out infinite;
+}
+.titre-trait { position: absolute; left: 0.02em; right: 0; bottom: -0.1em; width: 100%; height: 0.24em; overflow: visible; }
+.titre-trait path { fill: none; stroke: var(--color-ink); stroke-width: 3.2; stroke-linecap: round; stroke-dasharray: 320; stroke-dashoffset: 320; animation: titre-trait 1.1s 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+.titre-trait path + path { stroke-width: 2; opacity: 0.55; animation-delay: 1.15s; }
+@keyframes titre-monte { from { opacity: 0; transform: translateY(0.35em); } to { opacity: 1; transform: none; } }
+@keyframes titre-reflet { 0%, 55% { background-position: 100% 0; } 85%, 100% { background-position: 0% 0; } }
+@keyframes titre-trait { to { stroke-dashoffset: 0; } }
+.coq-flotte { animation: coq-flotte 7s ease-in-out infinite; transform-origin: 50% 90%; }
+@keyframes coq-flotte { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(-0.8deg); } }
+/* Pendant l’intro animée, les animations du titre attendent. */
+.js:not(.intro-vue) .titre-philo, .js:not(.intro-vue) .titre-afr, .js:not(.intro-vue) .titre-trait path { animation-play-state: paused; }
+
+/* ——— Fil défilant ——— */
+@keyframes fil-defile { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.fil-piste { display: flex; width: max-content; animation: fil-defile var(--duree, 60s) linear infinite; }
+.fil:hover .fil-piste, .fil:focus-within .fil-piste { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .titre-philo, .titre-afr, .coq-flotte, .fil-piste { animation: none !important; }
+  .titre-trait path { animation: none; stroke-dashoffset: 0; }
+  .fil { overflow-x: auto; }
+}

@@ -261,6 +261,31 @@ export default config({
       },
     }),
 
+    minutes: collection({
+      label: 'La minute du chant du coq',
+      slugField: 'titre',
+      path: 'content/minutes/*',
+      format: { contentField: 'contenu' },
+      entryLayout: 'content',
+      columns: ['titre', 'date'],
+      schema: {
+        titre: fields.slug({ name: { label: 'Concept expliqué', description: 'Ex. : Ubuntu, Muntu, Reprise de soi' }, slug: { label: 'Identifiant dans l’adresse' } }),
+        date: fields.date({ label: 'Date de publication', validation: { isRequired: true } }),
+        numero: fields.integer({ label: 'Numéro de l’épisode' }),
+        philosophe: fields.text({ label: 'Philosophe qui explique', validation: { length: { min: 1 } } }),
+        fonction: fields.text({ label: 'Fonction, institution' }),
+        portrait: image('Portrait du philosophe', 'minutes'),
+        video: fields.url({ label: 'Lien de la vidéo (YouTube ou WebTV)', description: 'Laisser vide si le fichier vidéo est déposé ci-dessous.' }),
+        fichierVideo: fields.file({ label: 'Ou fichier vidéo (MP4, 5 min, 100 Mo au plus)', directory: 'public/medias/minutes', publicPath: '/medias/minutes/' }),
+        affiche: image('Image d’affiche de la vidéo', 'minutes'),
+        duree: fields.text({ label: 'Durée affichée', description: 'Ex. : 4 min 52' }),
+        definition: fields.text({ label: 'Le concept en une phrase', multiline: true, description: 'Une définition courte, affichée sous la vidéo et dans la lettre du lundi.' }),
+        contenu: texte('Fiche du concept (texte, citations, prolongements)', 'minutes'),
+        references: fields.text({ label: 'Pour aller plus loin', multiline: true, description: 'Une référence par paragraphe' }),
+        motsCles: fields.text({ label: 'Mots-clés', description: 'Séparés par des virgules' }),
+      },
+    }),
+
     podcasts: collection({
       label: 'Podcasts (accueil)',
       slugField: 'titre',

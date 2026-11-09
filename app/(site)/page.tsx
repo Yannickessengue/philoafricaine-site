@@ -1,4 +1,7 @@
-import { getEditos, getActualites, getAgenda, reader, dateFr, extrait, sansEmail } from '@/lib/content';
+import { getEditos, getActualites, getAgenda, getRevue, reader, dateFr, extrait, sansEmail } from '@/lib/content';
+import { getMinutes, integrationVideo, MINUTE } from '@/lib/minutes';
+import { Fil } from '@/components/Fil';
+import { Compteurs } from '@/components/Compteurs';
 import { corpsBrut } from '@/lib/raw';
 import { Html } from '@/components/Html';
 import { CarrouselFlash } from '@/components/CarrouselFlash';
@@ -21,6 +24,10 @@ export default async function Accueil() {
     reader.collections.videos.all(),
     reader.collections.podcasts.all(),
   ]);
+  const [revue, minutes, appels] = await Promise.all([getRevue(), getMinutes(), reader.collections.appels.all()]);
+  const minute = minutes[0];
+  const aujourdhui = new Date().toISOString().slice(0, 10);
+  const appelsOuverts = appels.filter((a) => a.entry.ouvert && (!a.entry.cloture || a.entry.cloture >= aujourdhui));
   const podcasts = podcastsBruts.filter((p) => p.entry.audio).sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0));
   const videosTriees = videos.sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0)).slice(0, 6);
   const edito = editos[0];
@@ -37,6 +44,19 @@ export default async function Accueil() {
       {/* Intro animée, accroche, colloque : identiques à l'original */}
       <Html html={fragment('home-00')} />
       <Html html={fragment('home-01')} />
+      <Fil
+        elements={[
+          ...(editos[0] ? [{ etiquette: 'Édito', texte: editos[0].entry.titre, href: `/edito/${editos[0].slug}` }] : []),
+          ...(minute
+            ? [{ etiquette: 'Vidéo', texte: `La minute du chant du coq : ${minute.entry.titre}`, href: `${MINUTE.base}/${minute.slug}` }]
+            : [{ etiquette: 'Nouveau', texte: 'La minute du chant du coq : un concept, un philosophe, cinq minutes', href: MINUTE.base }]),
+          ...actus.slice(0, 3).map((a) => ({ etiquette: 'Actualité', texte: a.entry.titre, href: `/actualites/${a.slug}` })),
+          { etiquette: 'Revue', texte: 'Revue JOGOO n° 1 : « L’être africain »', href: '/sous-sites/revue-jogoo' },
+          ...appelsOuverts.slice(0, 2).map((a) => ({ etiquette: 'Appel', texte: a.entry.titre, href: '/recherche/appels-a-contributions' })),
+          ...prochains.slice(0, 2).map((a) => ({ etiquette: 'Agenda', texte: `${a.entry.intitule}${a.entry.dateAffichee ? ` · ${a.entry.dateAffichee}` : ''}`, href: '/agenda' })),
+          ...(podcasts[0] ? [{ etiquette: 'Podcast', texte: 'Écouter Marcien Towa', href: '/podcasts' }] : []),
+        ]}
+      />
       <Html html={fragment('home-02')} />
 
       {/* L'édito de la semaine */}
@@ -172,6 +192,22 @@ export default async function Accueil() {
         </div>
       </section>
 
+      {/* Le Groupe en chiffres */}
+      <section className="bg-ink text-paper">
+        <div className="mx-auto max-w-6xl px-5 py-14">
+          <Compteurs
+            chiffres={[
+              { n: new Date().getFullYear() - 2010, libelle: 'ans de débats' },
+              { n: 6, libelle: 'projets' },
+              { n: 10, libelle: 'axes de recherche' },
+              { n: editos.length, libelle: 'éditos publiés' },
+              { n: revue.length, libelle: 'articles de revue' },
+              { n: podcasts.length + videos.length, libelle: 'vidéos et podcasts' },
+            ]}
+          />
+        </div>
+      </section>
+
       {/* Nos projets : logos et noms seulement */}
       <section className="mx-auto max-w-6xl px-5 py-16">
         <div className="flex flex-wrap items-end justify-between gap-3">
@@ -181,12 +217,48 @@ export default async function Accueil() {
           </a>
         </div>
         <div className="mt-8 grid grid-cols-2 gap-5 lg:grid-cols-3">
-          {SOUS_SITES.map(([href, nom, logo]) => (
+          {SOUS_SITES.map(([href, nom, logo, e]) => (
             <a key={href} href={href} className="group flex aspect-[4/3] flex-col items-center justify-center gap-4 bg-white p-6 text-center shadow-[0_1px_2px_rgba(26,26,26,0.04),0_14px_34px_-22px_rgba(26,26,26,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_2px_4px_rgba(26,26,26,0.05),0_24px_44px_-24px_rgba(26,26,26,0.4)]">
-              <img src={logo} alt="" loading="lazy" className="h-24 w-auto max-w-[80%] object-contain transition-transform duration-500 group-hover:scale-105 sm:h-36 lg:h-40" />
+              <span className="flex h-28 w-full items-center justify-center sm:h-40 lg:h-44">
+                <img src={logo} alt="" loading="lazy" style={{ ['--e' as string]: e }} className="h-[calc(5.5rem*var(--e))] w-auto max-w-[88%] object-contain transition-transform duration-500 group-hover:scale-105 sm:h-[calc(8.5rem*var(--e))] lg:h-[calc(9.5rem*var(--e))]" />
+              </span>
               <span className="font-brand text-sm font-bold leading-tight text-ink group-hover:text-terra sm:text-base">{nom}</span>
             </a>
           ))}
+        </div>
+      </section>
+
+      {/* La minute du chant du coq */}
+      <section className="relative isolate overflow-hidden bg-[#140f0c] text-paper">
+        <img src="/medias/site/jogoo/coq-penseur-t.png" alt="" className="coq-flotte pointer-events-none absolute -bottom-10 right-[-3rem] -z-10 h-[115%] max-h-[26rem] opacity-80 sm:right-6" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_50%,rgba(168,54,27,0.5),transparent_60%)]" aria-hidden="true" />
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-14 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <p className="flex items-center gap-3 font-brand text-xs font-bold uppercase tracking-[0.24em] text-gold">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-terra opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-terra" />
+              </span>
+              {minute ? 'Nouvel épisode' : 'Nouvelle rubrique'}
+            </p>
+            <h2 className="mt-3 font-brand text-3xl font-black uppercase leading-[0.95] text-white sm:text-5xl">
+              La minute <span className="font-serif font-bold normal-case italic text-gold">du chant du coq</span>
+            </h2>
+            <p className="mt-4 max-w-md font-serif text-lg italic text-paper/80">{minute ? minute.entry.definition || MINUTE.devise : MINUTE.devise}</p>
+            <a href={minute ? `${MINUTE.base}/${minute.slug}` : MINUTE.base} className="mt-6 inline-block bg-terra px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-terra-deep">
+              {minute ? `Regarder : ${minute.entry.titre} →` : 'Découvrir la rubrique →'}
+            </a>
+          </div>
+          {minute && (minute.entry.affiche || integrationVideo(minute.entry.video)?.vignette) && (
+            <a href={`${MINUTE.base}/${minute.slug}`} className="group relative block aspect-video overflow-hidden shadow-2xl">
+              <img src={minute.entry.affiche || integrationVideo(minute.entry.video)!.vignette!} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+              <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7Z" />
+                </svg>
+              </span>
+            </a>
+          )}
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 import { reader, getActualites, getAgenda, getEditos, sansEmail } from '@/lib/content';
 import { getPodcasts } from '@/lib/podcasts';
+import { getMinutes, MINUTE } from '@/lib/minutes';
 import { SITE } from '@/lib/site';
 
 /**
@@ -26,6 +27,7 @@ export async function composerLettre(maintenant = new Date()) {
     getPodcasts(),
     reader.collections.flash.all(),
   ]);
+  const minutes = await getMinutes();
   const t = maintenant.getTime();
   const ilYa = (jours: number) => new Date(t - jours * 864e5).toISOString().slice(0, 10);
   const aujourdhui = new Date(t).toISOString().slice(0, 10);
@@ -77,6 +79,7 @@ export async function composerLettre(maintenant = new Date()) {
     postesOuverts,
     rendezVous,
     podcast: podcast && { titre: podcast.titre, description: podcast.description, url: `${SITE}/podcasts` },
+    minute: minutes[0] && (minutes[0].entry.date ?? '') >= ilYa(14) ? { titre: minutes[0].entry.titre, philosophe: minutes[0].entry.philosophe, definition: minutes[0].entry.definition, url: `${SITE}${MINUTE.base}/${minutes[0].slug}` } : null,
     flash: flash && { titre: flash.entry.titre, url: `${SITE}/flash` },
   };
 }
@@ -106,6 +109,10 @@ export function lettreHTML(l: Lettre, { desabonnement = '{{ unsubscribe }}', web
   <p style="margin:18px 0 0;font:16px/1.6 Georgia,serif;color:#3a3530">${esc(e.accroche)}</p>
   <p style="margin:22px 0 0">${bouton(e.url, 'Lire l’édito')} &nbsp; ${bouton(e.pdf, 'Version PDF', ENCRE)}</p>
 </td></tr>`);
+  }
+  if (l.minute) {
+    blocs.push(titreSection('La minute du chant du coq'));
+    blocs.push(ligne(`▶ ${l.minute.titre}`, l.minute.url, `Expliqué par ${l.minute.philosophe} · 5 minutes en vidéo`, l.minute.definition));
   }
   if (l.actualites.length) {
     blocs.push(titreSection('Cette semaine sur le portail'));

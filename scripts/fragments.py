@@ -206,3 +206,30 @@ h = open(f).read()
 h = h.replace('>Lettre d’information</h2>', '>La lettre du lundi</h2>')
 h = _re.sub(r'Une lettre unique, avec préférences par entité[^<]*<', 'Chaque lundi, l’édito de la semaine, les nouvelles publications, les appels en cours et l’agenda du Groupe JOGOO et de ses projets. <a href="/lettre" target="_blank" class="font-semibold text-terra-deep underline underline-offset-2 hover:text-terra">Voir la prochaine lettre</a><', h)
 open(f, 'w').write(h)
+# Accueil : « Philosophie africaine » retravaillé (couleurs, police, trait dessiné) et coq animé (9 nov. 2026, 19 h 35)
+f = OUT + '/home-01.html'
+h = open(f).read()
+h = h.replace(
+    '<h1 class="display-title mt-2 text-[2.5rem] leading-[0.92] text-ink sm:text-5xl md:text-6xl lg:text-7xl">Philosophie<br/>africaine</h1>',
+    '<h1 class="titre-accueil mt-2"><span class="titre-philo">Philosophie</span> <span class="titre-afr">africaine<svg class="titre-trait" viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true"><path d="M4 16 C 70 6, 170 3, 296 11"/><path d="M40 21 C 120 14, 210 13, 280 17"/></svg></span></h1>',
+)
+h = h.replace('<div class="relative mx-auto w-full max-w-md shadow-[0_24px_50px_-20px_rgba(60,35,5,0.45)]">', '<div class="coq-flotte relative mx-auto w-full max-w-md shadow-[0_24px_50px_-20px_rgba(60,35,5,0.45)]">')
+open(f, 'w').write(h)
+# Logos des projets harmonisés (recadrés, surface visuelle égalisée — voir lib/liste-sous-sites.ts)
+_LOGOS = {
+    'logo-revue-jogoo.png': ('revue', 0.98), 'logo-editions-jogoo.png': ('editions', 1.03), 'logo-fonds-eboussi.jpg': ('fonds', 0.86),
+    'picto-jogoo-ai.png': ('ai', 0.78), 'logo-sankofa-full.png': ('sankofa', 0.9), 'logo-philo-africaine-magazine.png': ('magazine', 0.7),
+}
+for nom in ('home-04-colonnes.html', 'home-04.html'):
+    f = OUT + '/' + nom
+    h = open(f).read()
+    def _logo(m):
+        tag = m.group(0)
+        src = _re.search(r'src="/medias/site/jogoo/([^"]+)"', tag)
+        if not src or src.group(1) not in _LOGOS: return tag
+        cle, e = _LOGOS[src.group(1)]
+        tag = _re.sub(r'\s(width|height)="\d+"', '', tag)
+        tag = tag.replace(f'src="/medias/site/jogoo/{src.group(1)}"', f'src="/medias/site/jogoo/projets/{cle}.png" style="height:{round(3.4 * e, 2)}rem"')
+        return tag.replace('h-auto max-h-16 w-auto max-w-20', 'w-auto max-w-20')
+    h = _re.sub(r'<img alt="Logo[^>]*>', _logo, h)
+    open(f, 'w').write(h)
