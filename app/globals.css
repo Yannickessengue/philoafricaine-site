@@ -112,3 +112,15 @@ body { top: 0 !important; }
 input[type='search']::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
 /* Adresses et mots très longs : retour à la ligne plutôt que débordement sur mobile */
 .prose-jogoo, .edito-doc, main p, main li { overflow-wrap: anywhere; }
+
+/* ——— Textes justifiés sur tout le site (demande du 9 nov. 2026) ———
+   Paragraphes, listes et citations sont justifiés avec césure ; on garde l'alignement voulu
+   pour les textes centrés ou à droite, les sur-titres, les boutons et la navigation. */
+@layer components {
+  :is(main, footer) :is(p, li, dd, blockquote, figcaption):not(.kicker, .eyebrow, [class*='text-center'], [class*='text-right'], [class*='uppercase']):not(:is([class*='text-center'], [class*='text-right'], nav, button, label, summary, [role='dialog']) *) {
+    text-align: justify;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+  }
+}

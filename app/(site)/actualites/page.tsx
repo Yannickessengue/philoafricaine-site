@@ -1,6 +1,7 @@
 import { getActualites, getAgenda, reader, dateFr, sansEmail } from '@/lib/content';
 import { EnTete, TitreSection, Lieu } from '@/components/ui';
 import { debut, rendre, type Classes } from '@/components/Prose';
+import { Lateral } from '@/components/Lateral';
 
 export const metadata = { title: 'Actualités', description: 'Ce qui vient de paraître, ce qui se prépare, ce qui se discute.' };
 export const revalidate = 3600;
@@ -60,12 +61,14 @@ export default async function Actualites() {
           </section>
         )}
 
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_19.5rem]">
+        <div className="min-w-0 space-y-16">
         <section>
           <TitreSection kicker="Groupe JOGOO" titre="Actualités" />
           {une && (
             <div className="mt-8">
-              <article className="grid overflow-hidden border border-ink/12 bg-white lg:grid-cols-2">
-                <a href={`/actualites/${une.slug}`} className="cadre aspect-[4/3] lg:aspect-auto lg:min-h-[26rem]">
+              <article className="overflow-hidden border border-ink/12 bg-white">
+                <a href={`/actualites/${une.slug}`} className="cadre block aspect-[16/9]">
                   {une.entry.image && <img alt={une.entry.imageDescription ?? ''} src={une.entry.image} className="grayscale transition duration-500 hover:grayscale-0" />}
                 </a>
                 <div className="flex flex-col justify-center p-7 sm:p-10">
@@ -90,7 +93,7 @@ export default async function Actualites() {
             </div>
           )}
           {autres.length > 0 && (
-            <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid gap-6 sm:grid-cols-2">
               {autres.map((a, i) => {
                 const d = debut(textes[i + 1], 420);
                 return (
@@ -179,6 +182,9 @@ export default async function Actualites() {
             )}
           </div>
         </section>
+        </div>
+        <Lateral sansAgenda />
+        </div>
       </div>
     </>
   );

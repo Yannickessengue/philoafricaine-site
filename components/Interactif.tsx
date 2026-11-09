@@ -101,16 +101,16 @@ export function Interactif() {
     // Lettre d'information (formulaire d'origine de l'accueil)
     const envoi = async (e: SubmitEvent) => {
       const form = e.target as HTMLFormElement;
-      const champEmail = form.querySelector<HTMLInputElement>('#nl-email');
+      const champEmail = form.querySelector<HTMLInputElement>('#nl-email, [data-newsletter] input[type="email"]') ?? (form.matches('[data-newsletter]') ? form.querySelector<HTMLInputElement>('input[type="email"]') : null);
       if (!champEmail) return;
       e.preventDefault();
       const bouton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      const note = form.querySelector<HTMLElement>('p');
-      const piege = form.querySelector<HTMLInputElement>('input.hidden');
+      const note = form.querySelector<HTMLElement>('[data-note]') ?? form.querySelector<HTMLElement>('p');
+      const piege = form.querySelector<HTMLInputElement>('input.hidden, input[data-piege]');
       const email = champEmail.value.trim();
       if (bouton) bouton.disabled = true;
       const dire = (t: string, ok = true) => {
-        if (note) { note.textContent = t; note.className = `mt-3 text-sm ${ok ? 'text-terra-deep font-semibold' : 'text-terra'}`; }
+        if (note) { note.textContent = t; note.className = `${note.dataset.note !== undefined ? 'mt-2 text-xs' : 'mt-3 text-sm'} ${ok ? 'text-terra-deep font-semibold' : 'text-terra'}`; }
       };
       try {
         const r = await fetch('/api/newsletter', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, site: piege?.value }) });

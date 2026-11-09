@@ -4,6 +4,7 @@ import { corpsBrut } from '@/lib/raw';
 import { Prose } from '@/components/Prose';
 import { Partage } from '@/components/Partage';
 import { typo } from '@/lib/typo';
+import { Lateral } from '@/components/Lateral';
 
 export async function generateStaticParams() {
   return (await getActualites()).map((a) => ({ slug: a.slug }));
@@ -24,7 +25,7 @@ export default async function Actualite({ params }: { params: Promise<{ slug: st
   const autres = toutes.filter((x) => x.slug !== slug).slice(0, 3);
   const partage = { url: `https://www.philoafricaine.org/actualites/${slug}`, titre: a.titre, accroche: a.resume ?? undefined, commentaires: false };
   return (
-    <article className="edito-doc mx-auto max-w-5xl px-5 py-14 lg:py-16">
+    <article className="edito-doc mx-auto max-w-6xl px-5 py-14 lg:py-16">
       <header className="mx-auto max-w-3xl text-center">
         <p className="kicker">
           <a href="/actualites" className="hover:text-terra">Actualités</a>
@@ -50,7 +51,9 @@ export default async function Actualite({ params }: { params: Promise<{ slug: st
           )}
         </figure>
       )}
-      <div className="mx-auto mt-12 max-w-3xl">
+      <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_19.5rem]">
+      <div className="min-w-0">
+      <div className="mx-auto max-w-3xl">
         <Prose node={node} className="prose-jogoo--flash !max-w-none" />
       </div>
       <Partage {...partage} className="mt-12 justify-center" />
@@ -72,6 +75,11 @@ export default async function Actualite({ params }: { params: Promise<{ slug: st
           ← Toutes les actualités
         </a>
       </p>
+      </div>
+      <div className="print:hidden">
+        <Lateral />
+      </div>
+      </div>
     </article>
   );
 }

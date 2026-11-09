@@ -26,7 +26,19 @@ export async function GET() {
   auteurs.forEach((a) => items.push({ t: a.entry.nom, u: `/publications/auteurs/${a.slug}`, k: 'Auteur', x: corps('auteurs', a.slug, 300) }));
   revue.forEach((r) => items.push({ t: r.entry.titre, u: `/sous-sites/revue-jogoo/${r.slug}`, k: 'Revue JOGOO', x: `${r.entry.auteurs ?? ''} ${r.entry.motsCles ?? ''} ${r.entry.resume ?? ''}` }));
   flashs.forEach((f) => items.push({ t: f.entry.titre, u: `/flash#${f.slug}`, k: 'Flash', x: `${f.entry.auteur ?? ''} ${f.entry.lieu ?? ''} ${corps('flash', f.slug, 800)}` }));
+  const NOUVEAUX: [string, string, string][] = [
+    ['/sous-sites/philo-africaine-magazine', 'Philo Africaine Magazine', 'Du philosophique au philosophant 2.0. Numéro inaugural : Mythologies africaines et pensée philosophique. Rubriques, contribuer, acheter et s’abonner.'],
+    ['/sous-sites/philo-africaine-magazine/dossier', 'Le dossier MAPP — Philo Africaine Magazine', 'Journées MAPP des 29 et 30 avril 2025, huit notices de communication : Savadogo, Amenguele Nyimi, Madounyem, Sidi Mohamed, Nzenti Kopa, Chafai, Sriti, El Fahmy, Tchinemang, Ibou Dramé Sylla. Mythe, raison, Towa.'],
+    ['/sous-sites/philo-africaine-magazine/acheter', 'Acheter et s’abonner — Philo Africaine Magazine', 'Tarifs, commande, abonnement : 3 000 FCFA, 5 €, numérique 2 €.'],
+    ['/sous-sites/editions-jogoo', 'Éditions JOGOO', 'Penser l’Afrique, publier le monde. Maison d’édition en préfiguration du Groupe JOGOO.'],
+    ['/sous-sites/editions-jogoo/catalogue', 'Catalogue — Éditions JOGOO', 'Dix collections : Sankofa, Muntu, Savoirs endogènes, Transversalités, T(r)opiques, Écologie des savoirs, Herméneutique, éthique et bioéthique, Transtopicités, Revues. Projets de livres.'],
+    ['/sous-sites/editions-jogoo/publier', 'Publier chez nous — Éditions JOGOO', 'Présenter un projet de livre, manuscrit, collectif, traduction.'],
+    ['/sous-sites/sankofa-communications', 'Sankofa Communications', 'L’Afrique du futur. Agence de communication pour la recherche : événementiel scientifique, création visuelle, traduction, édition.'],
+    ['/sous-sites/sankofa-communications/devis', 'Demander un devis — Sankofa Communications', 'Devis colloque, affiche, programme, traduction, interprétariat.'],
+  ];
+  NOUVEAUX.forEach(([u, t, x]) => items.push({ t, u, k: 'Sous-site', x }));
   for (const adr of adressesStatiques()) {
+    if (/^\/sous-sites\/(philo-africaine-magazine|editions-jogoo|sankofa-communications)/.test(adr)) continue;
     const s = pageStatique(adr)!;
     items.push({ t: s.titre, u: adr, k: adr.startsWith('/sous-sites') ? 'Sous-site' : 'Page', x: `${s.description} ${texte(s.html).slice(0, 2500)}` });
   }

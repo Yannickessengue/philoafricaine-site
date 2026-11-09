@@ -89,3 +89,7 @@ j=h.find('<section class="mt-16 bg-terra-deep text-paper">'); open(OUT+'/revue-p
 a=h.find('<section class="mx-auto max-w-6xl px-6 py-14"><div class="grid gap-5 lg:grid-cols-3">')
 b=h.find('</section>',a)+len('</section>')
 open(OUT+'/revue-accueil-avant.html','w').write(h[:a]); open(OUT+'/revue-accueil-apres.html','w').write(h[b:])
+# Accueil : le coq regarde vers la gauche (demande du 9 nov. 2026), image chargée tout de suite
+h=open(OUT+'/home-01.html').read()
+h=h.replace('class="block h-auto w-full -scale-x-100"','class="block h-auto w-full"').replace('loading="lazy"','loading="eager"')
+open(OUT+'/home-01.html','w').write(h)
