@@ -203,7 +203,7 @@ export default async function Accueil() {
                 Toute la médiathèque →
               </a>
             </div>
-            <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.6fr_1fr]">
+            <div className="mt-8 grid items-stretch gap-8 lg:grid-cols-2">
               <MosaiqueVideos videos={videosTriees.map((v) => ({ titre: v.entry.titre, url: v.entry.url ?? '', rubrique: v.entry.rubrique }))} />
               <LecteurPodcast
                 episodes={podcasts.map((p) => ({

@@ -25,5 +25,5 @@ export default async function RevueAccueil() {
       return `<div class="border border-ink/12 bg-white p-5 sm:p-6"><h2 class="inline-block border-b-[3px] border-terra pb-1 font-brand text-base font-bold text-ink">${titre}</h2><ul class="mt-4 divide-y divide-ink/10">${items.map(li).join('')}</ul></div>`;
     })
     .join('')}</div><p class="mt-6 text-center"><a class="font-brand text-xs font-bold uppercase tracking-wide text-terra-deep hover:text-terra" href="/sous-sites/revue-jogoo/dossier-fondateur">Voir le sommaire complet du numéro →</a></p></section>`;
-  return <Html html={fragment('revue-accueil-avant') + sommaire + fragment('revue-accueil-apres')} />;
+  return <Html html={'<h1 class="sr-only">Revue JOGOO, revue de philosophie africaine &amp; de culture</h1>' + fragment('revue-accueil-avant') + sommaire + fragment('revue-accueil-apres')} />;
 }

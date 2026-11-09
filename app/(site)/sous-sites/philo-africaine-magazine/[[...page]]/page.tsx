@@ -141,7 +141,7 @@ function EnLigne({ n }: { n: Numero }) {
     <section className="bg-[#1a1714] text-[#f7f1e6]">
       <div className="mx-auto grid max-w-6xl items-center gap-8 px-6 py-12 sm:grid-cols-[auto_1fr]">
         <a href={`${B}/lire/${n.slug}`} className="group mx-auto block w-36 shrink-0 sm:mx-0">
-          {n.couverture && <img alt="" src={n.couverture} className="w-full shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)] transition-transform duration-500 group-hover:-rotate-2" />}
+          {n.couverture && <img alt={`Couverture du n° ${n.slug} : ${n.titre}`} src={n.couverture} className="w-full shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)] transition-transform duration-500 group-hover:-rotate-2" />}
         </a>
         <div>
           <p className="kicker text-[#e5a220]">Le magazine en ligne</p>
@@ -205,6 +205,7 @@ function Lecture({ n }: { n: Numero }) {
   return (
     <>
       <section className="bg-[#1a1714]">
+        <h1 className="sr-only">{`Philo Africaine Magazine n° ${n.slug} : ${n.titre}`}</h1>
         <div className="mx-auto max-w-6xl px-0 sm:px-6 sm:py-6">
           <Visionneuse
             url={url}

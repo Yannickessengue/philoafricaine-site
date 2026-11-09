@@ -21,52 +21,68 @@ export function MosaiqueVideos({ videos }: { videos: VideoAccueil[] }) {
   const v = videos[une];
   const id = idYoutube(v.url);
   const src = integration(v.url);
-  const autres = videos.map((x, i) => [x, i] as const).filter(([, i]) => i !== une).slice(0, 5);
   const choisir = (i: number) => {
     setUne(i);
     setLecture(true);
   };
+  const Repli = () => (
+    <span className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,#7a2a12,#1a1a1a_70%)]" aria-hidden="true">
+      <img src="/medias/site/jogoo/logo-jogoo-blanc.png" alt="" className="w-1/3 max-w-[9rem] opacity-25" />
+    </span>
+  );
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-      <div className="col-span-2 sm:row-span-2">
-        <div className="relative aspect-video h-full w-full overflow-hidden bg-ink shadow-[0_24px_50px_-28px_rgba(0,0,0,0.7)] sm:aspect-auto">
-          {lecture && src ? (
-            <iframe
-              key={src}
-              className="absolute inset-0 h-full w-full"
-              src={src}
-              title={v.titre}
-              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              allowFullScreen
-            />
-          ) : (
-            <button type="button" onClick={() => (src ? setLecture(true) : window.open(v.url, '_blank', 'noopener'))} className="group absolute inset-0 block text-left" aria-label={`Lire la vidéo : ${v.titre}`}>
-              {id && <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100" />}
-              <span className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" aria-hidden="true" />
-              <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white shadow-xl transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z" /></svg>
-              </span>
-              <span className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                {v.rubrique && <span className="font-brand text-[0.6rem] font-bold uppercase tracking-[0.16em] text-gold">{v.rubrique}</span>}
-                <span className="mt-1 block font-brand text-base font-bold leading-snug text-white sm:text-xl">{v.titre}</span>
-              </span>
-            </button>
-          )}
-        </div>
-      </div>
-      {autres.map(([x, i], k) => {
-        const vid = idYoutube(x.url);
-        return (
-          <button key={x.url} type="button" onClick={() => choisir(i)} className={`group relative block aspect-video overflow-hidden bg-ink text-left ${k === 4 ? 'max-sm:hidden' : ''}`} aria-label={`Mettre à l’affiche : ${x.titre}`} title={x.titre}>
-            {vid && <img src={`https://i.ytimg.com/vi/${vid}/mqdefault.jpg`} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-75 transition duration-500 group-hover:scale-105 group-hover:opacity-100" />}
-            <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" aria-hidden="true" />
-            <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm transition-colors group-hover:bg-terra" aria-hidden="true">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z" /></svg>
+    <div className="flex h-full flex-col gap-3">
+      <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-ink shadow-[0_24px_50px_-28px_rgba(0,0,0,0.7)]">
+        {lecture && src ? (
+          <iframe
+            key={src}
+            className="absolute inset-0 h-full w-full"
+            src={src}
+            title={v.titre}
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowFullScreen
+          />
+        ) : (
+          <button type="button" onClick={() => (src ? setLecture(true) : window.open(v.url, '_blank', 'noopener'))} className="group absolute inset-0 block text-left" aria-label={`Lire la vidéo : ${v.titre}`}>
+            <Repli />
+            {id && <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" onError={(e) => (e.currentTarget.style.display = 'none')} className="absolute inset-0 h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100" />}
+            <span className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" aria-hidden="true" />
+            <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white shadow-xl transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z" /></svg>
             </span>
-            <span className="absolute inset-x-0 bottom-0 p-2.5 font-brand text-[0.68rem] font-bold leading-snug text-white sm:text-[0.72rem]"><span className="line-clamp-2">{x.titre}</span></span>
+            <span className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+              {v.rubrique && <span className="font-brand text-[0.6rem] font-bold uppercase tracking-[0.16em] text-gold">{v.rubrique}</span>}
+              <span className="mt-1 block font-brand text-base font-bold leading-snug text-white sm:text-xl">{v.titre}</span>
+            </span>
           </button>
-        );
-      })}
+        )}
+      </div>
+      <div className="grid flex-1 grid-cols-2 gap-3 sm:grid-cols-3 lg:auto-rows-fr">
+        {videos.slice(0, 6).map((x, i) => {
+          const vid = idYoutube(x.url);
+          const actif = i === une;
+          return (
+            <button
+              key={x.url}
+              type="button"
+              onClick={() => choisir(i)}
+              aria-current={actif ? 'true' : undefined}
+              className={`group relative block aspect-video min-h-[4.5rem] overflow-hidden bg-ink text-left lg:aspect-auto ${actif ? 'ring-2 ring-terra ring-offset-2 ring-offset-cream' : ''}`}
+              aria-label={`Lire : ${x.titre}`}
+              title={x.titre}
+            >
+              <Repli />
+              {vid && <img src={`https://i.ytimg.com/vi/${vid}/mqdefault.jpg`} alt="" loading="lazy" onError={(e) => (e.currentTarget.style.display = 'none')} className="absolute inset-0 h-full w-full object-cover opacity-75 transition duration-500 group-hover:scale-105 group-hover:opacity-100" />}
+              <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" aria-hidden="true" />
+              <span className={`absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full text-white backdrop-blur-sm transition-colors ${actif ? 'bg-terra' : 'bg-black/45 group-hover:bg-terra'}`} aria-hidden="true">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z" /></svg>
+              </span>
+              {actif && <span className="absolute left-2 top-2 bg-terra px-1.5 py-0.5 font-brand text-[0.55rem] font-bold uppercase tracking-[0.12em] text-white">À l’affiche</span>}
+              <span className="absolute inset-x-0 bottom-0 p-2.5 font-brand text-[0.68rem] font-bold leading-snug text-white sm:text-[0.72rem]"><span className="line-clamp-2">{x.titre}</span></span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -128,7 +144,7 @@ export function LecteurPodcast({ episodes }: { episodes: Episode[] }) {
       <audio
         ref={audio}
         src={ep.audio}
-        preload="metadata"
+        preload="none"
         onPlay={() => setJoue(true)}
         onPause={() => setJoue(false)}
         onTimeUpdate={(e) => setT(e.currentTarget.currentTime)}
