@@ -40,11 +40,11 @@ export async function GET() {
     ['/sous-sites/sankofa-communications', 'Sankofa Communications', 'L’Afrique du futur. Agence de communication pour la recherche : événementiel scientifique, création visuelle, traduction, édition.'],
     ['/sous-sites/sankofa-communications/devis', 'Demander un devis — Sankofa Communications', 'Devis colloque, affiche, programme, traduction, interprétariat.'],
   ];
-  NOUVEAUX.forEach(([u, t, x]) => items.push({ t, u, k: 'Sous-site', x }));
+  NOUVEAUX.forEach(([u, t, x]) => items.push({ t, u, k: 'Projet', x }));
   for (const adr of adressesStatiques()) {
     if (/^\/sous-sites\/(philo-africaine-magazine|editions-jogoo|sankofa-communications)/.test(adr)) continue;
     const s = pageStatique(adr)!;
-    items.push({ t: s.titre, u: adr, k: adr.startsWith('/sous-sites') ? 'Sous-site' : 'Page', x: `${s.description} ${texte(s.html).slice(0, 2500)}` });
+    items.push({ t: s.titre, u: adr, k: adr.startsWith('/sous-sites') ? 'Projet' : 'Page', x: `${s.description} ${texte(s.html).slice(0, 2500)}` });
   }
   // Extrait court pour l'affichage, texte complet pour la recherche
   return NextResponse.json(items.map((i) => ({ ...i, x: sansEmail(i.x).replace(/\s+/g, ' ').trim().slice(0, 3000) })));

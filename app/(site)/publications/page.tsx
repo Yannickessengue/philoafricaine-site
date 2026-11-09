@@ -4,14 +4,14 @@ import { Html } from '@/components/Html';
 import { CarteNote, FiltreNotes } from '@/components/FiltreNotes';
 import { fragment } from '@/lib/gabarits';
 
-export const metadata = { title: 'Publications', description: 'Notes de lecture, recensions signalées et accès aux catalogues des sous-sites.' };
+export const metadata = { title: 'Publications', description: 'Notes de lecture, recensions signalées et accès aux catalogues de nos projets.' };
 
 export default async function Publications() {
   const notes = await toutesLesNotes();
   const selection = notes.filter((n) => n.une);
   return (
     <>
-      <EnTete kicker="Portail · 5" titre="Publications" intro="Notes de lecture, recensions signalées et accès aux catalogues des sous-sites." icone="book" />
+      <EnTete kicker="Portail · 5" titre="Publications" intro="Notes de lecture, recensions signalées et accès aux catalogues de nos projets." icone="book" />
       <div className="mx-auto max-w-5xl px-5 py-16">
         {selection.length > 0 && (
           <>

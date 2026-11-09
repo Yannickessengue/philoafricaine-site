@@ -1,3 +1,4 @@
 {
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)donnees'"
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)donnees'",
+  "crons": [{ "path": "/api/newsletter/hebdo", "schedule": "0 7 * * 1" }]
 }

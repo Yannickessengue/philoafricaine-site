@@ -9,9 +9,9 @@ export function BarreSousSites() {
   const chemin = usePathname() ?? '';
   if (!chemin.startsWith('/sous-sites/')) return null;
   return (
-    <nav aria-label="Les sous-sites du Groupe JOGOO" className="bg-[#f4efe4]">
+    <nav aria-label="Les projets du Groupe JOGOO" className="bg-[#f4efe4]">
       <div className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-5 py-2 lg:justify-between [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <span className="hidden shrink-0 pr-1 font-brand text-[0.6rem] font-bold uppercase tracking-[0.18em] text-ink-soft xl:inline">Sous-sites</span>
+        <span className="hidden shrink-0 pr-1 font-brand text-[0.6rem] font-bold uppercase tracking-[0.18em] text-ink-soft xl:inline">Nos projets</span>
         {SOUS_SITES.map(([href, nom, logo]) => {
           const actif = chemin === href || chemin.startsWith(href + '/');
           return (

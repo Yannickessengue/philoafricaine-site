@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const NAV: [string, string][] = [
   ['/en', 'Home'],
   ['/en/about', 'About'],
-  ['/en#sub-sites', 'Sub-sites'],
+  ['/en#sub-sites', 'Our projects'],
   ['/en/contribute', 'Contribute'],
   ['/podcasts', 'Podcasts'],
   ['/sous-sites/jogoo-ai', 'JOGOO AI'],

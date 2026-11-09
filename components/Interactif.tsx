@@ -406,7 +406,7 @@ export function Interactif() {
               </a>
             );
           })}
-          <p className="kicker mt-8">Les sous-sites</p>
+          <p className="kicker mt-8">Nos projets</p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
             {[
               ['/sous-sites/revue-jogoo', 'Revue JOGOO'],

@@ -172,10 +172,10 @@ export default async function Accueil() {
         </div>
       </section>
 
-      {/* Les sous-sites : logos et noms seulement */}
+      {/* Nos projets : logos et noms seulement */}
       <section className="mx-auto max-w-6xl px-5 py-16">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 className="display-title text-3xl text-terra sm:text-4xl">Les sous-sites</h2>
+          <h2 className="display-title text-3xl text-terra sm:text-4xl">Nos projets</h2>
           <a className="text-sm font-semibold uppercase tracking-wide text-terra-deep hover:text-terra" href="/plan-du-site">
             Plan du site →
           </a>

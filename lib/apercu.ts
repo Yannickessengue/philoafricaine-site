@@ -15,3 +15,16 @@ export function partage(titre: string, description?: string | null, kicker?: str
     twitter: { card: 'summary_large_image' as const, title: titre, description: desc, images: [img.url] },
   };
 }
+
+/** Montage d’édito (comme sur l’ancien site) : image en fond, titre, sous-titre, auteur avec portrait, date. */
+export function apercuEdito(e: { titre: string; soustitre?: string | null; surtitre?: string | null; image?: string | null; portrait?: string | null; date?: string | null }, signature: string) {
+  const [nom, ...reste] = signature.split(/\s+·\s+|,\s+/);
+  const q = new URLSearchParams({ v: 'edito', t: e.titre, k: 'L’édito de la semaine' });
+  if (e.soustitre) q.set('st', e.soustitre);
+  if (e.image?.startsWith('/')) q.set('i', e.image);
+  if (e.portrait?.startsWith('/')) q.set('p', e.portrait);
+  if (nom) q.set('a', nom.trim());
+  if (reste.length) q.set('f', reste.join(', ').trim());
+  if (e.date) q.set('d', new Date(e.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }));
+  return { url: `/og?${q.toString()}`, width: 1200, height: 630, alt: e.titre };
+}

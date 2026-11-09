@@ -176,3 +176,33 @@ _ancre = 'peut être adressée à <a href="mailto:philoafricaine@gmail.com">phil
 if _ancre in h and 'Contenus extérieurs' not in h:
     h = h.replace(_ancre, _ancre + '<p class="mt-3">Le site ne dépose aucun cookie publicitaire ni de mesure d’audience. Les cookies essentiels mémorisent seulement la langue, l’introduction déjà vue et votre choix de cookies. <strong>Contenus extérieurs</strong> : les vidéos (YouTube, WebTV de l’université de Rouen) et la page Facebook ne se chargent qu’après votre accord, car ces services peuvent déposer leurs propres cookies. Votre choix est conservé six mois ; vous pouvez le modifier à tout moment : <button type="button" data-action="cookies" class="font-semibold text-terra-deep underline underline-offset-2 hover:text-terra">régler les cookies</button>.</p>', 1)
     open(f, 'w').write(h)
+# « Sous-sites » devient « Nos projets » dans tous les textes visibles (demande du 9 nov. 2026, 18 h 59).
+# Les adresses (/sous-sites/...) et les ancres restent inchangées.
+_PROJETS = [
+    ('Les autres sous-sites', 'Nos autres projets'),
+    ('aria-label="Les sous-sites"', 'aria-label="Nos projets"'),
+    ('>Les sous-sites<', '>Nos projets<'),
+    ('>Sous-sites<', '>Nos projets<'),
+    ('Sous-sites autonomes', 'Projets autonomes'),
+    ('de ses sous-sites', 'de ses projets'),
+    ('Chaque sous-site', 'Chaque projet'),
+    ('d’où son sous-site propre', 'd’où son espace propre'),
+    ('Découvrir le sous-site', 'Découvrir le projet'),
+    ('>Rubriques du sous-site<', '>Rubriques du projet<'),
+    ('Les contenus du sous-site', 'Les contenus du projet'),
+    ('>Sous-site : ', '>Projet : '),
+    ('Sous-site de la revue', 'Projet de la revue'),
+]
+import re as _re
+for f in _g.glob(OUT + '/*.html'):
+    h = open(f).read(); h0 = h
+    for a, b in _PROJETS: h = h.replace(a, b)
+    h = _re.sub(r'>Sous-site (B\.\d)', r'>Projet \1', h)
+    h = _re.sub(r'<span>Sous-site (B\.\d)', r'<span>Projet \1', h)
+    if h != h0: open(f, 'w').write(h)
+# Lettre d’information : devenue hebdomadaire
+f = OUT + '/home-09.html'
+h = open(f).read()
+h = h.replace('>Lettre d’information</h2>', '>La lettre du lundi</h2>')
+h = _re.sub(r'Une lettre unique, avec préférences par entité[^<]*<', 'Chaque lundi, l’édito de la semaine, les nouvelles publications, les appels en cours et l’agenda du Groupe JOGOO et de ses projets. <a href="/lettre" target="_blank" class="font-semibold text-terra-deep underline underline-offset-2 hover:text-terra">Voir la prochaine lettre</a><', h)
+open(f, 'w').write(h)

@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     '/magazine/pdf/[file]': ['./magazine-pdf/**/*'],
     '/podcasts/rss.xml': ['./public/medias/podcasts/**/*'],
     '/og': ['./lib/og/**/*'],
+    '/edito/[slug]/pdf': ['./lib/pdf/**/*'],
   },
   async redirects() {
     return [

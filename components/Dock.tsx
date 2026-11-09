@@ -91,7 +91,7 @@ export function Dock() {
       masque: surAI,
     },
     { id: 'facebook', libelle: 'Notre page Facebook', icone: <Ico d={I.fb} fill /> },
-    { id: 'lettre', libelle: 'Lettre d’information', icone: <Ico d={I.lettre} /> },
+    { id: 'lettre', libelle: 'La lettre du lundi', icone: <Ico d={I.lettre} /> },
     { id: 'partage', libelle: 'Partager cette page', icone: <Ico d={I.partage} />, action: partagerNatif },
   ];
 
@@ -155,7 +155,7 @@ export function Dock() {
             )}
             {ouvert === 'lettre' && (
               <form onSubmit={inscrire} className="p-5">
-                <p className="font-serif text-xl font-bold leading-snug text-ink">Recevez les éditos, les actualités et les appels du Groupe JOGOO.</p>
+                <p className="font-serif text-xl font-bold leading-snug text-ink">Chaque lundi : l’édito de la semaine, les nouvelles publications, les appels en cours et l’agenda.</p>
                 <div className="mt-5 flex">
                   <input
                     type="email"

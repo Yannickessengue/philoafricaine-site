@@ -59,7 +59,7 @@ export default async function Accueil() {
 
       <section id="sub-sites" className="scroll-mt-24 bg-cream/60">
         <div className="mx-auto max-w-6xl px-5 py-16">
-          <p className="kicker">Six autonomous sub-sites</p>
+          <p className="kicker">Six autonomous projects</p>
           <h2 className="display-title mt-2 text-3xl text-ink sm:text-4xl">What we do</h2>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SOUS_SITES.map(([href, nom, logo]) => (

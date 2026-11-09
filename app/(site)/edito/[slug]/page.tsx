@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { SITE } from '@/lib/site';
-import { partage } from '@/lib/apercu';
+import { apercuEdito } from '@/lib/apercu';
 import { reader, getEditos, dateFr, motsCles, sansEmail } from '@/lib/content';
 import { decouper, rendre, versNoeud, type Classes } from '@/components/Prose';
 import { Partage } from '@/components/Partage';
@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const e = await reader.collections.editos.read((await params).slug);
-  return e ? { title: e.titre, description: e.accroche?.replace(/\*/g, '').slice(0, 200), ...partage(e.titre, e.accroche, 'L’édito de la semaine', e.image) } : {};
+  return e ? { title: e.titre, description: e.accroche?.replace(/\*/g, '').slice(0, 200), ...partageEdito(e) } : {};
 }
 
 const JUSTIFIE = '[text-align:justify] [hyphens:auto]';
@@ -39,6 +39,15 @@ const colonnes: Classes = {
 const LETTRINE =
   'first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-display first-letter:text-[3.4rem] first-letter:font-black first-letter:leading-[0.75] first-letter:text-terra';
 
+function partageEdito(e: { titre: string; soustitre?: string | null; surtitre?: string | null; accroche?: string | null; image?: string | null; portrait?: string | null; date?: string | null; signature?: string | null }) {
+  const img = apercuEdito(e, sansEmail(e.signature) || 'Groupe JOGOO');
+  const desc = e.accroche?.replace(/\*/g, '').slice(0, 200);
+  return {
+    openGraph: { title: e.titre, description: desc, images: [img], siteName: 'Groupe JOGOO', locale: 'fr_FR', type: 'article' as const },
+    twitter: { card: 'summary_large_image' as const, title: e.titre, description: desc, images: [img.url] },
+  };
+}
+
 export default async function Edito({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [e, tous] = await Promise.all([reader.collections.editos.read(slug), getEditos()]);
@@ -50,7 +59,7 @@ export default async function Edito({ params }: { params: Promise<{ slug: string
   const precedent = tous[pos + 1];
   const suivant = pos > 0 ? tous[pos - 1] : undefined;
   const url = `${SITE}/edito/${slug}`;
-  const partage = { url, titre: e.titre, accroche: e.accroche ?? undefined, hashtags: motsCles(e.motsCles), pdf: e.pdf ?? null };
+  const partage = { url, titre: e.titre, accroche: e.accroche ?? undefined, hashtags: motsCles(e.motsCles), pdf: e.pdf || `/edito/${slug}/pdf` };
   const refs = (e.references ?? '').split(/\n\s*\n/).map((r) => r.trim()).filter(Boolean);
   const conclusion = e.conclusion ? decouper(versNoeud(e.conclusion)).chapeau : [];
 

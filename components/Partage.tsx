@@ -88,12 +88,14 @@ export function Partage({
       </button>
       {pdf !== undefined && (
         <a
-          className="inline-flex h-9 items-center bg-ink px-3 text-xs font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-terra"
+          className="inline-flex h-9 items-center gap-1.5 bg-ink px-3 text-xs font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-terra"
           href={pdf || '#'}
           onClick={pdf ? undefined : (e) => { e.preventDefault(); window.print(); }}
-          target={pdf ? '_blank' : undefined}
+          download={pdf && pdf.endsWith('/pdf') ? '' : undefined}
+          target={pdf && !pdf.endsWith('/pdf') ? '_blank' : undefined}
           rel="noreferrer"
         >
+          <Ic d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14" fill={false} />
           Version PDF
         </a>
       )}
