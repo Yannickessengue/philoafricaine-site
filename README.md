@@ -3,6 +3,7 @@
 Nouveau site du Groupe JOGOO, reconstruit à partir de la sauvegarde du 9 novembre 2026.
 
 - **Technique** : Next.js 15, Tailwind CSS, hébergement Vercel.
+- **Design** : celui du site d’origine, reproduit à l’identique (couleurs, typographies, mises en page, intro animée du coq). Les pages fixes d’origine sont dans `design/fragments/` (générées par `scripts/fragments.py` à partir des captures de `design/`).
 - **Espace rédaction** : Keystatic, à l’adresse `/keystatic` (ou `/admin`). Les contenus sont des fichiers dans `content/`, enregistrés directement dans ce dépôt GitHub.
 - **Médias** : `public/medias/` (images et PDF publics), `revue-pdf/` (PDF de la Revue JOGOO, servis seulement après l’embargo).
 
@@ -14,11 +15,14 @@ Nouveau site du Groupe JOGOO, reconstruit à partir de la sauvegarde du 9 novemb
 | Actualités | `/actualites` | `content/actualites` |
 | Publications (notes de lecture) | `/publications` | `content/publications`, `content/auteurs` |
 | Revue JOGOO | `/sous-sites/revue-jogoo` | `content/revue` |
-| Agenda | `/agenda` | `content/agenda` |
+| Agenda (dans la page Actualités) | `/actualites#agenda` | `content/agenda` |
 | Flash | `/flash` | `content/flash` |
 | Médiathèque | `/mediatheque` | `content/videos` |
 | Appels à postes / contributions | `/recherche/...` | `content/postes`, `content/appels` |
-| Pages fixes | leur adresse | `content/pages` |
+| Pages fixes d’origine | leur adresse | `design/fragments/page__*.html` |
+| Nouvelles pages | leur adresse | `content/pages` |
+| Commentaires des éditos (modération) | sous chaque édito | `donnees/commentaires` |
+| Bloc « En cours », coordonnées | Réglages du site | `content/reglages.json` |
 
 ## Embargo de la Revue JOGOO
 
@@ -30,6 +34,12 @@ Chaque article a une date de publication et une durée d’embargo (6 mois par d
 2. Pour que l’Espace rédaction enregistre en ligne, ouvrir `https://<adresse-vercel>/keystatic` et suivre l’assistant « Set up GitHub App » de Keystatic. Il crée une application GitHub et fournit quatre variables à ajouter dans Vercel (Settings → Environment Variables) :
    `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`, `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`, puis redéployer.
 3. Nom de domaine (o2switch) : dans Vercel, Settings → Domains → ajouter `philoafricaine.org` et `www.philoafricaine.org`, puis reporter chez o2switch les enregistrements DNS indiqués par Vercel.
+
+## Fonctions qui demandent un réglage dans Vercel
+
+- **Commentaires des éditos** : ajouter `GITHUB_TOKEN`, un jeton GitHub « fine-grained » limité à ce dépôt avec l’autorisation *Contents : Read and write*. Les commentaires sont enregistrés dans `donnees/commentaires/` (sans redéploiement, grâce à `vercel.json`) et se modèrent dans l’Espace rédaction, rubrique « Commentaires (modération) » (case « Masquer »).
+- **Lettre d’information** : ajouter `BREVO_API_KEY` et `BREVO_LIST_ID` (compte Brevo gratuit). Sans ces variables, le formulaire ouvre un e-mail d’inscription adressé à la rédaction.
+- **Candidatures aux postes** : le formulaire prépare un e-mail à philoafricaine@gmail.com, auquel le candidat joint ses pièces.
 
 ## Développement local
 

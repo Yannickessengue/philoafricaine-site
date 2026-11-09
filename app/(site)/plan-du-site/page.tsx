@@ -1,29 +1,18 @@
-import Link from 'next/link';
-import { getPages, getEditos, getActualites, getPublications, getRevue } from '@/lib/content';
-import { EnTete } from '@/components/ui';
-import { menu } from '@/components/Header';
+import { Html } from '@/components/Html';
+import { fragment } from '@/lib/gabarits';
 
 export const metadata = { title: 'Plan du site' };
 
-export default async function Plan() {
-  const [pages, editos, actus, pubs, revue] = await Promise.all([getPages(), getEditos(), getActualites(), getPublications(), getRevue()]);
-  const Bloc = ({ titre, liens }: { titre: string; liens: [string, string][] }) => (
-    <section>
-      <h2 className="label label-accent border-b border-ink pb-3">{titre}</h2>
-      <ul className="mt-4 space-y-2 text-[0.92rem]">{liens.map(([h, l]) => <li key={h}><Link href={h} className="font-serif text-ink-soft hover:text-terra">{l}</Link></li>)}</ul>
-    </section>
-  );
-  return (
-    <>
-      <EnTete titre="Plan du site" />
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-3">
-        <Bloc titre="Rubriques" liens={[...menu.map((m) => [m.href, m.label] as [string, string]), ['/agenda', 'Agenda'], ['/flash', 'Flash'], ['/recherche/appels-a-postes', 'Appels à postes'], ['/recherche/appels-a-contributions', 'Appels à contributions']]} />
-        <Bloc titre="Pages" liens={pages.map((p) => [p.entry.adresse ?? '/', p.entry.titre] as [string, string]).sort((a, b) => a[0].localeCompare(b[0]))} />
-        <Bloc titre="Éditos" liens={editos.map((e) => [`/edito/${e.slug}`, e.entry.titre])} />
-        <Bloc titre="Actualités" liens={actus.map((e) => [`/actualites/${e.slug}`, e.entry.titre])} />
-        <Bloc titre="Publications" liens={pubs.map((e) => [`/publications/${e.slug}`, e.entry.titre])} />
-        <Bloc titre="Revue JOGOO, n° 1" liens={revue.map((e) => [`/sous-sites/revue-jogoo/${e.slug}`, e.entry.titre])} />
-      </div>
-    </>
-  );
+export default function PlanDuSite() {
+  const lien = (href: string, t: string) => `<li><a class="text-ink underline underline-offset-2 hover:text-terra" href="${href}">${t}</a></li>`;
+  const html = fragment('plan-du-site')
+    .replace(
+      '<li><a class="text-ink underline underline-offset-2 hover:text-terra" href="/flash">Flash d’entrée</a></li>',
+      `${lien('/edito', 'L’édito de la semaine')}${lien('/flash', 'Flash d’entrée')}`,
+    )
+    .replace(
+      'href="/recherche/appels-a-postes">Appels à postes</a></li>',
+      'href="/recherche/appels-a-postes">Appels à postes</a></li><li><a class="text-ink-soft underline underline-offset-2 hover:text-terra" href="/recherche/appels-a-contributions">Appels à contributions</a></li>',
+    );
+  return <Html html={html} />;
 }

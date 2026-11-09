@@ -1,0 +1,157 @@
+{
+ "/colloque-eboussi": {
+  "f": "page__colloque-eboussi",
+  "title": "Fabien Eboussi Boulaga interculturel ? — Faire dialoguer les lieux, Groupe JOGOO",
+  "desc": "Colloque international · 12 – 14 octobre 2026 · En ligne (Zoom) · Université Toulouse Jean Jaurès. Organisé par le Fonds Eboussi Boulaga (Groupe JOGOO) en partenariat avec l’Université Toulouse Jean Jaurès."
+ },
+ "/contact": {
+  "f": "page__contact",
+  "title": "Contact, Groupe JOGOO",
+  "desc": "Contacter le Groupe JOGOO, Philosophie africaine. Débats & questions."
+ },
+ "/credits": {
+  "f": "page__credits",
+  "title": "Crédits, Groupe JOGOO",
+  "desc": "Crédits, charte graphique et typographie du portail du Groupe JOGOO."
+ },
+ "/le-groupe": {
+  "f": "page__le-groupe",
+  "title": "Le Groupe, Groupe JOGOO",
+  "desc": "Le Pro-jet, les objectifs, les moyens d’action, la gouvernance et la ligne éditoriale du Groupe JOGOO (ASPHICC-JOGOO)."
+ },
+ "/mentions-legales": {
+  "f": "page__mentions-legales",
+  "title": "Mentions légales, Groupe JOGOO",
+  "desc": "Mentions légales et conditions d’utilisation du portail du Groupe JOGOO."
+ },
+ "/philosophie-africaine": {
+  "f": "page__philosophie-africaine",
+  "title": "Philosophie africaine, Groupe JOGOO",
+  "desc": "Historique (Antiquité pharaonique, patristique médiévale, modernité musulmane et négro-musulmane, critique contemporaine), thématique, questions et figures de la philosophie africaine."
+ },
+ "/philosophie-africaine/figures": {
+  "f": "page__philosophie-africaine__figures",
+  "title": "Figures & biographies, Philosophie africaine, Groupe JOGOO",
+  "desc": "Notices biographiques : Amo, Blyden, Nkrumah, Kagame, Eboussi Boulaga, Hountondji, Wiredu, Ptahhotep, Crahay, Tempels, Mulago."
+ },
+ "/philosophie-africaine/historique": {
+  "f": "page__philosophie-africaine__historique",
+  "title": "Historique, Philosophie africaine, Groupe JOGOO",
+  "desc": "Les quatre grands moments de la philosophie africaine écrite selon Théophile Obenga, et les courants de la critique contemporaine."
+ },
+ "/philosophie-africaine/questions": {
+  "f": "page__philosophie-africaine__questions",
+  "title": "Questions, Philosophie africaine, Groupe JOGOO",
+  "desc": "Débats · Afrocentricité · Perspectives, et les vingt questions d’Issiaka-Prosper L. Lalèyè."
+ },
+ "/philosophie-africaine/thematique": {
+  "f": "page__philosophie-africaine__thematique",
+  "title": "Thématique, Philosophie africaine, Groupe JOGOO",
+  "desc": "Philosophie · Sciences · Culture & Religions : identité et développement, émotion nègre, unité africaine, interculturalité."
+ },
+ "/recherche": {
+  "f": "page__recherche",
+  "title": "Recherche, Groupe JOGOO",
+  "desc": "Axes de recherche, recherches en phénoménologie et herméneutique africaines, séminaires, colloques et appels à postes du Groupe JOGOO."
+ },
+ "/sous-sites/eboussi-studies": {
+  "f": "page__sous-sites__eboussi-studies",
+  "title": "Revue Eboussi Studies, Groupe JOGOO",
+  "desc": "Revue scientifique, plurilingue et annuelle · Éditée par le Groupe JOGOO, adossée au Fonds Eboussi Boulaga."
+ },
+ "/sous-sites/editions-jogoo": {
+  "f": "page__sous-sites__editions-jogoo",
+  "title": "Éditions JOGOO, Groupe JOGOO",
+  "desc": "Maison d’édition africaine et internationale : projet fondateur et feuille de route des Éditions JOGOO."
+ },
+ "/sous-sites/fonds-eboussi-boulaga": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga",
+  "title": "Fonds Eboussi Boulaga, fonds documentaire et archivistique",
+  "desc": "Le Fonds Eboussi Boulaga rassemble les écrits, manuscrits, images et témoignages de et sur le philosophe camerounais Fabien Eboussi Boulaga (1934-2018) : bibliographie, revue Eboussi Studies, galerie, médiathèque."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/activites": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__activites",
+  "title": "Activités du Fonds Eboussi Boulaga, Groupe JOGOO",
+  "desc": "Colloques, séminaires, leçons inaugurales, ateliers de lecture et MasterClass organisés par le Fonds Eboussi Boulaga depuis sa création en 2023."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/bibliographie": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__bibliographie",
+  "title": "Bibliographie de Fabien Eboussi Boulaga, Groupe JOGOO",
+  "desc": "Bibliographie de Fabien Eboussi Boulaga : ouvrages, articles, conférences, traductions et préfaces en philosophie, théologie et sciences sociales (1960-2018), et travaux qui lui sont consacrés. Recherche et PDF."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/contact": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__contact",
+  "title": "Contact du Fonds Eboussi Boulaga, Groupe JOGOO",
+  "desc": "Écrire au Fonds Eboussi Boulaga : consulter le fonds documentaire, proposer un document, signaler une publication manquante ou soumettre un article à Eboussi Studies."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/eboussi-studies": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__eboussi-studies",
+  "title": "Eboussi Studies n° 1, Reprise de soi et décolonisation des savoirs, Groupe JOGOO",
+  "desc": "Eboussi Studies n° 1 (octobre 2026), « Reprise de soi et décolonisation des savoirs » : sommaire, résumés, présentation en accès libre, commande du numéro (PDF ou papier) et consignes aux auteurs."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/fabien-eboussi-boulaga": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__fabien-eboussi-boulaga",
+  "title": "Fabien Eboussi Boulaga (1934-2018), biographie, Groupe JOGOO",
+  "desc": "Biographie de Fabien Eboussi Boulaga (1934-2018), philosophe, théologien et essayiste camerounais, auteur de La crise du Muntu et de Christianisme sans fétiche : repères chronologiques et notions clés."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/galerie": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__galerie",
+  "title": "Galerie, visages d’Eboussi, Groupe JOGOO",
+  "desc": "Portraits, illustrations et photographies d’archives de Fabien Eboussi Boulaga : Yaoundé I en 2009, Akometam en 2013, Mosaïques hors-série 005."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/le-fonds": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__le-fonds",
+  "title": "Le Fonds, poursuivre le dialogue des lieux, Groupe JOGOO",
+  "desc": "Le Fonds Fabien Eboussi Boulaga, lancé en mai 2023 à Yaoundé : mission, siège à la bibliothèque de l’UCAC, partenaires, présidents d’honneur et conseil scientifique."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/mediatheque": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__mediatheque",
+  "title": "Médiathèque du Fonds Eboussi Boulaga, Groupe JOGOO",
+  "desc": "Émissions, conférences et entretiens consacrés à Fabien Eboussi Boulaga (TV5MONDE, Thinking Africa, Radio-CRÉ) et le hors-série 005 de Mosaïques, « Le Muntu résistant »."
+ },
+ "/sous-sites/fonds-eboussi-boulaga/mentions-legales": {
+  "f": "page__sous-sites__fonds-eboussi-boulaga__mentions-legales",
+  "title": "Mentions légales et crédits du Fonds Eboussi Boulaga, Groupe JOGOO",
+  "desc": "Éditeur, licence CC BY-NC 4.0, embargo d’Eboussi Studies, crédits photographiques et données personnelles du sous-site Fonds Eboussi Boulaga."
+ },
+ "/sous-sites/philo-africaine-magazine": {
+  "f": "page__sous-sites__philo-africaine-magazine",
+  "title": "Philo Africaine Magazine, Groupe JOGOO",
+  "desc": "Le magazine semestriel du Groupe JOGOO : du philosophique au philosophant 2.0."
+ },
+ "/sous-sites/philo-africaine-magazine/numero-001": {
+  "f": "page__sous-sites__philo-africaine-magazine__numero-001",
+  "title": "Numéro 001 · Mythologies africaines et pensée philosophique, Groupe JOGOO",
+  "desc": "Dossier du premier numéro de Philo Africaine Magazine : mythologies africaines et pensée philosophique, adossé à la journée d’étude MAPP (avril 2025)."
+ },
+ "/sous-sites/revue-jogoo": {
+  "f": "page__sous-sites__revue-jogoo",
+  "title": "Revue JOGOO | Philosophie africaine et culture, Groupe JOGOO",
+  "desc": "JOGOO est une revue scientifique semestrielle consacrée à la philosophie africaine et à ses dialogues avec les cultures et les savoirs contemporains."
+ },
+ "/sous-sites/revue-jogoo/a-propos": {
+  "f": "page__sous-sites__revue-jogoo__a-propos",
+  "title": "À propos — Revue JOGOO, Groupe JOGOO",
+  "desc": "Présentation de la Revue JOGOO, sens de son nom, ligne éditoriale, domaines et types de textes publiés, et informations éditoriales."
+ },
+ "/sous-sites/revue-jogoo/comites": {
+  "f": "page__sous-sites__revue-jogoo__comites",
+  "title": "Comités — Revue JOGOO, Groupe JOGOO",
+  "desc": "Composition des comités de la Revue JOGOO telle qu’imprimée dans le n° 1 (« L’être africain ») : rédaction, éditeurs, comité de lecture et conseil scientifique."
+ },
+ "/sous-sites/revue-jogoo/dossier-fondateur": {
+  "f": "page__sous-sites__revue-jogoo__dossier-fondateur",
+  "title": "N° 1 — « L’être africain » — Revue JOGOO, Groupe JOGOO",
+  "desc": "Sommaire complet du n° 1 de la Revue JOGOO, « L’être africain » (Éditions JOGOO, octobre 2026) : entretien avec Fabien Eboussi Boulaga, réflexions, points de vue, varia et recensions."
+ },
+ "/sous-sites/revue-jogoo/publier": {
+  "f": "page__sous-sites__revue-jogoo__publier",
+  "title": "Publier dans JOGOO — consignes, évaluation, éthique, Groupe JOGOO",
+  "desc": "Consignes aux auteurs de la Revue JOGOO : longueur, résumés bilingues, feuille de style, procédure d’évaluation en double aveugle, éthique de publication et modalités de soumission."
+ },
+ "/sous-sites/sankofa-communications": {
+  "f": "page__sous-sites__sankofa-communications",
+  "title": "Sankofa Communications, Groupe JOGOO",
+  "desc": "Agence de communication · L’Afrique du futur."
+ }
+}

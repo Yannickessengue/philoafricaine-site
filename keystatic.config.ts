@@ -178,6 +178,17 @@ export default config({
           ],
           defaultValue: 'article',
         }),
+        langue: fields.select({
+          label: 'Langue de l’article',
+          options: [
+            { label: 'Français', value: 'fr' },
+            { label: 'English', value: 'en' },
+            { label: 'Español', value: 'es' },
+            { label: 'Português', value: 'pt' },
+            { label: 'العربية', value: 'ar' },
+          ],
+          defaultValue: 'fr',
+        }),
         section: fields.text({ label: 'Section du sommaire', description: 'Ex. : Réflexions, Point de vue, Varia, Recensions' }),
         ordre: fields.integer({ label: 'Ordre dans le numéro', defaultValue: 0 }),
         datePublication: fields.date({ label: 'Date de publication', validation: { isRequired: true } }),
@@ -213,6 +224,7 @@ export default config({
         fichier: fichier('Fichier de l’appel (PDF)', 'appels'),
         fichierLibelle: fields.text({ label: 'Libellé du fichier', defaultValue: 'Télécharger l’appel (PDF)' }),
         ouvert: fields.checkbox({ label: 'Appel ouvert', defaultValue: true }),
+        cloture: fields.date({ label: 'Date de clôture', description: 'Passée cette date, l’appel s’affiche automatiquement comme clos.' }),
         ordre: fields.integer({ label: 'Ordre', defaultValue: 0 }),
         descriptif: texte('Descriptif', 'appels'),
       },
@@ -246,6 +258,24 @@ export default config({
       },
     }),
 
+    commentaires: collection({
+      label: 'Commentaires (modération)',
+      slugField: 'edito',
+      path: 'donnees/commentaires/*',
+      format: { data: 'json' },
+      schema: {
+        edito: fields.slug({ name: { label: 'Édito (identifiant)' } }),
+        liste: fields.array(
+          fields.object({
+            nom: fields.text({ label: 'Nom' }),
+            texte: fields.text({ label: 'Commentaire', multiline: true }),
+            date: fields.text({ label: 'Date' }),
+            masque: fields.checkbox({ label: 'Masquer ce commentaire' }),
+          }),
+          { label: 'Commentaires', itemLabel: (p) => `${p.fields.masque.value ? '🚫 ' : ''}${p.fields.nom.value} : ${p.fields.texte.value.slice(0, 60)}` },
+        ),
+      },
+    }),
     pages: collection({
       label: 'Pages fixes',
       slugField: 'titre',
@@ -276,6 +306,10 @@ export default config({
         instagram: fields.url({ label: 'Instagram' }),
         youtube: fields.url({ label: 'YouTube' }),
         mentionLegale: fields.text({ label: 'Mention légale (pied de page)', multiline: true }),
+        enCours: fields.array(fields.text({ label: 'Chantier' }), {
+          label: 'Bloc « En cours » (page Actualités)',
+          itemLabel: (p) => p.value || 'Chantier',
+        }),
       },
     }),
   },

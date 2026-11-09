@@ -37,3 +37,54 @@ export function TexteSimple({ texte, className = '' }: { texte?: string | null; 
   if (!texte) return null;
   return <Prose node={Markdoc.parse(texte)} className={className} />;
 }
+
+/* ——— Rendu « à la manière de l'original » : chaque balise reçoit les classes du gabarit d'origine ——— */
+export type Classes = Partial<Record<'p' | 'pFort' | 'h2' | 'h3' | 'h4' | 'ul' | 'ol' | 'li' | 'blockquote' | 'img' | 'a' | 'hr' | 'table', string>>;
+
+function habiller(n: RenderableTreeNode, c: Classes): RenderableTreeNode {
+  if (typeof n === 'string') return typo(n);
+  if (!Tag.isTag(n)) return n;
+  n.children = n.children.map((x) => habiller(x, c));
+  const seulGras = n.name === 'p' && n.children.length === 1 && Tag.isTag(n.children[0]) && n.children[0].name === 'strong';
+  const k = seulGras && c.pFort ? c.pFort : (c as Record<string, string | undefined>)[n.name];
+  if (k) n.attributes = { ...n.attributes, className: k };
+  if (seulGras && c.pFort) n.children = (n.children[0] as Tag).children;
+  return n;
+}
+
+/** Transforme un texte de l'éditeur en blocs : avant le premier intertitre (chapeau), puis une section par intertitre H2. */
+export function decouper(node: Node) {
+  const arbre = Markdoc.transform(node, markdocConfig) as Tag;
+  const enfants = Tag.isTag(arbre) ? arbre.children : [arbre];
+  const chapeau: RenderableTreeNode[] = [];
+  const sections: { titre: RenderableTreeNode | null; corps: RenderableTreeNode[] }[] = [];
+  for (const e of enfants) {
+    if (Tag.isTag(e) && e.name === 'h2') sections.push({ titre: e, corps: [] });
+    else if (sections.length) sections[sections.length - 1].corps.push(e);
+    else chapeau.push(e);
+  }
+  return { chapeau, sections };
+}
+
+export function rendre(noeuds: RenderableTreeNode | RenderableTreeNode[], c: Classes) {
+  const liste = (Array.isArray(noeuds) ? noeuds : [noeuds]).map((x) => habiller(x, c));
+  return Markdoc.renderers.react(liste, React);
+}
+
+export function versNoeud(texte?: string | null) {
+  return Markdoc.parse(texte ?? '');
+}
+
+/** Premiers blocs d'un texte, jusqu'à environ `max` caractères (pour les listes). */
+export function debut(node: Node, max: number) {
+  const arbre = Markdoc.transform(node, markdocConfig) as Tag;
+  const enfants = Tag.isTag(arbre) ? arbre.children : [arbre];
+  const garde: RenderableTreeNode[] = [];
+  let n = 0;
+  for (const e of enfants) {
+    if (n >= max && garde.length) break;
+    garde.push(e);
+    n += texte(e).length;
+  }
+  return { noeuds: garde, tronque: garde.length < enfants.length };
+}

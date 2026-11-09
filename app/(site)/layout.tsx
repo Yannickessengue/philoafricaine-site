@@ -1,14 +1,14 @@
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { reader } from '@/lib/content';
+import { Html } from '@/components/Html';
+import { Interactif } from '@/components/Interactif';
+import { fragment } from '@/lib/gabarits';
 
-export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const reglages = await reader.singletons.reglages.read();
+export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header />
-      <main>{children}</main>
-      <Footer mention={reglages?.mentionLegale} email={reglages?.email} />
+      <Html html={fragment('header')} />
+      <main className="flex-1">{children}</main>
+      <Html html={fragment('footer')} />
+      <Interactif />
     </>
   );
 }

@@ -1,33 +1,35 @@
-import { reader } from '@/lib/content';
-import { EnTete, Etat } from '@/components/ui';
-import { Prose } from '@/components/Prose';
+import { EnTete } from '@/components/ui';
+import { CarteAppel, getAppels } from '@/components/Appels';
 
 export const metadata = { title: 'Appels à contributions' };
+export const revalidate = 86400;
 
 export default async function Appels() {
-  const items = (await reader.collections.appels.all()).sort((a, b) => a.entry.ordre! - b.entry.ordre!);
-  const corps = await Promise.all(items.map((i) => i.entry.descriptif()));
+  const appels = await getAppels();
+  const ouverts = appels.filter((a) => a.ouvert);
+  const clos = appels.filter((a) => !a.ouvert);
   return (
     <>
-      <EnTete kicker="Recherche" titre="Appels à contributions" />
-      <div className="mx-auto max-w-7xl px-5 sm:px-8"><div className="border-t border-ink">
-        {items.map((a, n) => (
-          <article key={a.slug} className="grid gap-8 border-b border-line py-12 md:grid-cols-12 md:gap-10">
-            <aside className="space-y-4 md:col-span-4">
-              {a.entry.ouvert ? <Etat>Appel ouvert</Etat> : <Etat ton="mute">Appel clos</Etat>}
-              <dl className="space-y-3 text-sm">
-                {[['Type', a.entry.type], ['Date', a.entry.dateEvenement], ['Lieu', a.entry.lieu], ['Échéance', a.entry.dateLimite], ['Contact', a.entry.contact]]
-                  .filter(([, v]) => v).map(([k, v]) => <div key={k}><dt className="label">{k}</dt><dd className="mt-1 text-ink-soft">{v}</dd></div>)}
-              </dl>
-            </aside>
-            <div className="md:col-span-8">
-              <h2 className="titre titre-m">{a.entry.titre}</h2>
-              <Prose node={corps[n].node} className="mt-5 [&>*]:!ml-0 !text-[1rem]" />
-              {a.entry.fichier && <a href={a.entry.fichier} className="bouton mt-6">{a.entry.fichierLibelle || 'Télécharger l’appel'}</a>}
-            </div>
-          </article>
-        ))}
-      </div></div>
+      <EnTete kicker="Recherche" titre="Appels à contributions" intro="Journées d’étude, colloques et ouvrages collectifs du Groupe JOGOO et de ses partenaires." icone="action" />
+      <div className="mx-auto max-w-5xl px-5 py-16">
+        <p className="kicker mb-2">En ce moment</p>
+        <h2 className="display-title text-3xl text-terra sm:text-4xl">Appels ouverts</h2>
+        {ouverts.length ? (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">{ouverts.map((a) => <CarteAppel key={a.slug} a={a} />)}</div>
+        ) : (
+          <p className="mt-6 text-ink-soft">
+            Aucun appel ouvert pour le moment. Les propositions d’articles pour la Revue JOGOO, Eboussi Studies et Philo Africaine Magazine sont reçues au fil de l’eau :{' '}
+            <a className="font-semibold text-terra-deep underline underline-offset-2" href="mailto:philoafricaine@gmail.com">philoafricaine@gmail.com</a>.
+          </p>
+        )}
+        {clos.length > 0 && (
+          <>
+            <hr className="rule-dotted my-14" />
+            <h2 className="display-title text-2xl text-terra sm:text-3xl">Appels clos</h2>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">{clos.map((a) => <CarteAppel key={a.slug} a={a} />)}</div>
+          </>
+        )}
+      </div>
     </>
   );
 }

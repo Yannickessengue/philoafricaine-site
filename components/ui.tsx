@@ -1,78 +1,56 @@
-import Link from 'next/link';
-import { Cadre, type Format } from './Cadre';
-
-/** En-tête de rubrique : surtitre, grand titre en Baskerville, chapô. */
-export function EnTete({ kicker, titre, intro, centre = false }: { kicker?: string; titre: string; intro?: string | null; centre?: boolean }) {
-  return (
-    <section className="mx-auto max-w-7xl px-5 pb-12 pt-16 sm:px-8 sm:pt-20">
-      <div className={centre ? 'mx-auto max-w-3xl text-center' : 'max-w-4xl'}>
-        {kicker && <p className="label label-accent">{kicker}</p>}
-        <h1 className="titre titre-xl mt-5">{titre}</h1>
-        {intro && <p className="mt-6 max-w-2xl font-serif text-lg italic leading-relaxed text-ink-soft sm:text-xl">{intro}</p>}
-      </div>
-      <div className="aube mt-14" aria-hidden />
-    </section>
-  );
-}
-
-/** Carte éditoriale sans cadre ni bordure : image à format fixe, rubrique, titre, chapô. */
-export function Carte({
-  href, image, alt, kicker, titre, meta, texte, format = '4/3', grand = false,
+/** En-tête de page de l'original : filigrane du coq, pastille terracotta, sur-titre, grand titre, chapeau. */
+export function EnTete({
+  kicker,
+  titre,
+  intro,
+  icone = 'tete',
+  children,
 }: {
-  href: string; image?: string | null; alt?: string | null; kicker?: string; titre: string;
-  meta?: string; texte?: string | null; format?: Format; grand?: boolean;
+  kicker: string;
+  titre: string;
+  intro?: React.ReactNode;
+  icone?: 'tete' | 'book' | 'action' | 'oreille' | 'projet' | 'revue' | 'fonds' | 'sankofa' | null;
+  children?: React.ReactNode;
 }) {
   return (
-    <article className="group">
-      <Link href={href} className="block">
-        <Cadre src={image} alt={alt} format={format} />
-        <div className="mt-5">
-          {kicker && <p className="label label-accent">{kicker}</p>}
-          <h3 className={`titre mt-2.5 ${grand ? 'titre-l' : 'titre-m'}`}><span className="lien">{titre}</span></h3>
-          {meta && <p className="mt-2.5 text-[0.78rem] text-mute">{meta}</p>}
-          {texte && <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-soft">{texte}</p>}
+    <header className="relative overflow-hidden border-b border-ink/10 bg-cream/60">
+      <img
+        alt=""
+        aria-hidden="true"
+        src="/medias/site/jogoo/icone-jogoo.png"
+        className="pointer-events-none absolute -right-10 -top-12 hidden opacity-[0.06] sm:block"
+        style={{ width: 260, height: 'auto' }}
+      />
+      <div className="relative mx-auto max-w-6xl px-5 py-14 sm:py-20">
+        <div className="flex items-center gap-3">
+          {icone && (
+            <span aria-hidden="true" className="inline-flex shrink-0 items-center justify-center bg-terra text-white" style={{ width: 34, height: 34 }}>
+              <img alt="" src={`/medias/site/jogoo/icons/${icone}.png`} className="object-contain brightness-0 invert" style={{ maxWidth: 20, maxHeight: 20, width: 'auto', height: 'auto' }} />
+            </span>
+          )}
+          <span className="kicker">{kicker}</span>
         </div>
-      </Link>
-    </article>
-  );
-}
-
-/** Ligne d'index numérotée (listes de type sommaire). */
-export function Index({ n, href, kicker, titre, meta, aside }: { n: number; href: string; kicker?: string; titre: string; meta?: string; aside?: React.ReactNode }) {
-  return (
-    <li className="group border-t border-line first:border-t-0">
-      <Link href={href} className="grid grid-cols-[2.6rem_1fr] gap-4 py-6 sm:grid-cols-[3.4rem_1fr_auto] sm:items-baseline sm:gap-6">
-        <span className="font-serif text-xl italic text-gold">{String(n).padStart(2, '0')}</span>
-        <span>
-          {kicker && <span className="label mb-1.5 block">{kicker}</span>}
-          <span className="titre titre-s block"><span className="lien">{titre}</span></span>
-          {meta && <span className="mt-1.5 block text-[0.82rem] text-mute">{meta}</span>}
-        </span>
-        {aside && <span className="col-start-2 sm:col-start-auto">{aside}</span>}
-      </Link>
-    </li>
-  );
-}
-
-/** Mention d'état en petites capitales, précédée d'un point. */
-export function Etat({ children, ton = 'terra' }: { children: React.ReactNode; ton?: 'terra' | 'gold' | 'mute' }) {
-  const point = { terra: 'bg-terra', gold: 'bg-gold', mute: 'bg-mute' }[ton];
-  return (
-    <span className="label inline-flex items-center gap-2 whitespace-nowrap !text-ink-soft">
-      <span className={`h-1.5 w-1.5 rounded-full ${point}`} aria-hidden />
-      {children}
-    </span>
-  );
-}
-
-export function Section({ titre, lien, libelle, children, className = '' }: { titre: string; lien?: string; libelle?: string; children: React.ReactNode; className?: string }) {
-  return (
-    <section className={`mx-auto max-w-7xl px-5 sm:px-8 ${className}`}>
-      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-ink pb-4">
-        <h2 className="titre titre-l">{titre}</h2>
-        {lien && <Link href={lien} className="fleche pb-2">{libelle ?? 'Tout voir'}</Link>}
+        <h1 className="display-title mt-4 max-w-4xl break-words text-4xl leading-[0.95] text-ink sm:text-6xl lg:text-7xl">{titre}</h1>
+        {intro && <p className="mt-6 max-w-2xl font-serif text-lg italic text-ink/80">{intro}</p>}
+        {children}
       </div>
-      <div className="pt-10">{children}</div>
-    </section>
+    </header>
   );
 }
+
+/** Titre de section de l'original (sur-titre + titre terracotta). */
+export function TitreSection({ kicker, titre, className = '' }: { kicker?: string; titre: string; className?: string }) {
+  return (
+    <div className={className}>
+      {kicker && <p className="kicker mb-2">{kicker}</p>}
+      <h2 className="display-title text-3xl text-terra sm:text-4xl">{titre}</h2>
+    </div>
+  );
+}
+
+export const Lieu = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    <path d="M12 21s7-7.1 7-12a7 7 0 1 0-14 0c0 4.9 7 12 7 12Z" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="12" cy="9" r="2.3" />
+  </svg>
+);
