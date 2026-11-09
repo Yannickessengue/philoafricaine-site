@@ -233,3 +233,8 @@ for nom in ('home-04-colonnes.html', 'home-04.html'):
         return tag.replace('h-auto max-h-16 w-auto max-w-20', 'w-auto max-w-20')
     h = _re.sub(r'<img alt="Logo[^>]*>', _logo, h)
     open(f, 'w').write(h)
+# Le coq regarde toujours vers la gauche ; le bout de la queue, coupé dans le dessin d’origine, s’estompe
+for f in _g.glob(OUT + '/*.html'):
+    h = open(f).read(); h0 = h
+    h = h.replace('src="/medias/site/jogoo/coq-penseur-t.png"', 'src="/medias/site/jogoo/coq-penseur-gauche.png"')
+    if h != h0: open(f, 'w').write(h)

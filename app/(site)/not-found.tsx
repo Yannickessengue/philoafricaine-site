@@ -5,7 +5,7 @@ export default function Introuvable() {
         alt=""
         aria-hidden="true"
         src="/medias/site/jogoo/coq-penseur.jpg"
-        className="jogoo-loader-watermark pointer-events-none absolute -bottom-[6vh] -right-[12vh] h-[50vh] w-[50vh] max-w-none object-contain opacity-80"
+        className="jogoo-loader-watermark -scale-x-100 pointer-events-none absolute -bottom-[6vh] -right-[12vh] h-[50vh] w-[50vh] max-w-none object-contain opacity-80"
       />
       <div className="relative mx-auto max-w-6xl px-5 py-20 sm:py-28">
         <p className="eyebrow text-ink/70">Erreur 404</p>

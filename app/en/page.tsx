@@ -24,7 +24,7 @@ export default async function Accueil() {
   return (
     <>
       <section className="relative overflow-hidden bg-[#eabf31]">
-        <img src="/medias/site/jogoo/coq-penseur-t.png" alt="" className="pointer-events-none absolute -bottom-10 right-0 hidden h-[115%] max-h-[34rem] lg:block" />
+        <img src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="pointer-events-none absolute -bottom-10 right-0 hidden h-[115%] max-h-[34rem] lg:block" />
         <div className="relative mx-auto max-w-6xl px-5 py-20 sm:py-24">
           <p className="font-brand text-xs font-bold uppercase tracking-[0.24em] text-ink/70">Groupe JOGOO</p>
           <h1 className="mt-4 max-w-3xl font-brand text-4xl font-black leading-[1.05] tracking-tight text-ink sm:text-6xl">

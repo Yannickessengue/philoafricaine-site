@@ -230,7 +230,7 @@ export default async function Accueil() {
 
       {/* La minute du chant du coq */}
       <section className="relative isolate overflow-hidden bg-[#140f0c] text-paper">
-        <img src="/medias/site/jogoo/coq-penseur-t.png" alt="" className="coq-flotte pointer-events-none absolute -bottom-10 right-[-3rem] -z-10 h-[115%] max-h-[26rem] opacity-80 sm:right-6" />
+        <img src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="coq-flotte pointer-events-none absolute bottom-0 right-[-3rem] -z-10 h-[92%] max-h-[24rem] opacity-80 sm:right-6" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_50%,rgba(168,54,27,0.5),transparent_60%)]" aria-hidden="true" />
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-14 lg:grid-cols-[1.1fr_1fr]">
           <div>

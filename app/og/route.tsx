@@ -40,7 +40,7 @@ export async function GET(req: Request) {
   const [photo, logo, coq] = await Promise.all([
     image && image.startsWith('/') ? enDonnees(image) : Promise.resolve(null),
     enDonnees('/medias/site/jogoo/logo-jogoo-blanc.png'),
-    enDonnees('/medias/site/jogoo/coq-penseur-t.png'),
+    enDonnees('/medias/site/jogoo/coq-penseur-gauche.png'),
   ]);
   if (q.get('v') === 'edito') {
     const sousTitre = (q.get('st') || '').slice(0, 140);

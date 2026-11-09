@@ -22,7 +22,7 @@ export default async function Minutes() {
   return (
     <>
       <section className="relative isolate overflow-hidden bg-ink text-paper">
-        <img src="/medias/site/jogoo/coq-penseur-t.png" alt="" className="coq-flotte pointer-events-none absolute -bottom-8 right-[-4rem] -z-10 h-[105%] max-h-[30rem] opacity-90 sm:right-0" />
+        <img src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="coq-flotte pointer-events-none absolute -bottom-8 right-[-4rem] -z-10 h-[105%] max-h-[30rem] opacity-90 sm:right-0" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_80%_40%,rgba(168,54,27,0.45),transparent_60%)]" aria-hidden="true" />
         <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
           <p className="flex items-center gap-3 font-brand text-xs font-bold uppercase tracking-[0.24em] text-gold">
