@@ -149,3 +149,10 @@ f = OUT + '/home-04-colonnes.html'
 h = open(f).read()
 h = re.sub(r'(<span class="display-title block text-base text-ink group-hover:text-terra">[^<]*</span>)<span class="block text-xs text-ink-soft">[^<]*</span>', r'\1', h)
 open(f, 'w').write(h)
+# Miniatures des sous-sites agrandies (demande du 9 nov. 2026, 16 h 45)
+for nom in ('home-04-colonnes.html', 'home-04.html'):
+    f = OUT + '/' + nom
+    h = open(f).read()
+    h = h.replace('<span class="flex h-10 w-12 shrink-0 items-center justify-center">', '<span class="flex h-16 w-20 shrink-0 items-center justify-center">')
+    h = h.replace('class="h-auto max-h-10 w-auto max-w-12 object-contain"', 'class="h-auto max-h-16 w-auto max-w-20 object-contain"')
+    open(f, 'w').write(h)

@@ -96,7 +96,19 @@ function Reponse({ texte, ancre, sombre }: { texte: string; ancre: string; sombr
   );
 }
 
-export function Assistant({ email, initiale = '', variante = 'clair', accueil = true }: { email: string; initiale?: string; variante?: Variante; accueil?: boolean }) {
+export function Assistant({
+  email,
+  initiale = '',
+  variante = 'clair',
+  accueil = true,
+  lireAdresse = true,
+}: {
+  email: string;
+  initiale?: string;
+  variante?: Variante;
+  accueil?: boolean;
+  lireAdresse?: boolean;
+}) {
   const t = THEMES[variante];
   const sombre = variante === 'sombre';
   const compact = variante === 'compact';
@@ -124,7 +136,7 @@ export function Assistant({ email, initiale = '', variante = 'clair', accueil = 
   };
 
   useEffect(() => {
-    const depuisAdresse = compact ? null : new URLSearchParams(window.location.search).get('q')?.slice(0, 500);
+    const depuisAdresse = compact || !lireAdresse ? null : new URLSearchParams(window.location.search).get('q')?.slice(0, 500);
     const premiere = initiale || depuisAdresse;
     if (premiere) poser(premiere);
     // eslint-disable-next-line react-hooks/exhaustive-deps

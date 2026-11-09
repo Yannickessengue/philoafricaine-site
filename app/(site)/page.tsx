@@ -3,18 +3,11 @@ import { corpsBrut } from '@/lib/raw';
 import { Html } from '@/components/Html';
 import { CarrouselFlash } from '@/components/CarrouselFlash';
 import { GrilleVideos } from '@/components/Lecteur';
+import { SOUS_SITES } from '@/lib/liste-sous-sites';
 import { fragment } from '@/lib/gabarits';
 
 export const revalidate = 3600;
 
-const SOUS_SITES: [string, string, string][] = [
-  ['/sous-sites/revue-jogoo', 'Revue JOGOO', '/medias/site/jogoo/logo-revue-jogoo.png'],
-  ['/sous-sites/editions-jogoo', 'Éditions JOGOO', '/medias/site/jogoo/logo-editions-jogoo.png'],
-  ['/sous-sites/fonds-eboussi-boulaga', 'Fonds Eboussi Boulaga', '/medias/site/jogoo/logo-fonds-eboussi.png'],
-  ['/sous-sites/jogoo-ai', 'JOGOO AI', '/medias/site/jogoo/picto-jogoo-ai.png'],
-  ['/sous-sites/sankofa-communications', 'Sankofa Communications', '/medias/site/jogoo/logo-sankofa-full.png'],
-  ['/sous-sites/philo-africaine-magazine', 'Philo Africaine Magazine', '/medias/site/jogoo/logo-philo-africaine-magazine.png'],
-];
 
 const Fleche = () => <span className="ml-1 inline-block transition-transform group-hover:translate-x-1">→</span>;
 
@@ -185,11 +178,11 @@ export default async function Accueil() {
             Plan du site →
           </a>
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-8 grid grid-cols-2 gap-5 lg:grid-cols-3">
           {SOUS_SITES.map(([href, nom, logo]) => (
-            <a key={href} href={href} className="group flex aspect-square flex-col items-center justify-center gap-3 bg-white p-4 text-center shadow-[0_1px_2px_rgba(26,26,26,0.04),0_14px_34px_-22px_rgba(26,26,26,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_2px_4px_rgba(26,26,26,0.05),0_24px_44px_-24px_rgba(26,26,26,0.4)]">
-              <img src={logo} alt="" loading="lazy" className="h-16 w-auto max-w-[80%] object-contain transition-transform duration-500 group-hover:scale-105 sm:h-20" />
-              <span className="font-brand text-[0.78rem] font-bold leading-tight text-ink group-hover:text-terra">{nom}</span>
+            <a key={href} href={href} className="group flex aspect-[4/3] flex-col items-center justify-center gap-4 bg-white p-6 text-center shadow-[0_1px_2px_rgba(26,26,26,0.04),0_14px_34px_-22px_rgba(26,26,26,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_2px_4px_rgba(26,26,26,0.05),0_24px_44px_-24px_rgba(26,26,26,0.4)]">
+              <img src={logo} alt="" loading="lazy" className="h-24 w-auto max-w-[80%] object-contain transition-transform duration-500 group-hover:scale-105 sm:h-36 lg:h-40" />
+              <span className="font-brand text-sm font-bold leading-tight text-ink group-hover:text-terra sm:text-base">{nom}</span>
             </a>
           ))}
         </div>

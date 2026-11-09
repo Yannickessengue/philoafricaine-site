@@ -70,8 +70,8 @@ const PROJETS: { titre: string; statut: string; collection?: string; texte: stri
 ];
 
 const PERIODIQUES = [
-  { titre: 'L’être africain', revue: 'Revue JOGOO · N° 1', texte: 'Sommaire et contributions de la revue de philosophie africaine et de culture.', href: '/sous-sites/revue-jogoo', logo: '/medias/site/jogoo/logo-revue-jogoo.png' },
-  { titre: 'Reprise de soi et décolonisation des savoirs', revue: 'Eboussi Studies · N° 1', texte: 'Revue scientifique du Groupe JOGOO adossée au Fonds Eboussi Boulaga.', href: '/sous-sites/fonds-eboussi-boulaga/eboussi-studies', logo: '/medias/site/jogoo/logo-eboussi-studies.png' },
+  { titre: 'L’être africain', revue: 'Revue JOGOO · N° 1', texte: 'Sommaire et contributions de la revue de philosophie africaine et de culture.', href: '/sous-sites/revue-jogoo', couverture: '/medias/site/jogoo/couverture-revue-jogoo-1.jpg', coordination: 'Coordonné par Yannick Essengue · Entretien avec Fabien Eboussi Boulaga' },
+  { titre: 'Reprise de soi et décolonisation des savoirs', revue: 'Eboussi Studies · N° 1', texte: 'Revue scientifique du Groupe JOGOO adossée au Fonds Eboussi Boulaga.', href: '/sous-sites/fonds-eboussi-boulaga/eboussi-studies', couverture: '/medias/site/jogoo/couverture-eboussi-studies-1.jpg', coordination: 'Coordonné par Abbed Kanoor et Yannick Essengue' },
 ];
 
 /** Couverture « en vitrine » : un livre à venir, aux couleurs de sa collection. */
@@ -141,14 +141,22 @@ function Accueil() {
 
 function Periodiques() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-8 sm:grid-cols-2">
       {PERIODIQUES.map((r) => (
-        <a key={r.titre} href={r.href} className="group flex items-center gap-5 border border-ink/12 bg-white p-5 transition-colors hover:border-[#ad0e0e]">
-          <img alt="" src={r.logo} loading="lazy" className="h-16 w-16 shrink-0 object-contain" />
+        <a key={r.titre} href={r.href} className="group flex flex-col gap-6 bg-white p-6 shadow-[0_1px_2px_rgba(26,26,26,0.04),0_18px_40px_-26px_rgba(26,26,26,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_2px_4px_rgba(26,26,26,0.05),0_30px_60px_-30px_rgba(26,26,26,0.45)] md:flex-row md:items-center">
+          <span className="relative mx-auto block w-48 shrink-0 md:mx-0 md:w-44 lg:w-52">
+            <img
+              alt={`Couverture : ${r.revue}, « ${r.titre} »`}
+              src={r.couverture}
+              loading="lazy"
+              className="block aspect-[2/3] w-full object-cover shadow-[0_22px_40px_-18px_rgba(0,0,0,0.55)] transition-transform duration-500 group-hover:-rotate-1 group-hover:scale-[1.03]"
+            />
+          </span>
           <span className="min-w-0">
-            <span className="kicker text-[#cc7a05]">{r.revue}</span>
-            <span className="mt-1 block font-serif text-lg font-bold italic leading-snug text-[#141414] group-hover:text-[#ad0e0e]">{r.titre}</span>
-            <span className="mt-1 block text-sm leading-relaxed text-ink-soft">{r.texte}</span>
+            <span className="kicker text-[#cc7a05]">{r.revue} · Octobre 2026</span>
+            <span className="mt-2 block font-serif text-2xl font-bold italic leading-snug text-[#141414] group-hover:text-[#ad0e0e]">{r.titre}</span>
+            <span className="mt-2 block text-sm leading-relaxed text-ink-soft">{r.coordination}</span>
+            <span className="mt-4 inline-block font-brand text-xs font-bold uppercase tracking-[0.12em] text-[#ad0e0e]">Découvrir le numéro →</span>
           </span>
         </a>
       ))}
