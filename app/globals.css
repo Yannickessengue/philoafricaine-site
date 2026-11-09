@@ -117,10 +117,15 @@ input[type='search']::-webkit-search-cancel-button { -webkit-appearance: none; d
    Paragraphes, listes et citations sont justifiés avec césure ; on garde l'alignement voulu
    pour les textes centrés ou à droite, les sur-titres, les boutons et la navigation. */
 @layer components {
-  :is(main, footer) :is(p, li, dd, blockquote, figcaption):not(.kicker, .eyebrow, [class*='text-center'], [class*='text-right'], [class*='uppercase']):not(:is([class*='text-center'], [class*='text-right'], nav, button, label, summary, [role='dialog']) *) {
+  main :is(p, li, dd, blockquote, figcaption):not(.kicker, .eyebrow, [class*='text-center'], [class*='text-right'], [class*='uppercase']):not(:is([class*='text-center'], [class*='text-right'], nav, button, label, summary, [role='dialog']) *) {
     text-align: justify;
     -webkit-hyphens: auto;
     hyphens: auto;
     hyphenate-limit-chars: 7 3 3;
   }
 }
+
+/* Visionneuse du magazine : effet de page tournée */
+@keyframes tourne-avant { 0% { opacity: 0; transform: perspective(1600px) rotateY(-14deg) translateX(28px); transform-origin: left center } to { opacity: 1; transform: none } }
+@keyframes tourne-arriere { 0% { opacity: 0; transform: perspective(1600px) rotateY(14deg) translateX(-28px); transform-origin: right center } to { opacity: 1; transform: none } }
+@media (prefers-reduced-motion: reduce) { [class*='tourne-'] { animation: none !important } }

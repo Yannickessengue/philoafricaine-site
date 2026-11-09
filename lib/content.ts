@@ -70,3 +70,9 @@ export function motsCles(s?: string | null) {
 export function sansEmail(s?: string | null) {
   return (s ?? '').replace(/\s*[-–·,]?\s*[\w.+-]+@[\w-]+\.[\w.-]+/g, '').trim();
 }
+
+/* ——— Philo Africaine Magazine : numéros en ligne ——— */
+export async function getMagazine() {
+  const items = await reader.collections.magazine.all();
+  return items.sort((a, b) => (b.entry.datePublication ?? '').localeCompare(a.entry.datePublication ?? ''));
+}

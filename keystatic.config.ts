@@ -1,3 +1,4 @@
+import { composantsTexte } from './lib/composants-texte';
 import { config, collection, singleton, fields } from '@keystatic/core';
 
 // En production (Vercel), l'Espace rédaction enregistre directement dans le dépôt GitHub.
@@ -13,6 +14,7 @@ const texte = (label: string, dossier: string) =>
     options: {
       image: { directory: `public/medias/uploads/${dossier}`, publicPath: `/medias/uploads/${dossier}/` },
     },
+    components: composantsTexte,
   });
 
 const image = (label: string, dossier: string, description?: string) =>
@@ -29,6 +31,7 @@ export default config({
       'Contenus du portail': ['editos', 'actualites', 'agenda', 'flash'],
       Publications: ['publications', 'auteurs'],
       'Revue JOGOO': ['revue'],
+      'Philo Africaine Magazine': ['magazine'],
       Recherche: ['appels', 'postes'],
       Médiathèque: ['videos'],
       'Pages du site': ['pages', 'reglages'],
@@ -258,6 +261,29 @@ export default config({
       },
     }),
 
+    magazine: collection({
+      label: 'Philo Africaine Magazine — numéros',
+      slugField: 'numero',
+      path: 'content/magazine/*',
+      format: { data: 'yaml' },
+      columns: ['numero', 'datePublication'],
+      schema: {
+        numero: fields.slug({ name: { label: 'Numéro (ex. 001)' } }),
+        titre: fields.text({ label: 'Titre du dossier' }),
+        periode: fields.text({ label: 'Période indiquée en couverture', description: 'Ex. : Déc. 2025 – Fév. 2026' }),
+        datePublication: fields.date({ label: 'Date de mise en ligne', description: 'Point de départ de l’embargo.', validation: { isRequired: true } }),
+        embargoMois: fields.integer({ label: 'Durée de l’embargo (mois)', defaultValue: 12, description: 'Pendant l’embargo, seules les premières pages sont lisibles en ligne.' }),
+        pagesApercu: fields.integer({ label: 'Pages lisibles pendant l’embargo', defaultValue: 5, description: 'Couverture, éditorial, sommaire…' }),
+        pdf: fields.file({ label: 'PDF du numéro', directory: 'magazine-pdf', publicPath: '/magazine/pdf/' }),
+        couverture: fields.image({ label: 'Image de couverture', directory: 'public/medias/uploads/magazine', publicPath: '/medias/uploads/magazine/' }),
+        resume: fields.text({ label: 'Présentation du numéro', multiline: true }),
+        sommaire: fields.array(
+          fields.object({ page: fields.text({ label: 'Page' }), rubrique: fields.text({ label: 'Rubrique' }), titre: fields.text({ label: 'Titre' }) }),
+          { label: 'Sommaire', itemLabel: (p) => `${p.fields.page.value} · ${p.fields.rubrique.value} — ${p.fields.titre.value}` },
+        ),
+        maquette: fields.checkbox({ label: 'Version de travail (maquette)', description: 'Affiche la mention « maquette » sur le site.' }),
+      },
+    }),
     commentaires: collection({
       label: 'Commentaires (modération)',
       slugField: 'edito',

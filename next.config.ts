@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     '/**/*': ['./content/**/*', './design/fragments/**/*'],
     '/revue/pdf/[file]': ['./revue-pdf/**/*'],
+      '/magazine/pdf/[file]': ['./magazine-pdf/**/*'],
   },
   async redirects() {
     return [

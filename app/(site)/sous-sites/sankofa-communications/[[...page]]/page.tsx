@@ -169,6 +169,12 @@ function Agence() {
               <p>
                 Le symbole adinkra issu de la culture akan figure un oiseau qui avance la tête tournée vers l’arrière. Cette image donne son sens au projet : relire les ressources du passé pour concevoir les supports dont la recherche a besoin aujourd’hui.
               </p>
+              <p>
+                Le mot vient de la culture akan d’Afrique de l’Ouest. Dans les symboles adinkra, il signifie « retour aux sources » : <strong>SAN</strong> (retourne), <strong>KO</strong> (va), <strong>FA</strong> (ramène). L’oiseau avance en regardant vers l’arrière, un œuf en son bec.
+              </p>
+              <p>
+                Sankofa Communications prend sa source dans la dialectique africaine du passé et du futur : offrir une solution numérique africaine aux préoccupations africaines. S’il y a une « âme africaine », il y a aussi une manière africaine d’être, de sentir et d’habiter le monde.
+              </p>
             </Texte>
           </div>
         </div>
@@ -181,6 +187,23 @@ function Agence() {
         </Texte>
         <Boutons site={S} liens={[[`${B}/devis`, 'Présenter votre projet']]} />
       </Section>
+      <Section site={S} kicker="Projets en cours" titre="Projets en cours">
+        <p className="max-w-3xl text-[1.02rem] leading-relaxed text-ink-soft">Pour installer l’agence dans la durée, trois chantiers sont en cours :</p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          {['Matériel informatique', 'Aménagement des bureaux et loyer pour un an', 'Allocations infographe et community manager (un an)'].map((x, i) => (
+            <div key={x} className="border-t-2 border-[#e20613] bg-[#f3f3f1] p-5">
+              <span className="font-brand text-2xl font-extrabold text-[#e20613]/40">{String(i + 1).padStart(2, '0')}</span>
+              <p className="mt-2 font-brand font-bold leading-snug text-[#3d3d3a]">{x}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 text-sm text-ink-soft">
+          Pour soutenir ces projets ou devenir partenaire :{' '}
+          <a className="font-semibold text-[#e20613] underline underline-offset-2" href={`mailto:${S.email}?subject=Soutenir%20Sankofa%20Communications`}>
+            {S.email}
+          </a>
+        </p>
+      </Section>
     </>
   );
 }
@@ -188,7 +211,15 @@ function Agence() {
 function Services() {
   return (
     <>
-      <Ouverture site={S} kicker="Services" titre="Services" chapeau="Cinq domaines d’intervention, au service des équipes de recherche et des institutions." />
+      <Ouverture site={S} kicker="Services" titre="Services" chapeau="Cinq domaines d’intervention, au service des équipes de recherche et des institutions.">
+        <ul className="mt-8 flex flex-wrap gap-2">
+          {['Solutions numériques, graphic & web design', 'Événementiel d’activités scientifiques', 'Assistance à l’édition, traductions et interprétariat', 'Régie publicitaire, campagnes, direction artistique', 'Digital marketing & community management'].map((x) => (
+            <li key={x} className="border border-[#646460]/25 bg-white px-3 py-1.5 font-brand text-xs font-semibold text-[#3d3d3a]">
+              {x}
+            </li>
+          ))}
+        </ul>
+      </Ouverture>
       <div className="mx-auto max-w-6xl px-6 py-12 sm:py-14">
         <div className="space-y-4">
           {SERVICES.map((s, i) => (

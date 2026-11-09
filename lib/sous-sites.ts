@@ -12,6 +12,7 @@ export const MAGAZINE: Site = {
   mention: 'Un magazine du Groupe JOGOO',
   onglets: [
     ['', 'Accueil'],
+    ['lire', 'Lire en ligne'],
     ['numero-001', 'N° 001'],
     ['dossier', 'Dossier MAPP'],
     ['rubriques', 'Rubriques'],
@@ -40,7 +41,7 @@ export const MAGAZINE: Site = {
     piedAccent: 'text-[#e5a220]',
   },
   pied: [
-    { titre: 'Le magazine', liens: [['/sous-sites/philo-africaine-magazine/numero-001', 'Numéro 001'], ['/sous-sites/philo-africaine-magazine/dossier', 'Le dossier MAPP'], ['/sous-sites/philo-africaine-magazine/rubriques', 'Les rubriques']] },
+    { titre: 'Le magazine', liens: [['/sous-sites/philo-africaine-magazine/lire', 'Lire en ligne'], ['/sous-sites/philo-africaine-magazine/numero-001', 'Numéro 001'], ['/sous-sites/philo-africaine-magazine/dossier', 'Le dossier MAPP'], ['/sous-sites/philo-africaine-magazine/rubriques', 'Les rubriques']] },
     { titre: 'Participer', liens: [['/sous-sites/philo-africaine-magazine/contribuer', 'Proposer un article'], ['/sous-sites/philo-africaine-magazine/acheter', 'Acheter et s’abonner']] },
     { titre: 'Contact', liens: [[`mailto:${EMAIL}`, EMAIL], ['https://wa.me/242064459909', 'WhatsApp +242 06 445 99 09']] },
     { titre: 'Fiche', liens: [['', 'Semestriel · papier et numérique'], ['', '210 × 275 mm · env. 100 pages'], ['', 'Édité par le Groupe JOGOO']] },

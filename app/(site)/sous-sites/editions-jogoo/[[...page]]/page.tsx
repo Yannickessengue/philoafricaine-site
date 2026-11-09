@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation';
 import { EDITIONS as S } from '@/lib/sous-sites';
 import { Bandeau, Pied, Ouverture, Section, Texte, Boutons, Repere, Contact } from '@/components/SousSite';
+import { Html } from '@/components/Html';
+import { fragment } from '@/lib/gabarits';
+
+const ancien = (n: string) => fragment(`ancien-editions-${n}`);
 
 const B = S.base;
 const PAGES = ['', 'la-maison', 'catalogue', 'publier', 'actualites', 'professionnels'] as const;
@@ -23,17 +27,17 @@ export async function generateMetadata({ params }: { params: Promise<{ page?: st
 }
 
 /* Une couleur par collection (consigne : « pour s'y retrouver ») */
-const COLLECTIONS: { nom: string; texte: string; couleur: string }[] = [
-  { nom: 'Sankofa', texte: 'Retour aux textes fondateurs et aux patrimoines philosophiques africains.', couleur: '#ad0e0e' },
-  { nom: 'Muntu', texte: 'La personne, ses relations et les conceptions de l’humain.', couleur: '#cc7a05' },
-  { nom: 'Savoirs endogènes', texte: 'Les conditions de formation, de transmission et de transformation des savoirs.', couleur: '#5b7f2a' },
-  { nom: 'Transversalités', texte: 'Des essais qui mettent plusieurs disciplines au travail sur une question contemporaine.', couleur: '#1f5f8b' },
-  { nom: 'T(r)opiques', texte: 'Lieux de pensée, parcours d’auteurs et biographies intellectuelles.', couleur: '#8a3b8f' },
-  { nom: 'Écologie des savoirs', texte: 'Pluralité des rationalités et conditions d’une justice épistémique.', couleur: '#2e7d6b' },
-  { nom: 'Herméneutique', texte: 'Pratiques de l’interprétation, de la traduction et de la transmission.', couleur: '#6b4a2b' },
-  { nom: 'Chemins africains de l’éthique et de la bioéthique', texte: 'Questions du soin, du vivant et de la responsabilité.', couleur: '#b5475b' },
-  { nom: 'Transtopicités', texte: 'Essais, fragments, récits et formes qui traversent philosophie et littérature.', couleur: '#3c3c8f' },
-  { nom: 'Revues', texte: 'Un espace de circulation pour les périodiques scientifiques.', couleur: '#141414' },
+const COLLECTIONS: { nom: string; texte: string; couleur: string; soustitre?: string; direction?: string }[] = [
+  { nom: 'Sankofa', soustitre: 'Classiques et patrimoines de la philosophie africaine', direction: 'Adoulou N. Bitang', texte: 'Retour aux textes fondateurs et aux patrimoines philosophiques africains.', couleur: '#ad0e0e' },
+  { nom: 'Muntu', soustitre: 'Anthropologie et philosophies de la personne', direction: 'À désigner', texte: 'La personne, ses relations et les conceptions de l’humain.', couleur: '#cc7a05' },
+  { nom: 'Savoirs endogènes', soustitre: 'Épistémologies et traditions de savoir africaines', direction: 'À désigner', texte: 'Les conditions de formation, de transmission et de transformation des savoirs.', couleur: '#5b7f2a' },
+  { nom: 'Transversalités', soustitre: 'Penser les grands défis contemporains', direction: 'À désigner', texte: 'Des essais qui mettent plusieurs disciplines au travail sur une question contemporaine.', couleur: '#1f5f8b' },
+  { nom: 'T(r)opiques', soustitre: 'Lieux, trajectoires et biographies intellectuelles', direction: 'À désigner', texte: 'Lieux de pensée, parcours d’auteurs et biographies intellectuelles.', couleur: '#8a3b8f' },
+  { nom: 'Écologie des savoirs', soustitre: 'Pluralité des rationalités et justice épistémique', direction: 'Pr Ulrich Metende', texte: 'Pluralité des rationalités et conditions d’une justice épistémique.', couleur: '#2e7d6b' },
+  { nom: 'Herméneutique', soustitre: 'Comprendre, interpréter, transmettre', direction: 'Pr Benoît Okolo Okonda & Pr Cléophas Jacob Defo', texte: 'Pratiques de l’interprétation, de la traduction et de la transmission.', couleur: '#6b4a2b' },
+  { nom: 'Chemins africains de l’éthique et de la bioéthique', soustitre: 'Penser le vivant, soigner l’humain, habiter le monde', direction: 'Pr Basile Ngono', texte: 'Questions du soin, du vivant et de la responsabilité.', couleur: '#b5475b' },
+  { nom: 'Transtopicités', soustitre: 'Les écritures en mouvement', direction: 'Yannick Essengue', texte: 'Essais, fragments, récits et formes qui traversent philosophie et littérature.', couleur: '#3c3c8f' },
+  { nom: 'Revues', soustitre: 'Pôle des périodiques scientifiques', direction: 'Coordination à préciser', texte: 'Un espace de circulation pour les périodiques scientifiques.', couleur: '#141414' },
 ];
 
 const PROJETS: { titre: string; statut: string; collection?: string; texte: string }[] = [
@@ -127,6 +131,7 @@ function Accueil() {
           </div>
         </div>
       </section>
+      <Html html={ancien('1')} />
       <Section site={S} kicker="À lire dès maintenant" titre="Les premiers numéros des revues">
         <Periodiques />
       </Section>
@@ -163,6 +168,7 @@ function Maison() {
           </p>
         </Texte>
       </Section>
+      <Html html={ancien('2')} />
       <section className="bg-[#faf6f0]">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-12 sm:py-14 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
@@ -179,6 +185,9 @@ function Maison() {
           </figure>
         </div>
       </section>
+      <Html html={ancien('5')} />
+      <Html html={ancien('7')} />
+      <Html html={ancien('8')} />
     </>
   );
 }
@@ -196,11 +205,20 @@ function Catalogue() {
                 <span className="block font-serif text-lg font-bold leading-snug" style={{ color: c.couleur === '#141414' ? '#141414' : c.couleur }}>
                   {c.nom}
                 </span>
+                {c.soustitre && <span className="mt-0.5 block font-serif text-[0.95rem] italic text-ink/70">{c.soustitre}</span>}
                 <span className="mt-1 block text-[0.95rem] leading-relaxed text-ink-soft">{c.texte}</span>
+                {c.direction && (
+                  <span className="mt-2 block font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] text-ink/45">
+                    Direction : <span className={c.direction === 'À désigner' || c.direction.startsWith('Coordination') ? 'text-ink/45' : 'text-[#ad0e0e]'}>{c.direction}</span>
+                  </span>
+                )}
               </span>
             </li>
           ))}
         </ul>
+        <p className="mt-6 max-w-3xl border-l-2 border-[#3c3c8f] pl-4 text-[0.95rem] leading-relaxed text-ink-soft">
+          La collection Transtopicités accueille les écritures qui traversent les frontières entre philosophie, littérature et création : poésie, essai, nouvelle, pamphlet, aphorisme, billet, fragment, carnet, correspondance, méditation et récit.
+        </p>
       </Section>
       <Section site={S} doux id="projets" kicker="Projets de livres" titre="Projets de livres">
         <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -283,6 +301,7 @@ function Actualites() {
         </div>
         <Boutons site={S} liens={[['/actualites', 'Suivre les parutions']]} />
       </Section>
+      <Html html={ancien('6')} />
     </>
   );
 }

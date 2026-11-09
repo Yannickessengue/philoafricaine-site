@@ -93,3 +93,8 @@ open(OUT+'/revue-accueil-avant.html','w').write(h[:a]); open(OUT+'/revue-accueil
 h=open(OUT+'/home-01.html').read()
 h=h.replace('class="block h-auto w-full -scale-x-100"','class="block h-auto w-full"').replace('loading="lazy"','loading="eager"')
 open(OUT+'/home-01.html','w').write(h)
+# Sous-sites d'origine découpés en sections (réutilisées dans les nouveaux sous-sites)
+for nom, f in [('magazine', 'page__sous-sites__philo-africaine-magazine'), ('numero', 'page__sous-sites__philo-africaine-magazine__numero-001'), ('editions', 'page__sous-sites__editions-jogoo'), ('sankofa', 'page__sous-sites__sankofa-communications')]:
+    s = BeautifulSoup(open(f'{OUT}/{f}.html').read(), 'html.parser')
+    for i, c in enumerate([c for c in s.children if getattr(c, 'name', None)]):
+        open(f'{OUT}/ancien-{nom}-{i}.html', 'w').write(str(c))

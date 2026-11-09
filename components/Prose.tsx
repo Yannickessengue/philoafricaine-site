@@ -3,7 +3,10 @@ import Markdoc, { Tag, type Node, type RenderableTreeNode } from '@markdoc/markd
 import { fields } from '@keystatic/core';
 import { typo } from '@/lib/typo';
 
-const base = fields.markdoc.createMarkdocConfig({});
+import { composantsTexte, rendusTexte } from '@/lib/composants-texte';
+import { composantsRendu } from '@/components/Enrichis';
+
+const base = fields.markdoc.createMarkdocConfig({ components: composantsTexte, render: { tags: rendusTexte } });
 // Un simple retour à la ligne dans l'éditeur reste un retour à la ligne à l'affichage.
 const markdocConfig = { ...base, nodes: { ...base.nodes, softbreak: { transform: () => new Tag('br') } } };
 
@@ -29,7 +32,7 @@ function surtitres(n: RenderableTreeNode): RenderableTreeNode {
 /** Affiche un texte rédigé dans l'éditeur riche (gras, italique, intertitres, listes, images…). */
 export function Prose({ node, className = '' }: { node: Node; className?: string }) {
   const renderable = surtitres(Markdoc.transform(node, markdocConfig));
-  return <div className={`prose-jogoo ${className}`}>{Markdoc.renderers.react(renderable, React)}</div>;
+  return <div className={`prose-jogoo ${className}`}>{Markdoc.renderers.react(renderable, React, { components: composantsRendu })}</div>;
 }
 
 /** Affiche un texte simple (paragraphes séparés par une ligne vide, **gras**, *italique*). */
@@ -68,7 +71,7 @@ export function decouper(node: Node) {
 
 export function rendre(noeuds: RenderableTreeNode | RenderableTreeNode[], c: Classes) {
   const liste = (Array.isArray(noeuds) ? noeuds : [noeuds]).map((x) => habiller(x, c));
-  return Markdoc.renderers.react(liste, React);
+  return Markdoc.renderers.react(liste, React, { components: composantsRendu });
 }
 
 export function versNoeud(texte?: string | null) {

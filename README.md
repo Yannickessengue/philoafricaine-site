@@ -24,6 +24,14 @@ Nouveau site du Groupe JOGOO, reconstruit à partir de la sauvegarde du 9 novemb
 | Commentaires des éditos (modération) | sous chaque édito | `donnees/commentaires` |
 | Bloc « En cours », coordonnées | Réglages du site | `content/reglages.json` |
 
+## Philo Africaine Magazine en ligne
+
+Les numéros se gèrent dans l’Espace rédaction (rubrique « Philo Africaine Magazine — numéros ») : PDF, couverture, sommaire, date de mise en ligne, durée d’embargo (12 mois par défaut) et nombre de pages lisibles pendant l’embargo (5 par défaut). Les PDF sont rangés dans `magazine-pdf/` (hors du dossier public) ; pendant l’embargo, le serveur ne livre qu’un extrait des premières pages, la visionneuse affiche ensuite une page « sous embargo ». À la fin de l’embargo, le numéro entier devient lisible et téléchargeable, sans intervention.
+
+## Images et encadrés dans les textes
+
+Dans l’éditeur riche (éditos, actualités, notes de lecture, pages…), le bouton « + » propose : **Image avec légende** (pleine largeur, à gauche, à droite ou centrée, le texte l’entoure), **Encadré** (titre, style sable / terracotta / sombre / filet, pleine largeur ou flottant) et **Citation mise en avant**.
+
 ## Embargo de la Revue JOGOO
 
 Chaque article a une date de publication et une durée d’embargo (6 mois par défaut). Pendant l’embargo, le site n’affiche que le titre, l’auteur, le résumé et la référence ; le PDF est refusé. Les pages sont régénérées chaque jour : l’embargo se lève automatiquement.
