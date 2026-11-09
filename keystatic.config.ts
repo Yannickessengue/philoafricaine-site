@@ -178,6 +178,7 @@ export default config({
           ],
           defaultValue: 'article',
         }),
+        section: fields.text({ label: 'Section du sommaire', description: 'Ex. : Réflexions, Point de vue, Varia, Recensions' }),
         ordre: fields.integer({ label: 'Ordre dans le numéro', defaultValue: 0 }),
         datePublication: fields.date({ label: 'Date de publication', validation: { isRequired: true } }),
         embargoMois: fields.integer({

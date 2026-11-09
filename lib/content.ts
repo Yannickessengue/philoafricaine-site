@@ -1,3 +1,4 @@
+import { typo } from './typo';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '@/keystatic.config';
 
@@ -57,7 +58,8 @@ export function extrait(markdown: string, max = 260) {
     .replace(/[*_#>`]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
-  return plain.length > max ? plain.slice(0, plain.lastIndexOf(' ', max)) + '…' : plain;
+  const t = plain.length > max ? plain.slice(0, plain.lastIndexOf(' ', max)).replace(/[\s«(,;:—–-]+$/, '') + '…' : plain;
+  return typo(t);
 }
 
 export function motsCles(s?: string | null) {

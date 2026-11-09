@@ -9,8 +9,8 @@ export default async function Plan() {
   const [pages, editos, actus, pubs, revue] = await Promise.all([getPages(), getEditos(), getActualites(), getPublications(), getRevue()]);
   const Bloc = ({ titre, liens }: { titre: string; liens: [string, string][] }) => (
     <section>
-      <h2 className="kicker">{titre}</h2>
-      <ul className="mt-3 space-y-1.5 text-sm">{liens.map(([h, l]) => <li key={h}><Link href={h} className="text-ink-soft hover:text-terra">{l}</Link></li>)}</ul>
+      <h2 className="label label-accent border-b border-ink pb-3">{titre}</h2>
+      <ul className="mt-4 space-y-2 text-[0.92rem]">{liens.map(([h, l]) => <li key={h}><Link href={h} className="font-serif text-ink-soft hover:text-terra">{l}</Link></li>)}</ul>
     </section>
   );
   return (

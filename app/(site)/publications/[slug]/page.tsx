@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { reader, getPublications, motsCles } from '@/lib/content';
 import { Prose } from '@/components/Prose';
 import { Cadre } from '@/components/Cadre';
+import { ArticleTete, Fin } from '@/components/Article';
 
 export async function generateStaticParams() {
   return (await getPublications()).map((p) => ({ slug: p.slug }));
@@ -10,7 +11,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const p = await reader.collections.publications.read((await params).slug);
-  return p ? { title: `${p.titre} · ${p.auteurOuvrage ?? ''}`, description: p.resume ?? undefined } : {};
+  return p ? { title: `${p.titre} — ${p.auteurOuvrage ?? ''}`, description: p.resume ?? undefined } : {};
 }
 
 export default async function Publication({ params }: { params: Promise<{ slug: string }> }) {
@@ -20,30 +21,30 @@ export default async function Publication({ params }: { params: Promise<{ slug: 
   const { node } = await p.contenu();
   const auteur = p.auteurFiche ? await reader.collections.auteurs.read(p.auteurFiche) : null;
   return (
-    <article className="mx-auto max-w-5xl px-5 py-12">
-      <Link href="/publications" className="kicker hover:text-terra">← Publications</Link>
-      <div className="mt-6 grid items-start gap-10 md:grid-cols-[1fr_2fr]">
-        <aside className="space-y-4">
-          {p.couverture && <Cadre src={p.couverture} alt={p.titre} format="2/3" />}
-          <dl className="space-y-2 border-t border-ink/10 pt-4 text-sm">
-            {p.auteurOuvrage && <div><dt className="kicker">Auteur</dt><dd>{auteur ? <Link className="text-terra-deep underline" href={`/publications/auteurs/${p.auteurFiche}`}>{p.auteurOuvrage}</Link> : p.auteurOuvrage}</dd></div>}
-            {p.editeur && <div><dt className="kicker">Éditeur</dt><dd>{p.editeur}{p.annee && `, ${p.annee}`}</dd></div>}
-          </dl>
-          {p.lienUrl && (
-            <a href={p.lienUrl} target="_blank" rel="noopener" className="inline-block border border-terra px-4 py-2 font-brand text-xs font-bold uppercase tracking-wider text-terra hover:bg-terra hover:text-paper">
-              {p.lienLibelle || 'Voir l’ouvrage'} ↗
-            </a>
+    <article>
+      <ArticleTete retour="/publications" retourLabel="Publications" kicker="Note de lecture" titre={p.titre}
+        soustitre={[p.auteurOuvrage, [p.editeur, p.annee].filter(Boolean).join(', ')].filter(Boolean).join(' — ')} />
+      {p.couverture && <div className="mx-auto mt-12 w-48"><Cadre src={p.couverture} alt={p.titre} format="2/3" /></div>}
+      <div className="px-5 pt-14 sm:px-8">
+        <Prose node={node} className="lettrine" />
+        <div className="mx-auto mt-12 grid max-w-[40rem] gap-6 border-t border-line pt-8 sm:grid-cols-2">
+          {auteur && (
+            <div>
+              <p className="label">L’auteur</p>
+              <Link href={`/publications/auteurs/${p.auteurFiche}`} className="group mt-2 inline-block font-serif text-lg italic"><span className="lien">{auteur.nom}</span></Link>
+            </div>
           )}
-        </aside>
-        <div>
-          <p className="kicker">Note de lecture</p>
-          <h1 className="display-title mt-2 text-3xl text-ink sm:text-4xl">{p.titre}</h1>
-          {p.auteurOuvrage && <p className="mt-2 font-serif text-lg italic text-ink-soft">{p.auteurOuvrage}</p>}
-          <div className="mt-4 flex flex-wrap gap-2">
-            {motsCles(p.motsCles).map((m) => <span key={m} className="bg-cream px-2 py-0.5 text-xs text-terra-deep">{m}</span>)}
-          </div>
-          <Prose node={node} className="mt-8" />
+          {p.lienUrl && (
+            <div>
+              <p className="label">L’ouvrage</p>
+              <a href={p.lienUrl} target="_blank" rel="noopener" className="group mt-2 inline-block font-serif text-lg italic"><span className="lien">{p.lienLibelle || 'Voir l’ouvrage'}</span> ↗</a>
+            </div>
+          )}
         </div>
+        {motsCles(p.motsCles).length > 0 && (
+          <p className="mx-auto mt-8 max-w-[40rem] text-[0.8rem] text-mute">{motsCles(p.motsCles).join(' · ')}</p>
+        )}
+        <Fin />
       </div>
     </article>
   );

@@ -8,7 +8,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
     <>
       <Header />
       <main>{children}</main>
-      <Footer mention={reglages?.mentionLegale} />
+      <Footer mention={reglages?.mentionLegale} email={reglages?.email} />
     </>
   );
 }

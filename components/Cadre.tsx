@@ -3,42 +3,30 @@
 const formats = {
   '16/10': 'aspect-[16/10]',
   '16/9': 'aspect-video',
+  '21/9': 'aspect-[21/9]',
   '4/3': 'aspect-[4/3]',
   '3/4': 'aspect-[3/4]',
+  '4/5': 'aspect-[4/5]',
   '1/1': 'aspect-square',
   '2/3': 'aspect-[2/3]',
 } as const;
 
+export type Format = keyof typeof formats;
+
 export function Cadre({
-  src,
-  alt = '',
-  format = '16/10',
-  className = '',
-  position = 'center',
-  gris = false,
+  src, alt = '', format = '16/10', className = '', position = 'center', priorite = false,
 }: {
-  src?: string | null;
-  alt?: string | null;
-  format?: keyof typeof formats;
-  className?: string;
-  position?: string;
-  gris?: boolean;
+  src?: string | null; alt?: string | null; format?: Format; className?: string; position?: string; priorite?: boolean;
 }) {
   return (
-    <div className={`relative overflow-hidden bg-cream ${formats[format]} ${className}`}>
+    <div className={`photo relative overflow-hidden bg-paper-deep ${formats[format]} ${className}`}>
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt ?? ''}
-          loading="lazy"
-          className={`absolute inset-0 h-full w-full object-cover transition duration-500 ${gris ? 'grayscale hover:grayscale-0' : ''}`}
-          style={{ objectPosition: position }}
-        />
+        <img src={src} alt={alt ?? ''} loading={priorite ? 'eager' : 'lazy'} decoding="async"
+          className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: position }} />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/medias/site/jogoo/icone-jogoo.png" alt="" className="h-1/3 w-auto opacity-15" />
+        <div className="absolute inset-0 flex items-end p-6">
+          <span className="aube w-full opacity-70" aria-hidden />
         </div>
       )}
     </div>

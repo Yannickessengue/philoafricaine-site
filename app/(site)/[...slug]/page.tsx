@@ -29,8 +29,9 @@ export default async function PageFixe({ params }: { params: Promise<{ slug: str
     <>
       {revue && <RevueBandeau />}
       <EnTete kicker={rubrique} titre={page.entry.titre} intro={page.entry.description} />
-      <div className="mx-auto max-w-4xl px-5 py-12">
+      <div className="px-5 sm:px-8">
         <Prose node={node} />
+        <div className="aube mx-auto mt-16 max-w-[40rem]" aria-hidden />
       </div>
     </>
   );

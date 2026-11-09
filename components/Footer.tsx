@@ -9,41 +9,55 @@ const sousSites = [
   { href: '/sous-sites/philo-africaine-magazine', label: 'Philo Africaine Magazine' },
 ];
 
-export function Footer({ mention }: { mention?: string | null }) {
+const rubriques = [
+  { href: '/edito', label: 'Édito' },
+  { href: '/actualites', label: 'Actualités' },
+  { href: '/publications', label: 'Publications' },
+  { href: '/agenda', label: 'Agenda' },
+  { href: '/flash', label: 'Flash' },
+  { href: '/mediatheque', label: 'Médiathèque' },
+];
+
+export function Footer({ mention, email }: { mention?: string | null; email?: string | null }) {
   return (
-    <footer className="mt-20 bg-ink text-paper">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-3">
-        <div>
+    <footer className="mt-28 bg-night text-paper">
+      <div className="mx-auto max-w-7xl px-5 pb-10 pt-20 sm:px-8">
+        <div className="grid gap-14 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div>
+            <p className="font-serif text-[1.9rem] leading-tight">
+              Le coq chante à l’aube,<br /><em className="text-gold">pas au crépuscule.</em>
+            </p>
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-paper/60">
+              Groupe JOGOO — Association des Philosophes du Chant du Coq. Un projet de réflexion sur la pensée philosophique africaine, depuis 2010.
+            </p>
+            {email && <a href={`mailto:${email}`} className="mt-6 inline-block font-serif italic text-gold hover:text-paper">{email}</a>}
+          </div>
+          <div>
+            <p className="label !text-paper/45">Rubriques</p>
+            <ul className="mt-5 space-y-2.5 text-[0.95rem]">{rubriques.map((s) => <li key={s.href}><Link href={s.href} className="text-paper/80 hover:text-gold">{s.label}</Link></li>)}</ul>
+          </div>
+          <div>
+            <p className="label !text-paper/45">Sous-sites</p>
+            <ul className="mt-5 space-y-2.5 text-[0.95rem]">{sousSites.map((s) => <li key={s.href}><Link href={s.href} className="text-paper/80 hover:text-gold">{s.label}</Link></li>)}</ul>
+          </div>
+          <div>
+            <p className="label !text-paper/45">Le site</p>
+            <ul className="mt-5 space-y-2.5 text-[0.95rem]">
+              <li><Link href="/le-groupe" className="text-paper/80 hover:text-gold">Le Groupe</Link></li>
+              <li><Link href="/contact" className="text-paper/80 hover:text-gold">Contact</Link></li>
+              <li><Link href="/plan-du-site" className="text-paper/80 hover:text-gold">Plan du site</Link></li>
+              <li><Link href="/mentions-legales" className="text-paper/80 hover:text-gold">Mentions légales</Link></li>
+              <li><Link href="/credits" className="text-paper/80 hover:text-gold">Crédits</Link></li>
+              <li><Link href="/keystatic" className="text-paper/80 hover:text-gold">Espace rédaction</Link></li>
+            </ul>
+          </div>
+        </div>
+        <div className="aube aube-nuit mt-16" aria-hidden />
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 text-xs text-paper/45 sm:flex-row">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/medias/site/jogoo/logo-jogoo-blanc.png" alt="Groupe JOGOO" className="h-12 w-auto" />
-          <p className="mt-4 max-w-xs font-serif text-sm italic text-paper/70">Philosophie africaine. Débats & questions.</p>
+          <img src="/medias/site/jogoo/logo-jogoo-blanc.png" alt="Groupe JOGOO" className="h-9 w-auto opacity-80" />
+          <p className="text-center sm:text-right">{mention ?? 'Groupe JOGOO (ASPHICC-JOGOO), association déclarée.'}</p>
         </div>
-        <div>
-          <p className="kicker !text-gold">Sous-sites</p>
-          <ul className="mt-3 space-y-1.5 text-sm">
-            {sousSites.map((s) => (
-              <li key={s.href}>
-                <Link href={s.href} className="text-paper/80 hover:text-gold">{s.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <p className="kicker !text-gold">Le site</p>
-          <ul className="mt-3 space-y-1.5 text-sm">
-            <li><Link href="/agenda" className="text-paper/80 hover:text-gold">Agenda</Link></li>
-            <li><Link href="/flash" className="text-paper/80 hover:text-gold">Flash</Link></li>
-            <li><Link href="/plan-du-site" className="text-paper/80 hover:text-gold">Plan du site</Link></li>
-            <li><Link href="/mentions-legales" className="text-paper/80 hover:text-gold">Mentions légales</Link></li>
-            <li><Link href="/credits" className="text-paper/80 hover:text-gold">Crédits</Link></li>
-            <li><Link href="/keystatic" className="text-paper/80 hover:text-gold">Espace rédaction</Link></li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-paper/10">
-        <p className="mx-auto max-w-6xl px-5 py-5 text-xs text-paper/50">
-          {mention ?? 'Groupe JOGOO (ASPHICC-JOGOO). Association déclarée.'}
-        </p>
       </div>
     </footer>
   );
