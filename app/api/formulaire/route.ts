@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
 import { getCandidature, getInscription, type Activite } from '@/lib/activites';
 import { DESTINATAIRES, EXTENSIONS, FICHIER_MAX, FORMULAIRES } from '@/lib/formulaires';
 import { SITE } from '@/lib/site';
@@ -7,7 +8,8 @@ import { SITE } from '@/lib/site';
  * Réception des formulaires d’inscription et de candidature.
  * Chaque envoi part, par Brevo (e-mail transactionnel), à philoafricaine@gmail.com et fondseboussi@gmail.com,
  * avec le fichier joint ; la personne reçoit un accusé de réception avec le PDF de l’activité.
- * Variables : BREVO_API_KEY, BREVO_SENDER_EMAIL (adresse d’expédition validée dans Brevo),
+ * Envoi : Brevo si BREVO_API_KEY (+ BREVO_SENDER_EMAIL) est défini, sinon Gmail directement si GMAIL_APP_PASSWORD
+ * (mot de passe d’application Google, + GMAIL_USER, par défaut philoafricaine@gmail.com).
  * LIENS_ZOOM (facultatif) : JSON {"<slug agenda>": {"lien": "...", "id": "...", "code": "..."}} — le lien Zoom
  * n’est jamais publié sur le site (dépôt public) : il n’apparaît que dans l’e-mail de confirmation des inscrits.
  */
@@ -42,13 +44,47 @@ function enveloppe(titre: string, corps: string) {
 <p style="margin:26px 0 0;font:12px/1.5 Arial,sans-serif;color:#8b7f74">Philosophie africaine. Débats &amp; Questions · <a href="${SITE}" style="color:#c8481e">${SITE.replace(/^https?:\/\//, '')}</a></p></div></body></html>`;
 }
 
-async function brevo(cle: string, message: object) {
-  const r = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: { 'api-key': cle, 'content-type': 'application/json', accept: 'application/json' },
-    body: JSON.stringify(message),
+type Message = {
+  sender: { name: string; email: string };
+  to: { email: string; name?: string }[];
+  replyTo: { email: string; name?: string };
+  subject: string;
+  htmlContent: string;
+  attachment?: { name: string; content: string }[];
+};
+
+const gmail = () =>
+  process.env.GMAIL_APP_PASSWORD
+    ? nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: process.env.GMAIL_USER || 'philoafricaine@gmail.com', pass: process.env.GMAIL_APP_PASSWORD.replace(/\s+/g, '') },
+      })
+    : null;
+
+const serviceActif = () => Boolean(process.env.BREVO_API_KEY || process.env.GMAIL_APP_PASSWORD);
+
+async function envoyer(m: Message) {
+  const cle = process.env.BREVO_API_KEY;
+  if (cle) {
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': cle, 'content-type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify(m),
+    });
+    if (!r.ok) throw new Error(`Brevo ${r.status} ${await r.text().catch(() => '')}`);
+    return;
+  }
+  const t = gmail();
+  if (!t) throw new Error('Aucun service d’envoi configuré');
+  const nom = (n?: string, e?: string) => (n ? `"${n.replace(/"/g, '')}" <${e}>` : e!);
+  await t.sendMail({
+    from: nom(m.sender.name, process.env.GMAIL_USER || 'philoafricaine@gmail.com'),
+    to: m.to.map((d) => nom(d.name, d.email)),
+    replyTo: nom(m.replyTo.name, m.replyTo.email),
+    subject: m.subject,
+    html: m.htmlContent,
+    attachments: m.attachment?.map((a) => ({ filename: a.name, content: Buffer.from(a.content, 'base64') })),
   });
-  if (!r.ok) throw new Error(`Brevo ${r.status} ${await r.text().catch(() => '')}`);
 }
 
 export async function POST(req: Request) {
@@ -96,8 +132,7 @@ export async function POST(req: Request) {
   const t = Date.now();
   if ((derniers.get(ip + slug) ?? 0) > t - 30_000) return NextResponse.json({ erreur: 'Envoi déjà reçu il y a un instant.' }, { status: 429 });
 
-  const cle = process.env.BREVO_API_KEY;
-  if (!cle)
+  if (!serviceActif())
     return NextResponse.json(
       { erreur: 'L’envoi en ligne n’est pas encore activé.' },
       { status: 503 },
@@ -118,7 +153,7 @@ ${zoom.id ? `<p style="margin:0;font:14px/1.6 Arial,sans-serif;color:#5b5048">ID
 
   try {
     // 1. Copie aux deux adresses du Groupe et du Fonds
-    await brevo(cle, {
+    await envoyer({
       sender: expediteur,
       to: DESTINATAIRES.map((e) => ({ email: e })),
       replyTo: { email, name: qui },
@@ -133,7 +168,7 @@ ${zoom.id ? `<p style="margin:0;font:14px/1.6 Arial,sans-serif;color:#5b5048">ID
       ...(piece ? { attachment: [piece] } : {}),
     });
     // 2. Accusé de réception, avec le PDF de l’activité
-    await brevo(cle, {
+    await envoyer({
       sender: expediteur,
       to: [{ email, name: qui }],
       replyTo: { email: DESTINATAIRES[1], name: 'Fonds Eboussi Boulaga' },
