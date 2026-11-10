@@ -11,6 +11,7 @@ export type Note = {
   resume: string;
   tags: string[];
   portrait?: string | null;
+  couverture?: string | null;
 };
 
 const Tags = ({ tags }: { tags: string[] }) => (
@@ -25,9 +26,14 @@ const Tags = ({ tags }: { tags: string[] }) => (
 
 export function CarteNote({ n, grande = false }: { n: Note; grande?: boolean }) {
   const vignette = grande ? 'h-20 w-16' : 'h-14 w-12';
+  const livre = grande ? 'w-28 sm:w-32' : 'w-24';
   return (
     <a className={`flash-fade group flex gap-5 border border-ink/12 bg-white p-6 transition-colors hover:border-terra ${grande ? 'sm:p-7' : ''}`} href={`/publications/${n.slug}`}>
-      {n.portrait ? (
+      {n.couverture ? (
+        <span className={`${livre} aspect-[2/3] shrink-0 self-start overflow-hidden border border-ink/10 bg-cream shadow-[0_6px_16px_-8px_rgba(0,0,0,0.35)]`}>
+          <img alt="" src={n.couverture} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+        </span>
+      ) : n.portrait ? (
         <img alt="" src={n.portrait} className={`${vignette} shrink-0 border border-ink/10 object-cover object-top grayscale transition duration-500 group-hover:grayscale-0`} />
       ) : (
         <span className={`${vignette} flex shrink-0 items-center justify-center border border-ink/10 bg-cream font-display text-lg font-black text-terra/40`}>

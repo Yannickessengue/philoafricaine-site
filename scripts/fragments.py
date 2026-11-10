@@ -238,3 +238,28 @@ for f in _g.glob(OUT + '/*.html'):
     h = open(f).read(); h0 = h
     h = h.replace('src="/medias/site/jogoo/coq-penseur-t.png"', 'src="/medias/site/jogoo/coq-penseur-gauche.png"')
     if h != h0: open(f, 'w').write(h)
+# Fonds Eboussi Boulaga (10 nov. 2026) : le colloque et la revue Eboussi Studies descendent en bas de l’accueil du Fonds ;
+# secrétaire exécutif ; photo de « Le Fonds » remplacée par un portrait net tiré de Mosaïques (Akometam, 2013)
+f = OUT + '/page__sous-sites__fonds-eboussi-boulaga.html'
+h = open(f).read()
+if 'id="fonds-bas"' not in h:
+    s = BeautifulSoup(h, 'html.parser')
+    colloque = s.find('section', class_='colloque')
+    revue = next((d for d in s.find_all('div', class_='feature') if 'couverture-eboussi-studies' in str(d)), None)
+    pied = s.find('footer', class_='fonds-colophon')
+    if colloque and revue and pied:
+        enveloppe = revue.parent  # <div class="wrap"> qui ne contient que la revue
+        bas = s.new_tag('div', id='fonds-bas', style='margin-bottom:-5rem')
+        enveloppe.extract(); colloque.extract()
+        bas.append(enveloppe); bas.append(colloque)
+        s.find('div', class_='fonds').append(bas)
+        h = str(s)
+        open(f, 'w').write(h)
+f = OUT + '/page__sous-sites__fonds-eboussi-boulaga__le-fonds.html'
+h = open(f).read()
+h = h.replace('<div><b>Edith Ekodo Mvondo</b><span>Secrétaire exécutive du Fonds depuis sa fondation</span></div>',
+              '<div><b>Adoulou N. Bitang</b><span>Secrétaire exécutif</span></div><div><b>Edith Ekodo Mvondo</b><span>Secrétaire exécutive à la fondation du Fonds</span></div>')
+h = _re.sub(r'<figure class="wide-ph">.*?</figure>',
+    '<figure class="wide-ph color" style="max-width:420px"><div class="frame" style="height:auto;aspect-ratio:433/537"><img alt="Fabien Eboussi Boulaga, pensif, la main au menton, à Akometam en octobre 2013" decoding="async" loading="lazy" src="/medias/site/jogoo/fonds-eboussi/eboussi-akometam-2013.jpg" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0"/></div><figcaption>Fabien Eboussi Boulaga à Akometam, en octobre 2013. © Perez · Mosaïques, numéro spécial</figcaption></figure>',
+    h, count=1, flags=_re.S)
+open(f, 'w').write(h)

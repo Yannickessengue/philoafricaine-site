@@ -8,6 +8,7 @@ import { CarrouselFlash } from '@/components/CarrouselFlash';
 import { LecteurPodcast, MosaiqueVideos } from '@/components/Medias';
 import { SOUS_SITES } from '@/lib/liste-sous-sites';
 import { fragment } from '@/lib/gabarits';
+import { toutesLesNotes } from '@/lib/notes';
 
 export const revalidate = 3600;
 
@@ -24,7 +25,13 @@ export default async function Accueil() {
     reader.collections.videos.all(),
     reader.collections.podcasts.all(),
   ]);
-  const [revue, minutes, appels] = await Promise.all([getRevue(), getMinutes(), reader.collections.appels.all()]);
+  const [revue, minutes, appels, notes] = await Promise.all([getRevue(), getMinutes(), reader.collections.appels.all(), toutesLesNotes()]);
+  const livres = notes
+    .filter((n) => n.couverture)
+    .sort((x, y) => Number(y.une) - Number(x.une) || (y.annee ?? '').localeCompare(x.annee ?? ''))
+    .slice(0, 9);
+  const colonnes = fragment('home-04-colonnes');
+  const accesRapide = colonnes.slice(colonnes.indexOf('<div class="border border-ink/12 bg-cream/60 p-6">'));
   const minute = minutes[0];
   const aujourdhui = new Date().toISOString().slice(0, 10);
   const appelsOuverts = appels.filter((a) => a.entry.ouvert && (!a.entry.cloture || a.entry.cloture >= aujourdhui));
@@ -57,7 +64,39 @@ export default async function Accueil() {
           ...(podcasts[0] ? [{ etiquette: 'Podcast', texte: 'Écouter Marcien Towa', href: '/podcasts' }] : []),
         ]}
       />
-      <Html html={fragment('home-02')} />
+      {/* La minute du chant du coq */}
+      <section className="relative isolate overflow-hidden bg-[#140f0c] text-paper">
+        <img src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="coq-flotte pointer-events-none absolute bottom-0 right-[-3rem] -z-10 h-[92%] max-h-[24rem] opacity-80 sm:right-6" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_50%,rgba(168,54,27,0.5),transparent_60%)]" aria-hidden="true" />
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-14 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <p className="flex items-center gap-3 font-brand text-xs font-bold uppercase tracking-[0.24em] text-gold">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-terra opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-terra" />
+              </span>
+              {minute ? 'Nouvel épisode' : 'Nouvelle rubrique'}
+            </p>
+            <h2 className="mt-3 font-brand text-3xl font-black uppercase leading-[0.95] text-white sm:text-5xl">
+              La minute <span className="font-serif font-bold normal-case italic text-gold">du chant du coq</span>
+            </h2>
+            <p className="mt-4 max-w-md font-serif text-lg italic text-paper/80">{minute ? minute.entry.definition || MINUTE.devise : MINUTE.devise}</p>
+            <a href={minute ? `${MINUTE.base}/${minute.slug}` : MINUTE.base} className="mt-6 inline-block bg-terra px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-terra-deep">
+              {minute ? `Regarder : ${minute.entry.titre} →` : 'Découvrir la rubrique →'}
+            </a>
+          </div>
+          {minute && (minute.entry.affiche || integrationVideo(minute.entry.video)?.vignette) && (
+            <a href={`${MINUTE.base}/${minute.slug}`} className="group relative block aspect-video overflow-hidden shadow-2xl">
+              <img src={minute.entry.affiche || integrationVideo(minute.entry.video)!.vignette!} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+              <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7Z" />
+                </svg>
+              </span>
+            </a>
+          )}
+        </div>
+      </section>
 
       {/* L'édito de la semaine */}
       {edito && (
@@ -126,37 +165,37 @@ export default async function Accueil() {
             Actualité principale, prochain événement, appel à contributions, publications et ressources nouvelles du réseau JOGOO.
           </p>
         </div>
-        <div className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_1fr_0.85fr]">
+        <div className="mt-8 grid gap-4 lg:grid-cols-[1.05fr_1.1fr_0.85fr]">
           <div className="flex flex-col gap-4">
             {actu && (
-              <a className="group relative isolate flex flex-1 flex-col justify-between overflow-hidden bg-ink p-8 text-paper" href={`/actualites/${actu.slug}`}>
+              <a className="group relative isolate flex flex-1 flex-col justify-between overflow-hidden bg-ink p-6 text-paper sm:p-7" href={`/actualites/${actu.slug}`}>
                 {actu.entry.image && (
                   <img
                     alt=""
                     aria-hidden="true"
                     src={actu.entry.image}
-                    className="absolute inset-0 -z-10 h-full w-full object-cover object-[85%_15%] opacity-25 -scale-x-100 transition-transform duration-500 group-hover:scale-105 group-hover:-scale-x-105"
+                    className="absolute inset-0 -z-10 h-full w-full object-cover object-[85%_15%] opacity-70 -scale-x-100 transition-transform duration-500 group-hover:scale-105 group-hover:-scale-x-105"
                   />
                 )}
-                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/85 to-ink/40 transition-colors group-hover:from-terra-deep group-hover:via-terra-deep/85" />
+                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/95 via-ink/55 to-transparent transition-colors group-hover:from-terra-deep group-hover:via-terra-deep/85" />
                 <p className="kicker text-gold">Actualité</p>
-                <div className="mt-8">
+                <div className="mt-4">
                   <h3 className="display-title text-2xl leading-[1.05] text-paper sm:text-[1.7rem]">{actu.entry.titre}</h3>
-                  <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-paper/75">{actu.entry.resume || extrait(corpsBrut('actualites', actu.slug), 260)}</p>
-                  <p className="mt-4 text-sm text-paper/60">
+                  <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-paper/85">{actu.entry.resume || extrait(corpsBrut('actualites', actu.slug), 260)}</p>
+                  <p className="mt-2 text-sm text-paper/70">
                     {dateFr(actu.entry.date)}
                     {actu.entry.auteur ? ` · ${actu.entry.auteur}` : ''}
                   </p>
-                  <span className="mt-6 inline-block bg-terra px-5 py-2.5 text-sm font-semibold uppercase tracking-wide text-white transition-colors group-hover:bg-white group-hover:text-ink">
+                  <span className="mt-4 inline-block bg-terra px-5 py-2 text-sm font-semibold uppercase tracking-wide text-white transition-colors group-hover:bg-white group-hover:text-ink">
                     En savoir plus
                   </span>
                 </div>
               </a>
             )}
             {rdv && (
-              <a className="group relative isolate flex flex-1 flex-col justify-between overflow-hidden bg-terra-deep p-8 text-paper" href="/actualites#agenda">
+              <a className="group relative isolate flex flex-1 flex-col justify-between overflow-hidden bg-terra-deep p-6 text-paper sm:p-7" href="/actualites#agenda">
                 <p className="kicker text-gold">Prochain rendez-vous</p>
-                <div className="mt-6">
+                <div className="mt-3">
                   <p className="font-brand text-xs font-bold uppercase tracking-wide text-paper/70">
                     {rdv.entry.dateAffichee || dateFr(rdv.entry.date)}
                     {rdv.entry.aConfirmer && <span className="ml-2 font-normal normal-case text-paper/60">· date à confirmer</span>}
@@ -164,13 +203,35 @@ export default async function Accueil() {
                   <h3 className="display-title mt-2 text-2xl leading-[1.05] text-paper sm:text-[1.7rem]">{rdv.entry.intitule}</h3>
                   {rdv.entry.lieu && <p className="mt-3 text-sm text-paper/70">{rdv.entry.lieu}</p>}
                 </div>
-                <span className="mt-6 inline-block w-fit bg-paper px-5 py-2.5 text-sm font-semibold uppercase tracking-wide text-ink transition-colors group-hover:bg-gold">
+                <span className="mt-4 inline-block w-fit bg-paper px-5 py-2 text-sm font-semibold uppercase tracking-wide text-ink transition-colors group-hover:bg-gold">
                   Voir l’agenda
                 </span>
               </a>
             )}
           </div>
-          <Html html={fragment('home-04-colonnes')} />
+          <div className="flex h-full flex-col border border-ink/12 bg-white">
+            <div className="flex items-baseline justify-between border-b border-ink/10 px-6 py-4">
+              <p className="kicker">Publications</p>
+              <span className="text-xs text-ink-soft">Notes de lecture</span>
+            </div>
+            <ul className="grid flex-1 grid-cols-3 content-start gap-x-4 gap-y-5 p-5">
+              {livres.map((n) => (
+                <li key={n.slug}>
+                  <a href={`/publications/${n.slug}`} className="group block" title={n.titre}>
+                    <span className="block aspect-[2/3] overflow-hidden border border-ink/10 bg-cream shadow-[0_8px_18px_-10px_rgba(0,0,0,0.45)] transition duration-300 group-hover:-translate-y-1">
+                      <img src={n.couverture!} alt={`Couverture : ${n.titre}`} loading="lazy" className="h-full w-full object-cover" />
+                    </span>
+                    <span className="mt-2 block line-clamp-2 text-[0.72rem] font-semibold leading-snug text-ink group-hover:text-terra">{n.auteur}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a className="group border-t border-ink/10 px-6 py-3 text-sm font-semibold text-terra-deep hover:text-terra" href="/publications">
+              Toutes les publications
+              <Fleche />
+            </a>
+          </div>
+          <Html html={accesRapide} />
         </div>
       </section>
 
@@ -225,40 +286,6 @@ export default async function Accueil() {
               <span className="font-brand text-sm font-bold leading-tight text-ink group-hover:text-terra sm:text-base">{nom}</span>
             </a>
           ))}
-        </div>
-      </section>
-
-      {/* La minute du chant du coq */}
-      <section className="relative isolate overflow-hidden bg-[#140f0c] text-paper">
-        <img src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="coq-flotte pointer-events-none absolute bottom-0 right-[-3rem] -z-10 h-[92%] max-h-[24rem] opacity-80 sm:right-6" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_50%,rgba(168,54,27,0.5),transparent_60%)]" aria-hidden="true" />
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-14 lg:grid-cols-[1.1fr_1fr]">
-          <div>
-            <p className="flex items-center gap-3 font-brand text-xs font-bold uppercase tracking-[0.24em] text-gold">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-terra opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-terra" />
-              </span>
-              {minute ? 'Nouvel épisode' : 'Nouvelle rubrique'}
-            </p>
-            <h2 className="mt-3 font-brand text-3xl font-black uppercase leading-[0.95] text-white sm:text-5xl">
-              La minute <span className="font-serif font-bold normal-case italic text-gold">du chant du coq</span>
-            </h2>
-            <p className="mt-4 max-w-md font-serif text-lg italic text-paper/80">{minute ? minute.entry.definition || MINUTE.devise : MINUTE.devise}</p>
-            <a href={minute ? `${MINUTE.base}/${minute.slug}` : MINUTE.base} className="mt-6 inline-block bg-terra px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-terra-deep">
-              {minute ? `Regarder : ${minute.entry.titre} →` : 'Découvrir la rubrique →'}
-            </a>
-          </div>
-          {minute && (minute.entry.affiche || integrationVideo(minute.entry.video)?.vignette) && (
-            <a href={`${MINUTE.base}/${minute.slug}`} className="group relative block aspect-video overflow-hidden shadow-2xl">
-              <img src={minute.entry.affiche || integrationVideo(minute.entry.video)!.vignette!} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-              <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7Z" />
-                </svg>
-              </span>
-            </a>
-          )}
         </div>
       </section>
 

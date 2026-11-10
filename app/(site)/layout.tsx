@@ -4,6 +4,7 @@ import { Dock } from '@/components/Dock';
 import { Html } from '@/components/Html';
 import { Interactif } from '@/components/Interactif';
 import { PiedAI } from '@/components/PiedAI';
+import { PiedProjets } from '@/components/PiedProjets';
 import { fragment } from '@/lib/gabarits';
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -14,6 +15,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <main className="flex-1">{children}</main>
       <PiedAI />
       <Html html={fragment('footer')} />
+      <PiedProjets />
       <Interactif />
       <Dock />
       <BandeauCookies />

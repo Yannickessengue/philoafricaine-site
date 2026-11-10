@@ -185,7 +185,7 @@ export function Cartes({ site, items, colonnes = 3 }: { site: Site; items: Carte
           <>
             {c.image && (
               <span className="cadre -mx-6 -mt-6 mb-5 block aspect-[16/10]">
-                <img alt="" src={c.image} loading="lazy" className="grayscale transition duration-500 group-hover:scale-[1.03] group-hover:grayscale-0" />
+                <img alt="" src={c.image} loading="lazy" className="transition duration-500 group-hover:scale-[1.03]" />
               </span>
             )}
             {c.numero && <span className={`font-serif text-2xl leading-none ${t.accent} opacity-60`}>{c.numero}</span>}

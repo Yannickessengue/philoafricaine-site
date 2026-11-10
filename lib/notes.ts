@@ -16,6 +16,7 @@ export async function toutesLesNotes() {
       resume: p.entry.resume || extrait(corps, 220),
       tags: motsCles(p.entry.motsCles),
       portrait: p.entry.auteurFiche ? portraits.get(p.entry.auteurFiche) : null,
+      couverture: (p.entry as { couverture?: string | null }).couverture ?? null,
       une: Boolean(p.entry.une),
       fiche: p.entry.auteurFiche,
     };

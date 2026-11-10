@@ -55,7 +55,15 @@ export default async function Publication({ params }: { params: Promise<{ slug: 
             ))}
           </ul>
         </div>
+        {p.couverture && (
+          <figure className="mx-auto mt-8 w-44 sm:float-right sm:mb-6 sm:ml-8 sm:mt-10 sm:w-52">
+            <div className="aspect-[2/3] overflow-hidden border border-ink/10 bg-cream shadow-[0_12px_30px_-12px_rgba(0,0,0,0.4)]">
+              <img alt={`Couverture : ${p.titre}`} src={p.couverture} className="h-full w-full object-cover" />
+            </div>
+          </figure>
+        )}
         <Prose node={node} className="mt-8" />
+        <div className="clear-both" />
         <Partage url={`${SITE}/publications/${slug}`} titre={p.titre} accroche={sousTitre || undefined} hashtags={['PhilosophieAfricaine']} commentaires={false} className="mt-10" />
         {p.lienUrl && (
           <a className="mt-8 inline-flex items-center gap-2 bg-ink px-6 py-3 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-terra" href={p.lienUrl} target="_blank" rel="noreferrer">
@@ -66,7 +74,7 @@ export default async function Publication({ params }: { params: Promise<{ slug: 
         )}
         {auteur && (
           <div className="mt-12 flex gap-5 border-l-2 border-terra bg-cream/50 p-6">
-            {auteur.portrait && <img alt={auteur.nom} src={auteur.portrait} className="h-24 w-20 shrink-0 border border-ink/10 object-cover object-top grayscale" />}
+            {auteur.portrait && <img alt={auteur.nom} src={auteur.portrait} className="h-24 w-20 shrink-0 border border-ink/10 object-cover object-top" />}
             <div>
               <p className="kicker">L’auteur</p>
               <h2 className="mt-1 font-brand text-lg font-bold text-ink">{auteur.nom}</h2>

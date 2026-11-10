@@ -69,7 +69,7 @@ export default async function Actualites() {
             <div className="mt-8">
               <article className="overflow-hidden border border-ink/12 bg-white">
                 <a href={`/actualites/${une.slug}`} className="cadre block aspect-[16/9]">
-                  {une.entry.image && <img alt={une.entry.imageDescription ?? ''} src={une.entry.image} className="grayscale transition duration-500 hover:grayscale-0" />}
+                  {une.entry.image && <img alt={une.entry.imageDescription ?? ''} src={une.entry.image} className="transition duration-500 hover:scale-[1.02]" />}
                 </a>
                 <div className="flex flex-col justify-center p-7 sm:p-10">
                   <p className="kicker">À la une</p>
@@ -100,7 +100,7 @@ export default async function Actualites() {
                   <article key={a.slug} className="flex flex-col border border-ink/12 bg-white">
                     {a.entry.image && (
                       <a href={`/actualites/${a.slug}`} className="cadre aspect-[16/10]">
-                        <img alt={a.entry.imageDescription ?? ''} src={a.entry.image} loading="lazy" className="grayscale transition duration-500 hover:grayscale-0" />
+                        <img alt={a.entry.imageDescription ?? ''} src={a.entry.image} loading="lazy" className="transition duration-500 hover:scale-[1.02]" />
                       </a>
                     )}
                     <div className="flex flex-1 flex-col p-6">
