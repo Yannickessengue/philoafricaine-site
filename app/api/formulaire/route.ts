@@ -1,3 +1,4 @@
+// Formulaires du site : voir lib/formulaires.ts (champs) et lib/activites.ts (activités).
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { getCandidature, getInscription, type Activite } from '@/lib/activites';
