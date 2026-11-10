@@ -7,8 +7,19 @@ import { SITE } from '@/lib/site';
  * Réception des formulaires d’inscription et de candidature.
  * Chaque envoi part, par Brevo (e-mail transactionnel), à philoafricaine@gmail.com et fondseboussi@gmail.com,
  * avec le fichier joint ; la personne reçoit un accusé de réception avec le PDF de l’activité.
- * Variables : BREVO_API_KEY, BREVO_SENDER_EMAIL (adresse d’expédition validée dans Brevo).
+ * Variables : BREVO_API_KEY, BREVO_SENDER_EMAIL (adresse d’expédition validée dans Brevo),
+ * LIENS_ZOOM (facultatif) : JSON {"<slug agenda>": {"lien": "...", "id": "...", "code": "..."}} — le lien Zoom
+ * n’est jamais publié sur le site (dépôt public) : il n’apparaît que dans l’e-mail de confirmation des inscrits.
  */
+type Zoom = { lien: string; id?: string; code?: string };
+function zoomPour(slug: string): Zoom | null {
+  try {
+    const z = JSON.parse(process.env.LIENS_ZOOM || '{}')[slug];
+    return z && typeof z.lien === 'string' && z.lien.startsWith('https://') ? z : null;
+  } catch {
+    return null;
+  }
+}
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -95,6 +106,15 @@ export async function POST(req: Request) {
   const formulaire = FORMULAIRES[a.genre].titre;
   const pdf = a.fichier ? `${SITE}${a.fichier}` : null;
   const page = `${SITE}/${a.sorte}/${a.slug}`;
+  const zoom = a.sorte === 'inscription' ? zoomPour(a.slug) : null;
+  const blocZoom = zoom
+    ? `<div style="margin:22px 0;padding:18px 20px;background:#f6efe6;border-left:4px solid #1a1512">
+<p style="margin:0 0 6px;font:700 11px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8a2a12">Rejoindre la séance sur Zoom</p>
+<p style="margin:0 0 12px;font:15px/1.5 Georgia,serif;color:#1a1512">${echap(a.quand)}</p>
+<p style="margin:0 0 12px"><a href="${echap(zoom.lien)}" style="display:inline-block;background:#1a1512;color:#fff;text-decoration:none;font:700 13px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:12px 18px">Participer à la réunion Zoom</a></p>
+${zoom.id ? `<p style="margin:0;font:14px/1.6 Arial,sans-serif;color:#5b5048">ID de réunion : <strong>${echap(zoom.id)}</strong>${zoom.code ? ` · Code secret : <strong>${echap(zoom.code)}</strong>` : ''}</p>` : ''}
+<p style="margin:10px 0 0;font:13px/1.5 Arial,sans-serif;color:#8b7f74">Ce lien vous est personnel : merci de ne pas le diffuser. La séance est aussi retransmise en direct sur <a href="${SITE}/direct" style="color:#c8481e">${SITE.replace(/^https?:\/\//, '')}/direct</a>.</p></div>`
+    : '';
 
   try {
     // 1. Copie aux deux adresses du Groupe et du Fonds
@@ -123,9 +143,12 @@ export async function POST(req: Request) {
         `<p style="font:16px/1.6 Georgia,serif;color:#1a1512">Bonjour ${echap(txt('prenom'))},</p>
 <p style="font:16px/1.6 Georgia,serif;color:#1a1512">Merci pour votre ${a.sorte === 'inscription' ? 'inscription à' : 'envoi pour'} <strong>${echap(a.titre)}</strong>. ${
           a.sorte === 'inscription'
-            ? 'Le lien de connexion et les informations pratiques vous seront envoyés avant la séance.'
+            ? zoom
+              ? 'Voici le lien pour rejoindre la séance ; gardez ce message.'
+              : 'Le lien de connexion et les informations pratiques vous seront envoyés avant la séance.'
             : 'Votre dossier a été transmis aux organisateurs, qui reviendront vers vous après examen.'
         }</p>
+${blocZoom}
 ${pdf ? `<p style="margin:22px 0"><a href="${pdf}" style="display:inline-block;background:#c8481e;color:#fff;text-decoration:none;font:700 13px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:13px 20px">Télécharger le document (PDF)</a></p>` : ''}
 <p style="font:13px/1.5 Arial,sans-serif;color:#8b7f74;margin:22px 0 8px">Copie de votre envoi :</p>${tableau(lignes)}
 <p style="font:14px/1.6 Georgia,serif;color:#5b5048;margin-top:20px">Page de l’activité : <a href="${page}" style="color:#c8481e">${page.replace(/^https?:\/\//, '')}</a><br>Pour toute question : ${DESTINATAIRES.join(' · ')}</p>`,
