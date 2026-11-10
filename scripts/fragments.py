@@ -263,3 +263,14 @@ h = _re.sub(r'<figure class="wide-ph">.*?</figure>',
     '<figure class="wide-ph color" style="max-width:420px"><div class="frame" style="height:auto;aspect-ratio:433/537"><img alt="Fabien Eboussi Boulaga, pensif, la main au menton, à Akometam en octobre 2013" decoding="async" loading="lazy" src="/medias/site/jogoo/fonds-eboussi/eboussi-akometam-2013.jpg" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0"/></div><figcaption>Fabien Eboussi Boulaga à Akometam, en octobre 2013. © Perez · Mosaïques, numéro spécial</figcaption></figure>',
     h, count=1, flags=_re.S)
 open(f, 'w').write(h)
+# Fonds Eboussi Boulaga (10 nov. 2026) : emplacement du bloc dynamique « À venir » (agenda + appels du Fonds),
+# rempli par app/(site)/[...slug]/page.tsx avec components/AVenirFonds.tsx
+for nom, apres in (('page__sous-sites__fonds-eboussi-boulaga.html', 'home-hero'), ('page__sous-sites__fonds-eboussi-boulaga__activites.html', 'fe-header')):
+    f = OUT + '/' + nom
+    h = open(f).read()
+    if 'data-a-venir' not in h:
+        s = BeautifulSoup(h, 'html.parser')
+        cible = s.find(class_=apres)
+        if cible:
+            cible.insert_after(s.new_tag('div', attrs={'data-a-venir': 'fonds'}))
+            open(f, 'w').write(str(s))

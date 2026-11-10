@@ -4,6 +4,9 @@ import { getPages, getPageByPath } from '@/lib/content';
 import { Prose } from '@/components/Prose';
 import { Html } from '@/components/Html';
 import { adressesStatiques, pageStatique } from '@/lib/gabarits';
+import { aVenirFondsHtml } from '@/lib/a-venir-fonds';
+
+export const revalidate = 3600;
 
 const geresAilleurs = /^\/sous-sites\/(revue-jogoo(\/[^/]+)?|philo-africaine-magazine|editions-jogoo|sankofa-communications|jogoo-ai|eboussi-studies)(\/.*)?$/;
 
@@ -26,7 +29,10 @@ export default async function PageFixe({ params }: { params: Promise<{ slug: str
   const adresse = '/' + (await params).slug.join('/');
   // 1. Page d'origine, reproduite à l'identique
   const s = pageStatique(adresse);
-  if (s) return <Html html={s.html} />;
+  if (s) {
+    const marque = '<div data-a-venir="fonds"></div>';
+    return <Html html={s.html.includes(marque) ? s.html.replace(marque, await aVenirFondsHtml()) : s.html} />;
+  }
   // 2. Page créée dans l'administration
   const page = await getPageByPath(adresse);
   if (!page) notFound();

@@ -9,6 +9,7 @@ import { LecteurPodcast, MosaiqueVideos } from '@/components/Medias';
 import { SOUS_SITES } from '@/lib/liste-sous-sites';
 import { fragment } from '@/lib/gabarits';
 import { toutesLesNotes } from '@/lib/notes';
+import { AgendaAccueil } from '@/components/AgendaAccueil';
 
 export const revalidate = 3600;
 
@@ -30,11 +31,12 @@ export default async function Accueil() {
     .filter((n) => n.couverture)
     .sort((x, y) => Number(y.une) - Number(x.une) || (y.annee ?? '').localeCompare(x.annee ?? ''))
     .slice(0, 9);
-  const colonnes = fragment('home-04-colonnes');
-  const accesRapide = colonnes.slice(colonnes.indexOf('<div class="border border-ink/12 bg-cream/60 p-6">'));
   const minute = minutes[0];
   const aujourdhui = new Date().toISOString().slice(0, 10);
-  const appelsOuverts = appels.filter((a) => a.entry.ouvert && (!a.entry.cloture || a.entry.cloture >= aujourdhui));
+  const appelsOuverts = appels
+    .filter((a) => a.entry.ouvert && (!a.entry.cloture || a.entry.cloture >= aujourdhui))
+    .sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0));
+  const appelUne = appelsOuverts[0];
   const podcasts = podcastsBruts.filter((p) => p.entry.audio).sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0));
   const videosTriees = videos.sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0)).slice(0, 6);
   const edito = editos[0];
@@ -42,7 +44,6 @@ export default async function Accueil() {
   const actu = actus[0];
   const mois = new Date().toISOString().slice(0, 7);
   const prochains = agenda.filter((a) => a.entry.date!.slice(0, 7) >= mois);
-  const rdv = prochains[0];
   const ouverts = postes.filter((p) => !p.entry.pourvu).length;
   const flashsTries = flashs.sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0));
 
@@ -59,8 +60,8 @@ export default async function Accueil() {
             : [{ etiquette: 'Nouveau', texte: 'La minute du chant du coq : un concept, un philosophe, cinq minutes', href: MINUTE.base }]),
           ...actus.slice(0, 3).map((a) => ({ etiquette: 'Actualité', texte: a.entry.titre, href: `/actualites/${a.slug}` })),
           { etiquette: 'Revue', texte: 'Revue JOGOO n° 1 : « L’être africain »', href: '/sous-sites/revue-jogoo' },
-          ...appelsOuverts.slice(0, 2).map((a) => ({ etiquette: 'Appel', texte: a.entry.titre, href: '/recherche/appels-a-contributions' })),
-          ...prochains.slice(0, 2).map((a) => ({ etiquette: 'Agenda', texte: `${a.entry.intitule}${a.entry.dateAffichee ? ` · ${a.entry.dateAffichee}` : ''}`, href: '/agenda' })),
+          ...appelsOuverts.slice(0, 2).map((a) => ({ etiquette: 'Appel', texte: a.entry.titre, href: a.entry.formulaire && a.entry.formulaire !== 'aucun' ? `/candidature/${a.slug}` : '/recherche/appels-a-contributions' })),
+          ...prochains.slice(0, 2).map((a) => ({ etiquette: 'Agenda', texte: `${a.entry.intitule}${a.entry.dateAffichee ? ` · ${a.entry.dateAffichee}` : ''}`, href: a.entry.inscription ? `/inscription/${a.slug}` : '/actualites#agenda' })),
           ...(podcasts[0] ? [{ etiquette: 'Podcast', texte: 'Écouter Marcien Towa', href: '/podcasts' }] : []),
         ]}
       />
@@ -192,19 +193,17 @@ export default async function Accueil() {
                 </div>
               </a>
             )}
-            {rdv && (
-              <a className="group relative isolate flex flex-1 flex-col justify-between overflow-hidden bg-terra-deep p-6 text-paper sm:p-7" href="/actualites#agenda">
-                <p className="kicker text-gold">Prochain rendez-vous</p>
+            {appelUne && (
+              <a className="group relative isolate flex flex-1 flex-col justify-between overflow-hidden bg-terra-deep p-6 text-paper sm:p-7" href={appelUne.entry.formulaire && appelUne.entry.formulaire !== 'aucun' ? `/candidature/${appelUne.slug}` : '/recherche/appels-a-contributions'}>
+                <p className="kicker text-gold">Appel à contributions</p>
                 <div className="mt-3">
-                  <p className="font-brand text-xs font-bold uppercase tracking-wide text-paper/70">
-                    {rdv.entry.dateAffichee || dateFr(rdv.entry.date)}
-                    {rdv.entry.aConfirmer && <span className="ml-2 font-normal normal-case text-paper/60">· date à confirmer</span>}
-                  </p>
-                  <h3 className="display-title mt-2 text-2xl leading-[1.05] text-paper sm:text-[1.7rem]">{rdv.entry.intitule}</h3>
-                  {rdv.entry.lieu && <p className="mt-3 text-sm text-paper/70">{rdv.entry.lieu}</p>}
+                  <p className="font-brand text-xs font-bold uppercase tracking-wide text-paper/70">{appelUne.entry.type}</p>
+                  <h3 className="display-title mt-2 text-2xl leading-[1.05] text-paper sm:text-[1.6rem]">{appelUne.entry.titre}</h3>
+                  {appelUne.entry.dateLimite && <p className="mt-3 text-sm font-semibold text-gold">{appelUne.entry.dateLimite}</p>}
                 </div>
-                <span className="mt-4 inline-block w-fit bg-paper px-5 py-2 text-sm font-semibold uppercase tracking-wide text-ink transition-colors group-hover:bg-gold">
-                  Voir l’agenda
+                <span className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                  <span className="inline-block w-fit bg-paper px-5 py-2 text-sm font-semibold uppercase tracking-wide text-ink transition-colors group-hover:bg-gold">Candidater en ligne</span>
+                  {appelsOuverts.length > 1 && <span className="text-sm text-paper/75">et {appelsOuverts.length - 1} autre{appelsOuverts.length > 2 ? 's' : ''} appel{appelsOuverts.length > 2 ? 's' : ''} ouvert{appelsOuverts.length > 2 ? 's' : ''}</span>}
                 </span>
               </a>
             )}
@@ -231,7 +230,7 @@ export default async function Accueil() {
               <Fleche />
             </a>
           </div>
-          <Html html={accesRapide} />
+          <AgendaAccueil rdv={prochains.slice(0, 4)} total={prochains.length} />
         </div>
       </section>
 

@@ -8,6 +8,29 @@ export const revalidate = 3600;
 
 const prose: Classes = {};
 
+function LiensRdv({ a }: { a: { slug: string; entry: { inscription?: boolean; fichier?: string | null; enDirect?: boolean } } }) {
+  if (!a.entry.inscription && !a.entry.fichier && !a.entry.enDirect) return null;
+  return (
+    <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+      {a.entry.inscription && (
+        <a className="bg-terra px-3.5 py-1.5 font-brand text-[0.7rem] font-bold uppercase tracking-[0.08em] text-white hover:bg-ink" href={`/inscription/${a.slug}`}>
+          S’inscrire
+        </a>
+      )}
+      {a.entry.fichier && (
+        <a className="font-semibold text-terra-deep underline underline-offset-2 hover:text-terra" href={a.entry.fichier} target="_blank" rel="noreferrer">
+          PDF
+        </a>
+      )}
+      {a.entry.enDirect && (
+        <a className="inline-flex items-center gap-1.5 font-semibold text-ink underline underline-offset-2 hover:text-terra" href="/direct">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#e53935]" /> En direct sur le site
+        </a>
+      )}
+    </p>
+  );
+}
+
 export default async function Actualites() {
   const [actus, agenda, reglages] = await Promise.all([getActualites(), getAgenda(), reader.singletons.reglages.read()]);
   const mois = new Date().toISOString().slice(0, 7);
@@ -53,9 +76,27 @@ export default async function Actualites() {
                 {prochain.entry.lieu && (
                   <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-paper/70">
                     <Lieu />
-                    {prochain.entry.lieu}
+                    {[prochain.entry.heure, prochain.entry.lieu].filter(Boolean).join(' · ')}
                   </p>
                 )}
+                {prochain.entry.presentation && <p className="mt-3 max-w-2xl text-sm leading-relaxed text-paper/80">{prochain.entry.presentation}</p>}
+                <div className="mt-5 flex flex-wrap gap-3">
+                  {prochain.entry.inscription && (
+                    <a href={`/inscription/${prochain.slug}`} className="bg-paper px-4 py-2.5 font-brand text-xs font-bold uppercase tracking-[0.08em] text-ink hover:bg-gold">
+                      S’inscrire
+                    </a>
+                  )}
+                  {prochain.entry.fichier && (
+                    <a href={prochain.entry.fichier} target="_blank" rel="noreferrer" className="border border-paper/40 px-4 py-2.5 font-brand text-xs font-bold uppercase tracking-[0.08em] text-paper hover:bg-paper hover:text-ink">
+                      Télécharger le PDF
+                    </a>
+                  )}
+                  {prochain.entry.enDirect && (
+                    <a href="/direct" className="inline-flex items-center gap-2 border border-paper/40 px-4 py-2.5 font-brand text-xs font-bold uppercase tracking-[0.08em] text-paper hover:bg-paper hover:text-ink">
+                      <span className="h-2 w-2 rounded-full bg-[#ff5a4f]" /> Suivre en direct
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           </section>
@@ -146,7 +187,9 @@ export default async function Actualites() {
                       {a.entry.aConfirmer && <span className="ml-2 font-normal normal-case text-ink/45">· date à confirmer</span>}
                     </time>
                     <p className="mt-1 max-w-2xl text-[0.97rem] leading-snug text-ink">{a.entry.intitule}</p>
-                    {a.entry.lieu && <p className="mt-0.5 text-sm text-ink/55">{a.entry.lieu}</p>}
+                    {(a.entry.lieu || a.entry.heure) && <p className="mt-0.5 text-sm text-ink/55">{[a.entry.heure, a.entry.lieu].filter(Boolean).join(' · ')}</p>}
+                    {a.entry.presentation && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">{a.entry.presentation}</p>}
+                    <LiensRdv a={a} />
                   </li>
                 ))}
               </ol>

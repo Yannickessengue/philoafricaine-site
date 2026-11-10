@@ -34,7 +34,12 @@ export function CarteAppel({ a }: { a: Awaited<ReturnType<typeof getAppels>>[num
       )}
       <Prose node={a.corps} className="!max-w-none text-sm leading-relaxed [&>p]:!text-left" />
       {e.dateLimite && <p className={`text-sm font-semibold ${a.ouvert ? 'text-terra-deep' : 'text-ink/45 line-through decoration-1'}`}>{e.dateLimite}</p>}
-      <div className="mt-auto flex flex-wrap gap-3 pt-2">
+      <div className="mt-auto flex flex-wrap items-center gap-3 pt-2">
+        {a.ouvert && e.formulaire && e.formulaire !== 'aucun' && (
+          <a className="bg-terra px-4 py-2 font-brand text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-ink" href={`/candidature/${a.slug}`}>
+            Candidater en ligne
+          </a>
+        )}
         {e.fichier && (
           <a className="text-sm font-semibold text-terra-deep underline underline-offset-2 hover:text-terra" href={e.fichier} target="_blank" rel="noreferrer">
             {e.fichierLibelle || 'Télécharger l’appel (PDF)'}
