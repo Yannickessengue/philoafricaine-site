@@ -274,3 +274,19 @@ for nom, apres in (('page__sous-sites__fonds-eboussi-boulaga.html', 'home-hero')
         if cible:
             cible.insert_after(s.new_tag('div', attrs={'data-a-venir': 'fonds'}))
             open(f, 'w').write(str(s))
+# Fonds Eboussi Boulaga (10 nov. 2026) : vignettes YouTube sur les cartes vidéo (accueil du Fonds et Médiathèque),
+# cartes plus compactes (styles dans app/fonds.css, bloc « vignettes »)
+for nom in ('page__sous-sites__fonds-eboussi-boulaga.html', 'page__sous-sites__fonds-eboussi-boulaga__mediatheque.html'):
+    f = OUT + '/' + nom
+    h = open(f).read()
+    def _vignette(m):
+        a = m.group(0)
+        if 'class="th"' in a:
+            return a
+        v = _re.search(r'youtube\.com/watch\?v=([\w-]{11})', a)
+        if not v:
+            return a
+        return a.replace('<span aria-hidden="true" class="play"></span>',
+            f'<span class="th"><img alt="" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/{v.group(1)}/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></span>', 1)
+    h = _re.sub(r'<a class="vid"[^>]*>.*?</a>', _vignette, h, flags=_re.S)
+    open(f, 'w').write(h)

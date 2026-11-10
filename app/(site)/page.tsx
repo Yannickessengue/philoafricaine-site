@@ -323,30 +323,33 @@ export default async function Accueil() {
         </section>
       )}
 
-      {/* Agenda et recherche */}
+      {/* Appels et recherche (l’agenda est dans la colonne « Agenda » plus haut) */}
       <section className="bg-ink text-paper">
         <div className="mx-auto grid max-w-6xl gap-x-14 gap-y-12 px-5 py-16 md:grid-cols-2">
           <div>
             <div className="flex items-baseline justify-between border-b border-white/15 pb-3">
-              <p className="kicker text-gold">À l’agenda</p>
-              <a className="text-xs font-semibold uppercase tracking-wide text-paper/60 hover:text-gold" href="/actualites#agenda">
+              <p className="kicker text-gold">Appels à contributions</p>
+              <a className="text-xs font-semibold uppercase tracking-wide text-paper/60 hover:text-gold" href="/recherche/appels-a-contributions">
                 Tout voir →
               </a>
             </div>
             <ol className="mt-2 divide-y divide-white/10">
-              {prochains.slice(0, 3).map((a) => (
-                <li key={a.slug}>
-                  <a className="group flex gap-4 py-4" href="/actualites#agenda">
-                    <time className="w-24 shrink-0 font-brand text-xs font-semibold uppercase tracking-wide text-gold" dateTime={a.entry.date ?? undefined}>
-                      {a.entry.dateAffichee || dateFr(a.entry.date)}
-                    </time>
-                    <span className="text-[0.95rem] leading-snug text-paper/90 group-hover:text-white">
-                      {a.entry.intitule}
-                      {a.entry.lieu && <span className="mt-0.5 block text-xs text-paper/50">{a.entry.lieu}</span>}
-                    </span>
-                  </a>
-                </li>
-              ))}
+              {appelsOuverts.slice(0, 4).map((a) => {
+                const enLigne = a.entry.formulaire && a.entry.formulaire !== 'aucun';
+                return (
+                  <li key={a.slug}>
+                    <a className="group block py-4" href={enLigne ? `/candidature/${a.slug}` : '/recherche/appels-a-contributions'}>
+                      <span className="font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] text-gold">{a.entry.type}</span>
+                      <span className="mt-1 block text-[0.95rem] leading-snug text-paper/90 group-hover:text-white">{a.entry.titre}</span>
+                      <span className="mt-1 flex flex-wrap gap-x-3 text-xs text-paper/50">
+                        {a.entry.dateLimite && <span>{a.entry.dateLimite}</span>}
+                        {enLigne && <span className="font-semibold text-gold/90 group-hover:text-gold">Candidater en ligne →</span>}
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+              {!appelsOuverts.length && <li className="py-4 text-sm text-paper/60">Aucun appel ouvert pour le moment.</li>}
             </ol>
           </div>
           <Html html={fragment('home-07-droite').replace(/(<span class="display-title text-6xl leading-none text-gold">)\d+/, `$1${ouverts}`)} />
