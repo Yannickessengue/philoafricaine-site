@@ -258,7 +258,7 @@ if 'id="fonds-bas"' not in h:
 f = OUT + '/page__sous-sites__fonds-eboussi-boulaga__le-fonds.html'
 h = open(f).read()
 h = h.replace('<div><b>Edith Ekodo Mvondo</b><span>Secrétaire exécutive du Fonds depuis sa fondation</span></div>',
-              '<div><b>Adoulou N. Bitang</b><span>Secrétaire exécutif</span></div><div><b>Edith Ekodo Mvondo</b><span>Secrétaire exécutive à la fondation du Fonds</span></div>')
+              '<div><b>Adoulou N. Bitang</b><span>Secrétaire exécutif</span></div>')
 h = _re.sub(r'<figure class="wide-ph">.*?</figure>',
     '<figure class="wide-ph color" style="max-width:420px"><div class="frame" style="height:auto;aspect-ratio:433/537"><img alt="Fabien Eboussi Boulaga, pensif, la main au menton, à Akometam en octobre 2013" decoding="async" loading="lazy" src="/medias/site/jogoo/fonds-eboussi/eboussi-akometam-2013.jpg" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0"/></div><figcaption>Fabien Eboussi Boulaga à Akometam, en octobre 2013. © Perez · Mosaïques, numéro spécial</figcaption></figure>',
     h, count=1, flags=_re.S)
