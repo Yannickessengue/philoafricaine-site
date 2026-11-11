@@ -59,7 +59,7 @@ export function DefileHistoire({ moments }: { moments: MomentHistoire[] }) {
         className="mt-4 font-brand text-xs font-bold uppercase tracking-[0.14em] text-ink/55 hover:text-terra motion-reduce:hidden"
         aria-pressed={pause}
       >
-        {pause ? '▶ Reprendre le défilement' : '❚❚ Mettre en pause'}
+        {pause ? '▶︎ Reprendre le défilement' : '❚❚ Mettre en pause'}
       </button>
       <style>{`@keyframes defile-histoire { from { transform: translateX(0) } to { transform: translateX(calc(-50% - 0.5rem)) } }
         .defile-histoire { mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent); }`}</style>

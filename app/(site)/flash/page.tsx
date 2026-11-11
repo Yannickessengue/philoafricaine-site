@@ -107,7 +107,7 @@ export default async function Flash() {
             rel="noreferrer"
             className="mt-8 inline-flex items-center gap-2 border border-paper/30 px-5 py-2.5 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-paper hover:text-ink"
           >
-            Écouter « Bayi Yoon » <span aria-hidden="true">↗</span>
+            Écouter « Bayi Yoon » <span aria-hidden="true">↗︎</span>
           </a>
           <p className="mt-8 text-xs font-semibold uppercase tracking-[0.16em] text-gold">Daara J Family — « Bayi Yoon »</p>
         </div>

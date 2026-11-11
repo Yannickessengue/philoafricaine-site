@@ -67,7 +67,7 @@ export function Externe({ service, lien, children, sombre = true }: { service: s
         </button>
         {lien && (
           <a href={lien} target="_blank" rel="noreferrer" className={`px-4 py-2 font-brand text-[0.7rem] font-bold uppercase tracking-[0.12em] ${sombre ? 'bg-white/10 hover:bg-white/20' : 'bg-white hover:bg-white/70'}`}>
-            Voir sur {service} ↗
+            Voir sur {service} ↗︎
           </a>
         )}
       </div>

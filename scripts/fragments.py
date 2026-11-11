@@ -322,3 +322,9 @@ for f in _g.glob(OUT + '/*.html'):
 for f in _g.glob(OUT + '/*.html'):
     h = open(f).read()
     if '✳' in h: open(f, 'w').write(h.replace('✳️', '✱').replace('✳', '✱'))
+# Flèches ↗ et ▶ (11 nov. 2026) : forcer l'affichage texte (U+FE0E) pour éviter les émojis sous Windows
+import re as _re
+for f in _g.glob(OUT + '/*.html'):
+    h = open(f).read()
+    n = _re.sub('([\u2197\u25b6])(?!\ufe0e)', '\\1\ufe0e', h)
+    if n != h: open(f, 'w').write(n)

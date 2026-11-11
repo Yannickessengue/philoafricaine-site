@@ -69,7 +69,7 @@ export default async function Publication({ params }: { params: Promise<{ slug: 
           <a className="mt-8 inline-flex items-center gap-2 bg-ink px-6 py-3 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-terra" href={p.lienUrl} target="_blank" rel="noreferrer">
             Lire ou se procurer l’ouvrage
             {p.lienLibelle && <span className="text-xs font-normal normal-case text-paper/60">· {p.lienLibelle}</span>}
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">↗︎</span>
           </a>
         )}
         {auteur && (

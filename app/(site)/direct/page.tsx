@@ -69,8 +69,8 @@ export default async function Direct() {
               <p className="font-brand text-xs font-bold uppercase tracking-[0.14em] text-gold">Suivre ailleurs</p>
               <p className="mt-2 leading-relaxed text-paper/70">La même diffusion est visible sur notre chaîne YouTube et notre page Facebook. Pour intervenir, rejoignez la réunion Zoom (lien envoyé aux inscrits).</p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <a href={YOUTUBE} target="_blank" rel="noreferrer" className="bg-paper px-3.5 py-2 font-brand text-[0.7rem] font-bold uppercase tracking-[0.1em] text-ink hover:bg-gold">YouTube ↗</a>
-                <a href={FACEBOOK} target="_blank" rel="noreferrer" className="border border-paper/30 px-3.5 py-2 font-brand text-[0.7rem] font-bold uppercase tracking-[0.1em] text-paper hover:bg-paper hover:text-ink">Facebook ↗</a>
+                <a href={YOUTUBE} target="_blank" rel="noreferrer" className="bg-paper px-3.5 py-2 font-brand text-[0.7rem] font-bold uppercase tracking-[0.1em] text-ink hover:bg-gold">YouTube ↗︎</a>
+                <a href={FACEBOOK} target="_blank" rel="noreferrer" className="border border-paper/30 px-3.5 py-2 font-brand text-[0.7rem] font-bold uppercase tracking-[0.1em] text-paper hover:bg-paper hover:text-ink">Facebook ↗︎</a>
               </div>
             </div>
             <a href="/actualites#agenda" className="inline-block font-semibold text-paper/80 underline underline-offset-2 hover:text-gold">← Tout l’agenda</a>

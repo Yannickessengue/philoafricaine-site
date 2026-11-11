@@ -49,7 +49,7 @@ export function Bandeau({ site, actif }: { site: Site; actif: string }) {
           <a className="group inline-flex items-center gap-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] opacity-70 transition-opacity hover:opacity-100" href="/">
             Portail du Groupe JOGOO
             <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
-              ↗
+              ↗︎
             </span>
           </a>
         </div>

@@ -122,7 +122,7 @@ export function Dock() {
               <div className="flex items-center gap-1">
                 {ouvert === 'ia' && (
                   <a href="/sous-sites/jogoo-ai/interroger" className="px-2 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-paper/70 hover:text-gold">
-                    Plein écran ↗
+                    Plein écran ↗︎
                   </a>
                 )}
                 <button type="button" onClick={() => setOuvert(null)} className="flex h-8 w-8 items-center justify-center text-paper/80 hover:text-gold" aria-label="Fermer">

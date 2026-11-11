@@ -36,7 +36,7 @@ export function ListeVideos({ videos }: { videos: Video[] }) {
                 </svg>
               </span>
               <span className="text-[0.95rem] leading-snug text-ink group-hover:text-terra">{v.titre}</span>
-              {!idYoutube(v.url) && <span aria-hidden="true" className="ml-auto text-ink/30">↗</span>}
+              {!idYoutube(v.url) && <span aria-hidden="true" className="ml-auto text-ink/30">↗︎</span>}
             </a>
           </li>
         ))}

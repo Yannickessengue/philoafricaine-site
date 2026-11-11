@@ -80,7 +80,7 @@ export default function LayoutAnglais({ children }: { children: React.ReactNode 
             </p>
             <p className="mt-2 text-sm">
               <a href="https://www.facebook.com/Philosophie-africaine-D%C3%A9bats-et-questions-169580879726591/" target="_blank" rel="noreferrer" className="hover:text-gold">
-                Facebook ↗
+                Facebook ↗︎
               </a>
             </p>
           </div>
