@@ -60,8 +60,9 @@ const THEMES = {
 function Reponse({ texte, ancre, sombre }: { texte: string; ancre: string; sombre: boolean }) {
   const blocs = texte.split(/\n{2,}/);
   const enLigne = (t: string, k: string) =>
-    t.split(/(\*\*[^*]+\*\*|\[\d+\])/g).map((m, i) => {
+    t.split(/(\*\*[^*]+\*\*|\*[^*\s][^*]*\*|\[\d+\])/g).map((m, i) => {
       if (/^\*\*[^*]+\*\*$/.test(m)) return <strong key={k + i}>{m.slice(2, -2)}</strong>;
+      if (/^\*[^*\s][^*]*\*$/.test(m)) return <em key={k + i}>{m.slice(1, -1)}</em>;
       const n = m.match(/^\[(\d+)\]$/)?.[1];
       if (n)
         return (

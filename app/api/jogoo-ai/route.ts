@@ -49,6 +49,15 @@ function limite(ip: string) {
   return false;
 }
 
+/* Titres issus de noms de fichiers : on retire les traces de sites de téléchargement et les extensions. */
+const nettoyerTitre = (t: string) =>
+  t
+    .replace(/[\s_-]*\(?b-ok\.(xyz|cc|org)\)?/gi, '')
+    .replace(/[\s_-]*\(?\b(z-?lib(rary)?\.(org|is|io)|b-ok\.(xyz|cc|org)|1lib\.\w+|libgen\.\w+|ok\.xyz)\)?/gi, '')
+    .replace(/\.(pdf|epub|docx?|djvu)$/i, '')
+    .replace(/[\s_-]+$/, '')
+    .trim();
+
 type Message = { role: 'user' | 'assistant'; content: string };
 
 export async function POST(req: Request) {
@@ -73,7 +82,7 @@ export async function POST(req: Request) {
   const passages = await rechercher(`${question} ${derniere}`.trim(), 6, chercheurs);
   const sources = passages.map((p, i) => ({
     n: i + 1,
-    titre: p.notice.titre,
+    titre: nettoyerTitre(p.notice.titre),
     auteur: p.notice.auteur,
     type: p.notice.type,
     source: p.notice.source,
@@ -87,7 +96,7 @@ export async function POST(req: Request) {
   if (!cle) return NextResponse.json({ mode: 'bibliotheque', reponse: null, sources, chercheurs });
 
   const documents = passages
-    .map((p, i) => `<document numero="${i + 1}">\nTitre : ${p.notice.titre}\nAuteur : ${p.notice.auteur || 'non précisé'}\nType : ${p.notice.type} — ${p.notice.source}${p.notice.annee ? ` (${p.notice.annee})` : ''}\nAccès : ${p.notice.acces}\nExtrait :\n${p.extrait}\n</document>`)
+    .map((p, i) => `<document numero="${i + 1}">\nTitre : ${nettoyerTitre(p.notice.titre)}\nAuteur : ${p.notice.auteur || 'non précisé'}\nType : ${p.notice.type} — ${p.notice.source}${p.notice.annee ? ` (${p.notice.annee})` : ''}\nAccès : ${p.notice.acces}\nExtrait :\n${p.extrait}\n</document>`)
     .join('\n\n');
 
   const longueur = corps.longueur === 'developpee' ? 'developpee' : 'courte';
