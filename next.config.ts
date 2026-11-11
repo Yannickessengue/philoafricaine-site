@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
       // Eboussi Studies est désormais une rubrique du Fonds Eboussi Boulaga (redirections permanentes 301)
       { source: '/sous-sites/eboussi-studies', destination: '/sous-sites/fonds-eboussi-boulaga/eboussi-studies', statusCode: 301 },
       { source: '/sous-sites/eboussi-studies/:path*', destination: '/sous-sites/fonds-eboussi-boulaga/eboussi-studies', statusCode: 301 },
+      // Anciennes adresses du site précédent (bascule du domaine philoafricaine.org)
+      { source: '/palabre-bidima', destination: '/notre-histoire#palabre-autour-de-jean-godefroy-bidima-2026', statusCode: 301 },
+      { source: '/edito/moderation', destination: '/keystatic', permanent: false },
+      { source: '/newsletter/:path*', destination: '/', permanent: false },
     ];
   },
 };
