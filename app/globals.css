@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/montserrat';
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource-variable/fraunces/full-italic.css';
+@import '@fontsource/ubuntu/300.css';
+@import '@fontsource/ubuntu/300-italic.css';
 @import '@fontsource/ubuntu/400.css';
 @import '@fontsource/ubuntu/500.css';
 @import '@fontsource/ubuntu/700.css';
@@ -16,14 +20,14 @@
   --color-gold-deep: #a97e0c;
   --color-terra: #c94c27;
   --color-terra-deep: #9e3a1c;
-  --color-ink: #1a1a1a;
-  --color-ink-soft: #3f3a38;
-  --color-cream: #f8ede8;
-  --color-paper: #fbf8f3;
+  --color-ink: #2a2421;
+  --color-ink-soft: #564d48;
+  --color-cream: #faf2ec;
+  --color-paper: #fefcf9;
   --font-sans: 'Ubuntu', 'Segoe UI', system-ui, sans-serif;
   --font-serif: 'Libre Baskerville', 'Iowan Old Style', Georgia, serif;
   --font-brand: 'Montserrat Variable', 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
-  --font-display: 'Montserrat Variable', 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
 }
 
 :root { --background: var(--color-paper); --foreground: var(--color-ink); }
@@ -239,3 +243,32 @@ main :is(div, article, li, a):is([class~='border']):is([class*='border-ink/1'], 
   .titre-trait path { animation: none; stroke-dashoffset: 0; }
   .fil { overflow-x: auto; }
 }
+
+/* ——— Design adouci (nov. 2026) : typographie plus légère, couleurs éclaircies ———
+   Règles hors couche (@layer) : elles priment sur les classes utilitaires des gabarits d'origine.
+   Titres en Fraunces (axe SOFT : empattements arrondis), texte courant en Ubuntu Light,
+   graisses ramenées de 800–900 à 500–600, aplats sombres et dorés éclaircis. */
+body { font-weight: 300; letter-spacing: .005em; }
+strong, b { font-weight: 500; }
+.font-black, .font-extrabold { font-weight: 600; }
+.font-bold { font-weight: 600; }
+.font-brand.font-bold, .font-brand.font-semibold, .uppercase.font-bold, .uppercase.font-semibold { font-weight: 550; }
+h1, h2, h3, h4 { font-weight: 500; }
+.display-title, .titre-philo, .prose-jogoo h2, .prose-jogoo h3 {
+  font-family: var(--font-display); text-transform: none; font-weight: 400;
+  font-variation-settings: "SOFT" 100, "WONK" 0; letter-spacing: -.015em; line-height: 1.04;
+}
+.titre-philo { font-weight: 350; letter-spacing: -.025em; font-size: clamp(2.6rem, 7vw, 5.6rem); }
+.titre-afr { font-family: var(--font-display); font-weight: 400; font-variation-settings: "SOFT" 100, "WONK" 1; }
+.prose-jogoo { color: var(--color-ink-soft); }
+.prose-jogoo h2 { font-size: 1.6rem; font-weight: 450; color: var(--color-ink); }
+.prose-jogoo h3 { font-size: 1.3rem; font-weight: 450; color: var(--color-terra-deep); }
+.prose-jogoo strong { font-weight: 500; }
+.kicker, .prose-jogoo .surtitre { font-weight: 500; letter-spacing: .16em; }
+/* Aplats : l'or du bandeau d'accueil et les fonds sombres deviennent plus lumineux */
+section.bg-gold, header.bg-gold { background-color: #f6e3a6; }
+.bg-ink { background-color: #2f2825; }
+.bg-cream\/60 { background-color: color-mix(in oklab, var(--color-cream) 45%, transparent); }
+/* Bordures et ombres plus discrètes */
+.shadow-lg, .shadow-xl, .shadow-2xl { box-shadow: 0 18px 40px -28px rgba(42, 36, 33, .35); }
+.rule-dotted, .prose-jogoo hr { border-top-width: 2px; opacity: .5; }
