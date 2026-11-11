@@ -208,37 +208,109 @@ async function indexer(chercheurs: boolean) {
   const prives = await bibliothequePrivee();
   let notices = [...(await corpus()), ...prives];
   if (chercheurs) {
-    // dans l'espace chercheurs, le texte intégral remplace la notice du même ouvrage
-    const complets = await bibliothequeChercheurs();
-    const ids = new Set(complets.map((c) => c.id));
-    notices = [...notices.filter((n) => !ids.has(n.id)), ...complets];
+    // dans l'espace chercheurs, le texte intégral (cherché à part, voir chercherIntegral) remplace la notice
+    const ids = new Set((await integraux()).map((c) => c.notice.id));
+    notices = notices.filter((n) => !ids.has(n.id));
   }
   const passages: Entree[] = [];
-  const ajouter = (no: Notice, extrait: string) => {
-    const termes = mots(`${no.titre}. ${no.auteur}. ${no.motsCles.join(', ')} ${extrait}`).map(racine);
-    const tf = new Map<string, number>();
-    for (const t of termes) tf.set(t, (tf.get(t) ?? 0) + 1);
-    passages.push({ notice: no, extrait, tf, long: termes.length, tete: new Set(mots(`${no.titre} ${no.auteur}`).map(racine)) });
-  };
-  for (const no of notices) {
-    const blocs = no.texte.split(/\n\s*\n/).map((b) => b.trim()).filter((b) => b.length > 60);
-    // passages d'environ 900 caractères
-    let courant = '';
-    for (const b of blocs.length ? blocs : [no.resume || no.titre]) {
-      if ((courant + b).length > 900 && courant) {
-        ajouter(no, courant.trim());
-        courant = '';
-      }
-      courant += b + '\n\n';
-    }
-    if (courant.trim()) ajouter(no, courant.trim());
-  }
+  for (const no of notices) for (const extrait of decouper(no)) passages.push(entree(no, extrait));
   const df = new Map<string, number>();
   for (const p of passages) for (const t of p.tf.keys()) df.set(t, (df.get(t) ?? 0) + 1);
   const moy = passages.reduce((s, p) => s + p.long, 0) / Math.max(1, passages.length);
   const ix = { quand: Date.now(), passages, df, moy };
   index.set(chercheurs, ix);
   return ix;
+}
+
+function entree(no: Notice, extrait: string): Entree {
+  const termes = mots(`${no.titre}. ${no.auteur}. ${no.motsCles.join(', ')} ${extrait}`).map(racine);
+  const tf = new Map<string, number>();
+  for (const t of termes) tf.set(t, (tf.get(t) ?? 0) + 1);
+  return { notice: no, extrait, tf, long: termes.length, tete: new Set(mots(`${no.titre} ${no.auteur}`).map(racine)) };
+}
+
+/** Passages d'environ 900 caractères. */
+function decouper(no: Notice): string[] {
+  const blocs = no.texte.split(/\n\s*\n/).map((b) => b.trim()).filter((b) => b.length > 60);
+  const out: string[] = [];
+  let courant = '';
+  for (const b of blocs.length ? blocs : [no.resume || no.titre]) {
+    if ((courant + b).length > 900 && courant) {
+      out.push(courant.trim());
+      courant = '';
+    }
+    courant += b + '\n\n';
+  }
+  if (courant.trim()) out.push(courant.trim());
+  return out;
+}
+
+/* ——— Espace chercheurs : plusieurs centaines de livres en texte intégral ———
+   Indexer chaque passage de tous les livres coûterait trop de mémoire : on cherche d'abord
+   les livres les plus pertinents (comptage des termes dans le texte normalisé), puis on ne découpe
+   en passages que ces livres-là. */
+type Integral = { notice: Notice; norm: string; long: number; passages?: Entree[] };
+let integrauxCache: Integral[] | null = null;
+async function integraux(): Promise<Integral[]> {
+  if (integrauxCache) return integrauxCache;
+  const complets = await bibliothequeChercheurs();
+  integrauxCache = complets.map((notice) => ({ notice, norm: normaliser(notice.texte), long: notice.texte.length }));
+  return integrauxCache;
+}
+
+async function chercherIntegral(q: string[], df: Map<string, number>, N: number, moy: number): Promise<Passage[]> {
+  const docs = await integraux();
+  if (!docs.length) return [];
+  const longMoy = docs.reduce((s, d) => s + d.long, 0) / docs.length;
+  const termes = q.filter((t) => t.length >= 3);
+  // fréquence documentaire des termes parmi les livres
+  const comptes = docs.map((d) => termes.map((t) => compter(d.norm, t)));
+  const dfDoc = termes.map((_, i) => comptes.filter((c) => c[i] > 0).length);
+  const classes = docs
+    .map((d, j) => {
+      let s = 0;
+      termes.forEach((t, i) => {
+        const tf = comptes[j][i];
+        if (!tf) return;
+        const idf = Math.log(1 + (docs.length - dfDoc[i] + 0.5) / (dfDoc[i] + 0.5));
+        s += idf * ((tf * 2.2) / (tf + 1.2 * (0.25 + 0.75 * (d.long / longMoy))));
+      });
+      s += termes.filter((t) => normaliser(`${d.notice.titre} ${d.notice.auteur}`).includes(t)).length * 1.5;
+      return { d, s };
+    })
+    .filter((x) => x.s > 0)
+    .sort((a, b) => b.s - a.s)
+    .slice(0, 6);
+  const res: Passage[] = [];
+  for (const { d } of classes) {
+    d.passages ??= decouper(d.notice).map((e) => entree(d.notice, e));
+    const meilleurs = d.passages
+      .map((p) => ({ notice: p.notice, extrait: p.extrait, score: bm25(p, q, df, N, moy) }))
+      .filter((p) => p.score > 1)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 2);
+    res.push(...meilleurs);
+  }
+  return res;
+}
+
+function compter(texte: string, t: string) {
+  let n = 0;
+  for (let i = texte.indexOf(t); i !== -1 && n < 5000; i = texte.indexOf(t, i + t.length)) n++;
+  return n;
+}
+
+function bm25(p: Entree, q: string[], df: Map<string, number>, N: number, moy: number) {
+  let s = 0;
+  for (const t of q) {
+    const tf = p.tf.get(t);
+    if (!tf) continue;
+    const d = df.get(t) ?? 0;
+    const idf = Math.log(1 + (N - d + 0.5) / (d + 0.5));
+    s += idf * ((tf * 2.2) / (tf + 1.2 * (0.25 + 0.75 * (p.long / moy))));
+  }
+  if (s) s += q.filter((t) => p.tete.has(t)).length * 1.5;
+  return s;
 }
 
 export async function rechercher(question: string, max = 6, chercheurs = false): Promise<Passage[]> {
@@ -248,19 +320,10 @@ export async function rechercher(question: string, max = 6, chercheurs = false):
   const N = passages.length;
   const scores: Passage[] = [];
   for (const p of passages) {
-    let s = 0;
-    for (const t of q) {
-      const tf = p.tf.get(t);
-      if (!tf) continue;
-      const d = df.get(t) ?? 0;
-      const idf = Math.log(1 + (N - d + 0.5) / (d + 0.5));
-      s += idf * ((tf * 2.2) / (tf + 1.2 * (0.25 + 0.75 * (p.long / moy))));
-    }
-    if (!s) continue;
-    // bonus si le terme est dans le titre ou l'auteur
-    s += q.filter((t) => p.tete.has(t)).length * 1.5;
+    const s = bm25(p, q, df, N, moy);
     if (s > 1) scores.push({ notice: p.notice, extrait: p.extrait, score: s });
   }
+  if (chercheurs) scores.push(...(await chercherIntegral(q, df, N, moy)));
   scores.sort((a, b) => b.score - a.score);
   // au plus deux passages par document
   const parDoc = new Map<string, number>();

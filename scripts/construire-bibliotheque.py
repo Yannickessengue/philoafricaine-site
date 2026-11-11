@@ -14,7 +14,8 @@ import argparse, base64, gzip, hashlib, json, os, re, sys
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 ap = argparse.ArgumentParser()
-ap.add_argument('--textes', required=True); ap.add_argument('--meta', required=True); ap.add_argument('--notices', required=True)
+ap.add_argument('--textes'); ap.add_argument('--meta'); ap.add_argument('--notices', required=True)
+ap.add_argument('--chercheurs', help="dossier de textes intégraux <sha1(chemin)[:10]>.txt : construit chercheurs.enc (espace chercheurs, accès par code)")
 ap.add_argument('--sortie', default=os.path.join(os.path.dirname(__file__), '..', 'content', 'jogoo-ai', 'bibliotheque.enc'))
 a = ap.parse_args()
 cle = base64.b64decode(os.environ['JOGOO_AI_CORPUS_CLE'])
@@ -28,6 +29,42 @@ def propre(t):
     t = re.sub(r'\n[ \t]*(?=\S)', '\n', t)
     return re.sub(r'\n{3,}', '\n\n', t).strip()
 
+DOM = {'afr': 'philosophie africaine et pensée africaine', 'theo': 'théologie africaine et cultures africaines', 'gen': 'philosophie générale'}
+def titre_de(chemin):
+    titre = re.sub(r'\.pdf$', '', re.split(r'[\\/]', chemin)[-1], flags=re.I).replace('_', ' ').strip()
+    return re.sub(r'\s*\((z-lib|Z-Library|z-library)[^)]*\)|-?libgen\.\w+|@\w+|\s{2,}', ' ', titre).strip(' -')
+def ecrire(notices, sortie):
+    brut = gzip.compress(json.dumps(notices, ensure_ascii=False).encode('utf-8'), 9)
+    iv = os.urandom(12); ct = AESGCM(cle).encrypt(iv, brut, None)   # ct = chiffré + étiquette (16 derniers octets)
+    open(sortie, 'wb').write(iv + ct[-16:] + ct[:-16])
+    return len(brut)
+
+if a.chercheurs:   # textes intégraux des ouvrages protégés : même identifiant que leur notice publique
+    out, vus = [], set()
+    for dom, chemin, auteur in json.load(open(a.notices)):
+        if 'adyas' in chemin.lower(): continue
+        f = os.path.join(a.chercheurs, hashlib.sha1(chemin.encode()).hexdigest()[:10] + '.txt')
+        if not os.path.exists(f): continue
+        texte = propre(open(f, encoding='utf-8', errors='replace').read())
+        cle_doublon = (len(texte) // 1000, texte[2000:2200])
+        if len(texte) < 1500 or cle_doublon in vus: continue
+        vus.add(cle_doublon)
+        out.append({'id': 'not-' + hashlib.sha1(chemin.encode()).hexdigest()[:10], 'type': 'Ouvrage', 'titre': titre_de(chemin), 'auteur': auteur or '',
+            'annee': '', 'source': f'Bibliothèque du Groupe JOGOO ({DOM[dom]})', 'url': '', 'langue': '', 'acces': 'Texte intégral (bibliothèque du Groupe)',
+            'resume': '', 'motsCles': [DOM[dom]], 'texte': texte})
+    dossier = os.path.join(os.path.dirname(__file__), '..', 'bibliotheque-chercheurs'); os.makedirs(dossier, exist_ok=True)
+    for f in os.listdir(dossier):
+        if f.endswith('.enc'): os.remove(os.path.join(dossier, f))
+    parts, cur, taille = [], [], 0          # parts d'environ 90 Mo de texte (moins de 40 Mo une fois compressées)
+    for n in out:
+        if cur and taille + len(n['texte']) > 90_000_000: parts.append(cur); cur, taille = [], 0
+        cur.append(n); taille += len(n['texte'])
+    if cur: parts.append(cur)
+    for i, p in enumerate(parts, 1):
+        k = ecrire(p, os.path.join(dossier, f'chercheurs-{i}.enc'))
+        print(f"part {i} : {len(p)} textes intégraux, {k//1024} Ko compressés")
+    sys.exit()
+
 notices = []
 meta = json.load(open(a.meta))
 for fichier, m in meta.items():
@@ -36,7 +73,6 @@ for fichier, m in meta.items():
         'titre': m['titre'], 'auteur': m.get('auteur', ''), 'annee': m.get('annee', ''), 'source': m.get('source', 'Bibliothèque du Groupe JOGOO'),
         'url': '', 'langue': 'Français', 'acces': 'Texte intégral (bibliothèque du Groupe)', 'resume': m.get('resume', ''),
         'motsCles': m.get('motsCles', []), 'texte': texte})
-DOM = {'afr': 'philosophie africaine et pensée africaine', 'theo': 'théologie africaine et cultures africaines', 'gen': 'philosophie générale'}
 titres_integraux = {re.sub(r'\W+', '', n['titre'].lower()) for n in notices}
 for dom, chemin, auteur in json.load(open(a.notices)):
     if 'adyas' in chemin.lower(): continue

@@ -2,7 +2,7 @@
 import 'server-only';
 import { createDecipheriv } from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import type { Notice } from './corpus';
 
@@ -15,9 +15,15 @@ import type { Notice } from './corpus';
 const caches = new Map<string, Notice[]>();
 
 /** Bibliothèque publique (textes autorisés + notices). */
-export const bibliothequePrivee = () => lire('bibliotheque.enc');
-/** Espace chercheurs (accès par code) : tous les livres en texte intégral, sauf les inédits d'Eboussi. */
-export const bibliothequeChercheurs = () => lire('chercheurs.enc');
+export const bibliothequePrivee = () => lire(path.join(process.cwd(), 'content/jogoo-ai/bibliotheque.enc'));
+/** Espace chercheurs (accès par code) : tous les livres en texte intégral, sauf les inédits d'Eboussi.
+   Fichiers bibliotheque-chercheurs/*.enc (hors de content/ pour n'être embarqués que dans /api/jogoo-ai),
+   découpés en parts de moins de 40 Mo pour GitHub. */
+export async function bibliothequeChercheurs(): Promise<Notice[]> {
+  const dossier = path.join(process.cwd(), 'bibliotheque-chercheurs');
+  const fichiers = (await readdir(dossier).catch(() => [] as string[])).filter((f) => f.endsWith('.enc')).sort();
+  return (await Promise.all(fichiers.map((f) => lire(path.join(dossier, f))))).flat();
+}
 
 async function lire(fichier: string): Promise<Notice[]> {
   const deja = caches.get(fichier);
@@ -26,7 +32,7 @@ async function lire(fichier: string): Promise<Notice[]> {
   const cle = process.env.JOGOO_AI_CORPUS_CLE?.trim();
   if (!cle) return cache;
   try {
-    const brut = await readFile(path.join(process.cwd(), 'content/jogoo-ai', fichier));
+    const brut = await readFile(fichier);
     const iv = brut.subarray(0, 12);
     const tag = brut.subarray(12, 28);
     const d = createDecipheriv('aes-256-gcm', Buffer.from(cle, 'base64'), iv);
