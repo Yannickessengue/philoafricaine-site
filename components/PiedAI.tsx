@@ -16,7 +16,7 @@ export function PiedAI() {
           <span className="relative block h-20 w-20 shrink-0 sm:h-24 sm:w-24">
             <span className="ai-pouls absolute -inset-2 rounded-full bg-[radial-gradient(circle,rgba(255,201,74,0.35),transparent_70%)] blur-md" aria-hidden="true" />
             <span className="ai-tour absolute -inset-1.5 rounded-full border border-dashed border-[#d99a0e]/50" aria-hidden="true" />
-            <img src="/medias/site/jogoo/disque-jogoo-ai.png" alt="" className="relative h-full w-full rounded-full shadow-[0_0_0_2px_rgba(217,154,14,0.6)]" />
+            <img loading="lazy" decoding="async" src="/medias/site/jogoo/disque-jogoo-ai.png" alt="" className="relative h-full w-full rounded-full shadow-[0_0_0_2px_rgba(217,154,14,0.6)]" />
           </span>
           <div>
             <p className="font-brand text-[0.64rem] font-bold uppercase tracking-[0.28em] text-[#d99a0e]">JOGOO AI</p>

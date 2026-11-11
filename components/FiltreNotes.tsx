@@ -34,7 +34,7 @@ export function CarteNote({ n, grande = false }: { n: Note; grande?: boolean }) 
           <img alt="" src={n.couverture} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
         </span>
       ) : n.portrait ? (
-        <img alt="" src={n.portrait} className={`${vignette} shrink-0 border border-ink/10 object-cover object-top grayscale transition duration-500 group-hover:grayscale-0`} />
+        <img loading="lazy" decoding="async" alt="" src={n.portrait} className={`${vignette} shrink-0 border border-ink/10 object-cover object-top grayscale transition duration-500 group-hover:grayscale-0`} />
       ) : (
         <span className={`${vignette} flex shrink-0 items-center justify-center border border-ink/10 bg-cream font-display text-lg font-black text-terra/40`}>
           {(n.auteur ?? n.titre).trim()[0]?.toUpperCase()}

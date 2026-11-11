@@ -140,7 +140,7 @@ export function BandeauCookies({ en = false }: { en?: boolean }) {
       {etat === 'inconnu' && !fenetre && (
         <div role="region" aria-label="Cookies" className={`flash-fade fixed inset-x-3 ${en ? 'bottom-5' : 'bottom-20'} z-[85] mx-auto max-w-2xl bg-ink p-5 text-paper shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] sm:p-6 lg:bottom-5 lg:left-5 lg:right-auto lg:mx-0`}>
           <div className="flex items-start gap-4">
-            <img src="/medias/site/jogoo/picto-jogoo-ai.png" alt="" className="hidden h-12 w-12 shrink-0 object-contain sm:block" />
+            <img loading="lazy" decoding="async" src="/medias/site/jogoo/picto-jogoo-ai.png" alt="" className="hidden h-12 w-12 shrink-0 object-contain sm:block" />
             <div className="text-left">
               <p className="font-brand text-sm font-bold text-white">{T.titre}</p>
               <p className="mt-1.5 text-[0.85rem] leading-relaxed text-paper/70 [text-align:left]">

@@ -11,7 +11,7 @@ export function PageActivite({ a, enDirect = false }: { a: Activite; enDirect?: 
   return (
     <>
       <header className="relative overflow-hidden border-b border-ink/10 bg-[#1a1512] text-paper">
-        <img alt="" aria-hidden="true" src="/medias/site/jogoo/fonds-eboussi/portrait-dessine-orange.jpg" className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-auto object-cover opacity-30 [mask-image:linear-gradient(to_left,black_30%,transparent)] lg:block" />
+        <img loading="lazy" decoding="async" alt="" aria-hidden="true" src="/medias/site/jogoo/fonds-eboussi/portrait-dessine-orange.jpg" className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-auto object-cover opacity-30 [mask-image:linear-gradient(to_left,black_30%,transparent)] lg:block" />
         <div className="relative mx-auto max-w-6xl px-5 py-12 sm:py-16">
           <p className="font-brand text-[0.7rem] font-bold uppercase tracking-[0.2em] text-gold">
             {a.sorte === 'inscription' ? 'Agenda · inscription' : `${a.type}`}

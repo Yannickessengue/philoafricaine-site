@@ -39,7 +39,7 @@ export function VideoMinute({
           aria-label={`Regarder : ${titre}`}
         >
           {poster ? (
-            <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100" />
+            <img loading="lazy" decoding="async" src={poster} alt="" className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100" />
           ) : (
             <span className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,#7a2a12,#1a1a1a_70%)]" aria-hidden="true" />
           )}

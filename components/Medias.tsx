@@ -28,7 +28,7 @@ export function MosaiqueVideos({ videos }: { videos: VideoAccueil[] }) {
   };
   const Repli = () => (
     <span className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,#7a2a12,#1a1a1a_70%)]" aria-hidden="true">
-      <img src="/medias/site/jogoo/logo-jogoo-blanc.png" alt="" className="w-1/3 max-w-[9rem] opacity-25" />
+      <img loading="lazy" decoding="async" src="/medias/site/jogoo/logo-jogoo-blanc.png" alt="" className="w-1/3 max-w-[9rem] opacity-25" />
     </span>
   );
   return (
@@ -50,7 +50,7 @@ export function MosaiqueVideos({ videos }: { videos: VideoAccueil[] }) {
         ) : (
           <button type="button" onClick={() => (src ? setLecture(true) : window.open(v.url, '_blank', 'noopener'))} className="group absolute inset-0 block text-left" aria-label={`Lire la vidéo : ${v.titre}`}>
             <Repli />
-            {id && <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" onError={(e) => (e.currentTarget.style.display = 'none')} className="absolute inset-0 h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100" />}
+            {id && <img loading="lazy" decoding="async" src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" onError={(e) => (e.currentTarget.style.display = 'none')} className="absolute inset-0 h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100" />}
             <span className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" aria-hidden="true" />
             <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white shadow-xl transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20" aria-hidden="true">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z" /></svg>
@@ -158,7 +158,7 @@ export function LecteurPodcast({ episodes, complet = false }: { episodes: Episod
       />
       <div className={`relative overflow-hidden p-5 sm:p-6 ${complet ? 'lg:sticky lg:top-20 lg:self-start lg:p-10' : ''}`}>
         <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-terra/30 blur-3xl" aria-hidden="true" />
-        {complet && <img src="/medias/podcasts/couverture-podcast.jpg" alt="" className="relative mb-6 w-28 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.8)] sm:w-36" />}
+        {complet && <img loading="lazy" decoding="async" src="/medias/podcasts/couverture-podcast.jpg" alt="" className="relative mb-6 w-28 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.8)] sm:w-36" />}
         <p className="relative flex items-center gap-2 font-brand text-[0.62rem] font-bold uppercase tracking-[0.2em] text-gold">
           <span className={`flex h-3 items-end gap-[2px] ${joue ? '' : 'opacity-50'}`} aria-hidden="true">
             {[0, 1, 2, 3].map((b) => (

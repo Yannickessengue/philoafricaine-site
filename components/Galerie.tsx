@@ -36,7 +36,7 @@ export function Galerie({ images, titre }: { images: string[]; titre: string }) 
       </div>
       {i !== null && (
         <div role="dialog" aria-modal="true" aria-label={titre} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4" onClick={fermer}>
-          <img src={images[i]} alt={`${titre} — photo ${i + 1}`} className="max-h-[88vh] max-w-full object-contain shadow-2xl" onClick={(e) => e.stopPropagation()} />
+          <img loading="lazy" decoding="async" src={images[i]} alt={`${titre} — photo ${i + 1}`} className="max-h-[88vh] max-w-full object-contain shadow-2xl" onClick={(e) => e.stopPropagation()} />
           <button type="button" onClick={fermer} className="absolute right-4 top-4 font-brand text-3xl text-white/80 hover:text-white" aria-label="Fermer">×</button>
           {images.length > 1 && (
             <>
@@ -69,7 +69,7 @@ export function AfficheZoom({ src, titre }: { src: string; titre: string }) {
       </button>
       {ouvert && (
         <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4" onClick={() => setOuvert(false)}>
-          <img src={src} alt={`Affiche : ${titre}`} className="max-h-[92vh] max-w-full object-contain" />
+          <img loading="lazy" decoding="async" src={src} alt={`Affiche : ${titre}`} className="max-h-[92vh] max-w-full object-contain" />
           <button type="button" className="absolute right-4 top-4 font-brand text-3xl text-white/80" aria-label="Fermer">×</button>
         </div>
       )}

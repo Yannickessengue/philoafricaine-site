@@ -224,7 +224,7 @@ export function Assistant({
       <div ref={zone} className={`flex-1 overflow-y-auto ${t.zone} ${vide && sombre ? 'hidden' : ''}`}>
         {vide && accueil && !sombre && (
           <div className="flex flex-col items-center py-4 text-center">
-            <img src="/medias/site/jogoo/picto-jogoo-ai.png" alt="" className={compact ? 'h-16 w-auto' : 'h-24 w-auto'} />
+            <img loading="lazy" decoding="async" src="/medias/site/jogoo/picto-jogoo-ai.png" alt="" className={compact ? 'h-16 w-auto' : 'h-24 w-auto'} />
             <p className={`mt-3 font-serif ${compact ? 'text-base' : 'text-xl'} ${t.titre}`}>Une question sur la philosophie africaine ?</p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               {EXEMPLES.slice(0, compact ? 3 : 4).map((e) => (
@@ -242,7 +242,7 @@ export function Assistant({
                 <p className={`max-w-[85%] px-4 py-2.5 leading-relaxed ${t.bulleQ}`}>{x.question}</p>
               </div>
               <div className="mt-4 flex gap-3">
-                <img src="/medias/site/jogoo/picto-jogoo-ai.png" alt="" className={`mt-1 h-9 w-9 shrink-0 object-contain ${sombre ? 'drop-shadow-[0_0_10px_rgba(255,201,74,0.6)]' : ''}`} />
+                <img loading="lazy" decoding="async" src="/medias/site/jogoo/picto-jogoo-ai.png" alt="" className={`mt-1 h-9 w-9 shrink-0 object-contain ${sombre ? 'drop-shadow-[0_0_10px_rgba(255,201,74,0.6)]' : ''}`} />
                 <div className="min-w-0 flex-1">
                   {x.enCours && !x.reponse ? (
                     <p className={`flex items-center gap-2 text-sm ${t.mute}`} role="status">

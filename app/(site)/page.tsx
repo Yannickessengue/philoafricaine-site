@@ -129,7 +129,7 @@ export default async function Accueil() {
       )}
       {/* La minute du chant du coq */}
       <section className="relative isolate overflow-hidden bg-[#140f0c] text-paper">
-        <img src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="coq-flotte pointer-events-none absolute bottom-0 right-[-3rem] -z-10 h-[92%] max-h-[24rem] opacity-80 sm:right-6" />
+        <img loading="lazy" decoding="async" src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="coq-flotte pointer-events-none absolute bottom-0 right-[-3rem] -z-10 h-[92%] max-h-[24rem] opacity-80 sm:right-6" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_50%,rgba(168,54,27,0.5),transparent_60%)]" aria-hidden="true" />
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-14 lg:grid-cols-[1.1fr_1fr]">
           <div>
@@ -150,7 +150,7 @@ export default async function Accueil() {
           </div>
           {minute && (minute.entry.affiche || integrationVideo(minute.entry.video)?.vignette) && (
             <a href={`${MINUTE.base}/${minute.slug}`} className="group relative block aspect-video overflow-hidden shadow-2xl">
-              <img src={minute.entry.affiche || integrationVideo(minute.entry.video)!.vignette!} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+              <img loading="lazy" decoding="async" src={minute.entry.affiche || integrationVideo(minute.entry.video)!.vignette!} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
               <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white" aria-hidden="true">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M8 5v14l11-7Z" />
@@ -177,7 +177,7 @@ export default async function Accueil() {
             <a className="group mt-8 grid overflow-hidden border border-ink/12 bg-white lg:grid-cols-2" href={`/edito/${edito.slug}`}>
               <div className="cadre relative aspect-[7/5] overflow-hidden bg-ink">
                 {edito.entry.image && (
-                  <img alt={edito.entry.imageDescription ?? ''} src={edito.entry.image} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                  <img loading="lazy" decoding="async" alt={edito.entry.imageDescription ?? ''} src={edito.entry.image} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                 )}
               </div>
               <div className="flex flex-col p-8 sm:p-10">
@@ -185,7 +185,7 @@ export default async function Accueil() {
                 <p className="mt-4 font-serif text-lg italic leading-relaxed text-ink sm:text-xl">{extrait(edito.entry.accroche || corpsBrut('editos', edito.slug), 520)}</p>
                 {edito.entry.signature && (
                   <div className="mt-6 flex items-center gap-3">
-                    {edito.entry.portrait && <img alt="" src={edito.entry.portrait} className="h-11 w-11 rounded-full object-cover" />}
+                    {edito.entry.portrait && <img loading="lazy" decoding="async" alt="" src={edito.entry.portrait} className="h-11 w-11 rounded-full object-cover" />}
                     <span className="text-sm leading-tight text-ink-soft">{sansEmail(edito.entry.signature)}</span>
                   </div>
                 )}

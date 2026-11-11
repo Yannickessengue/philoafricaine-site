@@ -22,7 +22,7 @@ export function DefileHistoire({ moments }: { moments: MomentHistoire[] }) {
           <img src={m.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
           <span className="flex h-full items-center justify-center bg-terra">
-            <img src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="w-24 opacity-90" />
+            <img loading="lazy" decoding="async" src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="w-24 opacity-90" />
           </span>
         )}
         <span className="absolute left-0 top-0 bg-ink/85 px-2.5 py-1 font-brand text-sm font-bold text-gold">{m.annee}</span>
