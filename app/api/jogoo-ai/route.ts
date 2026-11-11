@@ -32,7 +32,12 @@ Règles impératives :
 - Distingue ce que disent les textes de tes propres reformulations ; présente les débats et les positions de manière équilibrée.
 - Propose, quand c'est utile, une ou deux pistes pour approfondir (documents du corpus à lire, notions à explorer).
 - Tu peux consulter quelques sites de référence (Stanford Encyclopedia of Philosophy, Internet Encyclopedia of Philosophy, PhilPapers, Persée, OpenEdition, Érudit, HAL, CODESRIA, Cairn) avec l'outil de recherche web, surtout quand les documents ne suffisent pas ou pour la philosophie comparée. Nomme alors clairement la source en ligne (par exemple : « selon la Stanford Encyclopedia of Philosophy, article "African Ethics" ») sans lui donner de numéro entre crochets.
-- Réponse structurée et concise : quelques paragraphes courts, éventuellement une liste. Pas plus de 450 mots.`;
+- Réponse structurée : paragraphes courts, éventuellement une liste.`;
+
+const LONGUEURS = {
+  courte: { consigne: 'Format demandé : réponse courte et directe, 120 à 200 mots au plus, avec les renvois aux sources.', jetons: 700 },
+  developpee: { consigne: 'Format demandé : réponse développée et approfondie, 350 à 550 mots, avec les renvois aux sources.', jetons: 1800 },
+} as const;
 
 const historiques = new Map<string, number[]>();
 function limite(ip: string) {
@@ -47,6 +52,7 @@ function limite(ip: string) {
 type Message = { role: 'user' | 'assistant'; content: string };
 
 export async function POST(req: Request) {
+  const t0 = Date.now();
   const corps = await req.json().catch(() => ({}));
   const question = String(corps.question ?? '').trim().slice(0, 1200);
   const fil: Message[] = Array.isArray(corps.historique)
@@ -79,38 +85,25 @@ export async function POST(req: Request) {
     .map((p, i) => `<document numero="${i + 1}">\nTitre : ${p.notice.titre}\nAuteur : ${p.notice.auteur || 'non précisé'}\nType : ${p.notice.type} — ${p.notice.source}${p.notice.annee ? ` (${p.notice.annee})` : ''}\nAccès : ${p.notice.acces}\nExtrait :\n${p.extrait}\n</document>`)
     .join('\n\n');
 
-  const appeler = (avecWeb: boolean) =>
+  const longueur = corps.longueur === 'developpee' ? 'developpee' : 'courte';
+  const corpusSuffit = passages.length >= 4 && (passages[0]?.score ?? 0) >= 10;
+  const appeler = (avecWeb: boolean, flux: boolean) =>
     fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': cle, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       body: JSON.stringify({
         model: process.env.JOGOO_AI_MODELE || 'claude-sonnet-5-5',
-        max_tokens: 1800,
-        system: SYSTEME,
+        max_tokens: LONGUEURS[longueur].jetons,
+        system: `${SYSTEME}\n- ${LONGUEURS[longueur].consigne}`,
+        stream: flux,
         ...(avecWeb ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2, allowed_domains: SITES }] } : {}),
         messages: [...fil, { role: 'user', content: `<documents>\n${documents || '(aucun document du corpus ne correspond)'}\n</documents>\n\nQuestion : ${question}` }],
       }),
     });
-  try {
-    // La recherche en ligne ajoute 5 à 15 s : on ne la lance que si le corpus répond mal à la question
-    const corpusSuffit = passages.length >= 4 && (passages[0]?.score ?? 0) >= 10;
-    let r = await appeler(!corpusSuffit);
-    if (!r.ok) {
-      console.error('JOGOO AI (avec recherche en ligne)', r.status, await r.text());
-      r = await appeler(false);
-    }
-    if (!r.ok) {
-      console.error('JOGOO AI', r.status, await r.text());
-      return NextResponse.json({ mode: 'bibliotheque', reponse: null, sources, chercheurs, erreur: 'L’assistant est momentanément indisponible ; voici les documents trouvés dans le corpus.' });
-    }
-    type Bloc = { type: string; text?: string; citations?: { type: string; url?: string; title?: string }[] };
-    const j = (await r.json()) as { content?: Bloc[] };
-    const blocs = (j.content ?? []).filter((b) => b.type === 'text');
-    const reponse = blocs.map((b) => b.text ?? '').join('').trim();
-    // sources en ligne citées dans la réponse
+  type Citation = { type: string; url?: string; title?: string };
+  const sourcesEnLigne = (citations: Citation[]) => {
     const vus = new Set<string>();
-    const enLigne = blocs
-      .flatMap((b) => b.citations ?? [])
+    return citations
       .filter((c) => c.url && !vus.has(c.url) && vus.add(c.url))
       .slice(0, 6)
       .map((c, i) => ({
@@ -124,9 +117,81 @@ export async function POST(req: Request) {
         acces: 'Lien externe',
         extrait: '',
       }));
-    return NextResponse.json({ mode: 'assistant', reponse: reponse || AUCUNE_SOURCE, sources: [...sources, ...enLigne], chercheurs });
+  };
+  const indisponible = 'L’assistant est momentanément indisponible ; voici les documents trouvés dans le corpus.';
+
+  /* Réponse au fil de l'écriture (flux NDJSON) : le navigateur affiche le texte dès les premiers mots. */
+  if (corps.flux) {
+    const enc = new TextEncoder();
+    const flux = new ReadableStream({
+      async start(ctrl) {
+        const envoyer = (o: object) => ctrl.enqueue(enc.encode(JSON.stringify(o) + '\n'));
+        envoyer({ t: 'meta', sources, chercheurs, recherche: Date.now() - t0 });
+        try {
+          let r = await appeler(!corpusSuffit, true);
+          if (!r.ok || !r.body) {
+            console.error('JOGOO AI (flux, avec recherche en ligne)', r.status, await r.text());
+            r = await appeler(false, true);
+          }
+          if (!r.ok || !r.body) {
+            console.error('JOGOO AI (flux)', r.status, await r.text());
+            envoyer({ t: 'fin', mode: 'bibliotheque', sources, erreur: indisponible });
+            return ctrl.close();
+          }
+          const lecteur = r.body.getReader();
+          const dec = new TextDecoder();
+          let tampon = '', texte = '', premier = 0;
+          const citations: Citation[] = [];
+          for (;;) {
+            const { value, done } = await lecteur.read();
+            if (done) break;
+            tampon += dec.decode(value, { stream: true });
+            let k;
+            while ((k = tampon.indexOf('\n')) >= 0) {
+              const ligne = tampon.slice(0, k).trim();
+              tampon = tampon.slice(k + 1);
+              if (!ligne.startsWith('data:')) continue;
+              let ev: { type?: string; delta?: { type?: string; text?: string; citation?: Citation }; content_block?: { type?: string } };
+              try { ev = JSON.parse(ligne.slice(5)); } catch { continue; }
+              if (ev.type === 'content_block_start' && ev.content_block?.type === 'server_tool_use') envoyer({ t: 'etat', d: 'Consultation des sites de référence…' });
+              if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta' && ev.delta.text) {
+                if (!premier) premier = Date.now() - t0;
+                texte += ev.delta.text;
+                envoyer({ t: 'texte', d: ev.delta.text });
+              }
+              if (ev.type === 'content_block_delta' && ev.delta?.type === 'citations_delta' && ev.delta.citation) citations.push(ev.delta.citation);
+            }
+          }
+          if (!texte.trim()) envoyer({ t: 'texte', d: AUCUNE_SOURCE });
+          envoyer({ t: 'fin', mode: 'assistant', sources: [...sources, ...sourcesEnLigne(citations)], premier, total: Date.now() - t0 });
+        } catch (e) {
+          console.error('JOGOO AI (flux)', e);
+          envoyer({ t: 'fin', mode: 'bibliotheque', sources, erreur: indisponible });
+        }
+        ctrl.close();
+      },
+    });
+    return new Response(flux, { headers: { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store', 'x-accel-buffering': 'no' } });
+  }
+
+  try {
+    // La recherche en ligne ajoute 5 à 15 s : on ne la lance que si le corpus répond mal à la question
+    let r = await appeler(!corpusSuffit, false);
+    if (!r.ok) {
+      console.error('JOGOO AI (avec recherche en ligne)', r.status, await r.text());
+      r = await appeler(false, false);
+    }
+    if (!r.ok) {
+      console.error('JOGOO AI', r.status, await r.text());
+      return NextResponse.json({ mode: 'bibliotheque', reponse: null, sources, chercheurs, erreur: indisponible });
+    }
+    type Bloc = { type: string; text?: string; citations?: Citation[] };
+    const j = (await r.json()) as { content?: Bloc[] };
+    const blocs = (j.content ?? []).filter((b) => b.type === 'text');
+    const reponse = blocs.map((b) => b.text ?? '').join('').trim();
+    return NextResponse.json({ mode: 'assistant', reponse: reponse || AUCUNE_SOURCE, sources: [...sources, ...sourcesEnLigne(blocs.flatMap((b) => b.citations ?? []))], chercheurs });
   } catch (e) {
     console.error('JOGOO AI', e);
-    return NextResponse.json({ mode: 'bibliotheque', reponse: null, sources, chercheurs, erreur: 'L’assistant est momentanément indisponible ; voici les documents trouvés dans le corpus.' });
+    return NextResponse.json({ mode: 'bibliotheque', reponse: null, sources, chercheurs, erreur: indisponible });
   }
 }

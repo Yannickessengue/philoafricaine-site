@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 type Source = { n: number; titre: string; auteur: string; type: string; source: string; annee: string; url: string; acces: string; extrait: string };
-type Tour = { question: string; reponse: string | null; sources: Source[]; mode?: string; erreur?: string; enCours?: boolean };
+type Longueur = 'courte' | 'developpee';
+type Tour = { question: string; reponse: string | null; sources: Source[]; mode?: string; erreur?: string; enCours?: boolean; etat?: string; longueur?: Longueur };
 export type Variante = 'clair' | 'sombre' | 'compact';
 
 export const EXEMPLES = [
@@ -120,11 +121,19 @@ export function Assistant({
   const [code, setCode] = useState('');
   const [chercheurs, setChercheurs] = useState(false);
   const [saisieCode, setSaisieCode] = useState(false);
+  const [longueur, setLongueur] = useState<Longueur>('courte');
   useEffect(() => {
     try {
       setCode(localStorage.getItem('jogoo-ai-code') ?? '');
+      if (localStorage.getItem('jogoo-ai-longueur') === 'developpee') setLongueur('developpee');
     } catch {}
   }, []);
+  const choisirLongueur = (l: Longueur) => {
+    setLongueur(l);
+    try {
+      localStorage.setItem('jogoo-ai-longueur', l);
+    } catch {}
+  };
   const enregistrerCode = (c: string) => {
     setCode(c);
     setChercheurs(false);
@@ -134,22 +143,53 @@ export function Assistant({
     } catch {}
   };
 
-  const poser = async (question: string) => {
+  /* Pose une question ; la réponse s'affiche au fil de l'écriture (flux NDJSON).
+     `remplacer` : indice d'un tour à refaire (bouton « Approfondir »). */
+  const poser = async (question: string, opts: { longueur?: Longueur; remplacer?: number } = {}) => {
     const texte = question.trim();
     if (texte.length < 3 || occupe) return;
-    const historique = tours.filter((x) => x.reponse).flatMap((x) => [
+    const lg = opts.longueur ?? longueur;
+    const base = opts.remplacer !== undefined ? tours.slice(0, opts.remplacer) : tours;
+    const historique = base.filter((x) => x.reponse).flatMap((x) => [
       { role: 'user', content: x.question },
       { role: 'assistant', content: x.reponse! },
     ]);
-    setTours((ts) => [...ts, { question: texte, reponse: null, sources: [], enCours: true }]);
-    setQ('');
+    const idx = base.length;
+    const maj = (f: (x: Tour) => Tour) => setTours((ts) => ts.map((x, i) => (i === idx ? f(x) : x)));
+    setTours([...base, { question: texte, reponse: null, sources: [], enCours: true, longueur: lg }]);
+    if (opts.remplacer === undefined) setQ('');
     try {
-      const r = await fetch('/api/jogoo-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: texte, historique, code: code || undefined }) });
-      const j = await r.json();
-      setChercheurs(Boolean(j.chercheurs));
-      setTours((ts) => ts.map((x, i) => (i === ts.length - 1 ? { question: texte, reponse: j.reponse ?? null, sources: j.sources ?? [], mode: j.mode, erreur: j.erreur } : x)));
+      const r = await fetch('/api/jogoo-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: texte, historique, code: code || undefined, longueur: lg, flux: true }) });
+      if (!r.ok || !r.body || !(r.headers.get('content-type') ?? '').includes('ndjson')) {
+        const j = await r.json().catch(() => ({}));
+        setChercheurs(Boolean(j.chercheurs));
+        maj((x) => ({ ...x, enCours: false, reponse: j.reponse ?? null, sources: j.sources ?? [], mode: j.mode, erreur: j.erreur ?? (r.ok ? undefined : 'La connexion a échoué. Réessayez dans un instant.') }));
+        return;
+      }
+      const lecteur = r.body.getReader();
+      const dec = new TextDecoder();
+      let tampon = '';
+      for (;;) {
+        const { value, done } = await lecteur.read();
+        if (done) break;
+        tampon += dec.decode(value, { stream: true });
+        let k;
+        while ((k = tampon.indexOf('\n')) >= 0) {
+          const ligne = tampon.slice(0, k);
+          tampon = tampon.slice(k + 1);
+          if (!ligne.trim()) continue;
+          const ev = JSON.parse(ligne);
+          if (ev.t === 'meta') {
+            setChercheurs(Boolean(ev.chercheurs));
+            maj((x) => ({ ...x, sources: ev.sources ?? [], etat: 'JOGOO AI rédige sa réponse…' }));
+          } else if (ev.t === 'etat') maj((x) => ({ ...x, etat: ev.d }));
+          else if (ev.t === 'texte') maj((x) => ({ ...x, reponse: (x.reponse ?? '') + ev.d }));
+          else if (ev.t === 'fin') maj((x) => ({ ...x, enCours: false, etat: undefined, mode: ev.mode, sources: ev.sources ?? x.sources, erreur: ev.erreur }));
+        }
+      }
+      maj((x) => (x.enCours ? { ...x, enCours: false, etat: undefined } : x));
     } catch {
-      setTours((ts) => ts.map((x, i) => (i === ts.length - 1 ? { question: texte, reponse: null, sources: [], erreur: 'La connexion a échoué. Réessayez dans un instant.' } : x)));
+      maj((x) => ({ ...x, enCours: false, etat: undefined, erreur: x.reponse ? undefined : 'La connexion a échoué. Réessayez dans un instant.' }));
     }
   };
 
@@ -191,11 +231,16 @@ export function Assistant({
               <div className="mt-4 flex gap-3">
                 <img src="/medias/site/jogoo/picto-jogoo-ai.png" alt="" className={`mt-1 h-9 w-9 shrink-0 object-contain ${sombre ? 'drop-shadow-[0_0_10px_rgba(255,201,74,0.6)]' : ''}`} />
                 <div className="min-w-0 flex-1">
-                  {x.enCours ? (
-                    <p className={`flex items-center gap-2 text-sm ${t.mute}`}>
+                  {x.enCours && !x.reponse ? (
+                    <p className={`flex items-center gap-2 text-sm ${t.mute}`} role="status">
                       <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#d99a0e]/30 border-t-[#d99a0e]" aria-hidden="true" />
-                      JOGOO AI recherche les documents pertinents…
+                      {x.etat ?? 'JOGOO AI recherche les documents pertinents…'}
                     </p>
+                  ) : x.enCours ? (
+                    <div aria-live="polite">
+                      <Reponse texte={x.reponse!} ancre={`src-${i}`} sombre={sombre} />
+                      <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-[#d99a0e] align-middle" aria-hidden="true" />
+                    </div>
                   ) : (
                     <>
                       {x.erreur && <p className={`mb-3 text-sm ${t.lien}`}>{x.erreur}</p>}
@@ -231,6 +276,11 @@ export function Assistant({
                       {(x.reponse || x.sources.length > 0) && (
                         <p className={`mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.7rem] ${t.mute}`}>
                           <span>Aide à la recherche : vérifiez toujours les textes originaux.</span>
+                          {x.reponse && x.longueur !== 'developpee' && x.mode === 'assistant' && (
+                            <button type="button" disabled={occupe} onClick={() => poser(x.question, { longueur: 'developpee', remplacer: i })} className={`font-semibold underline underline-offset-2 disabled:opacity-40 ${t.lien}`}>
+                              Approfondir cette réponse
+                            </button>
+                          )}
                           <a
                             className={`font-semibold underline underline-offset-2 ${t.lien}`}
                             href={`mailto:${email}?subject=${encodeURIComponent('JOGOO AI — signalement')}&body=${encodeURIComponent(`Question : ${x.question}\n\nRéponse ou référence incorrecte :\n\n`)}`}
@@ -291,7 +341,22 @@ export function Assistant({
         </div>
       )}
       {!compact && (
-        <div className={`flex flex-wrap items-center justify-end gap-x-3 gap-y-1 px-4 pb-3 text-[0.72rem] ${t.mute}`}>
+        <div className={`flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 pb-3 text-[0.72rem] ${t.mute}`}>
+          <span className="flex items-center gap-1" role="group" aria-label="Longueur des réponses">
+            <span>Réponses :</span>
+            {(['courte', 'developpee'] as const).map((l) => (
+              <button
+                key={l}
+                type="button"
+                aria-pressed={longueur === l}
+                onClick={() => choisirLongueur(l)}
+                className={`px-1.5 py-0.5 ${longueur === l ? 'bg-[#d99a0e] font-bold text-[#0d1b2a]' : 'underline underline-offset-2'}`}
+              >
+                {l === 'courte' ? 'courtes' : 'développées'}
+              </button>
+            ))}
+          </span>
+          <span className="flex flex-wrap items-center gap-x-3">
           {chercheurs ? (
             <>
               <span className="font-bold uppercase tracking-[0.12em] text-[#d99a0e]">Espace chercheurs actif : toute la bibliothèque du Groupe</span>
@@ -319,6 +384,7 @@ export function Assistant({
               {code ? 'Code chercheurs enregistré (posez une question pour l’activer)' : 'Accès chercheurs'}
             </button>
           )}
+          </span>
         </div>
       )}
     </div>
