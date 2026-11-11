@@ -146,6 +146,7 @@ export default config({
         presentation: fields.text({ label: 'Présentation', multiline: true }),
         intervenants: fields.text({ label: 'Intervenants', multiline: true }),
         affiche: fields.text({ label: 'Affiche (chemin de l’image)', description: 'Ex. : /medias/histoire/mon-evenement/affiche.jpg' }),
+        miniature: fields.text({ label: 'Miniature (facultatif)', description: 'Image montrée dans le bandeau « Notre histoire » de l’accueil. Ex. : /medias/histoire/mon-evenement/affiche.jpg. Vide : choix automatique.' }),
         photos: fields.array(fields.text({ label: 'Photo (chemin)' }), { label: 'Galerie de photos', itemLabel: (p) => p.value }),
       },
     }),

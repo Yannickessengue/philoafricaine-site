@@ -38,7 +38,7 @@ export default async function Accueil() {
       date: h.entry.dateAffichee ?? '',
       titre: h.entry.titre,
       lieu: h.entry.lieu && h.entry.lieu !== '—' ? h.entry.lieu : '',
-      image: (h.entry.photos.length > 2 ? h.entry.photos[Math.min(h.entry.photos.length - 1, 3)] : h.entry.affiche || h.entry.photos[0] || '')?.replace(/\.jpg$/, '-v.jpg') || null,
+      image: (h.entry.miniature || (h.entry.photos.length > 2 ? h.entry.photos[Math.min(h.entry.photos.length - 1, 3)] : h.entry.affiche || h.entry.photos[0] || ''))?.replace(/\.jpg$/, '-v.jpg') || null,
       enSalle: /présentiel|hybride/i.test(h.entry.format ?? ''),
     }));
   const livres = notes
