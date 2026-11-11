@@ -194,7 +194,7 @@ export function Assistant({
                         <ol className="mt-4 space-y-2">
                           {x.sources.slice(0, compact ? 4 : 6).map((s) => (
                             <li key={s.n} id={`src-${i}-${s.n}`} className={`scroll-mt-24 px-3.5 py-2.5 ${t.source}`}>
-                              <a href={s.url} className="group block">
+                              <a href={s.url || undefined} className="group block">
                                 <span className="flex items-baseline gap-2">
                                   <span className={`font-brand text-[0.68rem] font-bold ${t.lien}`}>[{s.n}]</span>
                                   <span className={`font-serif text-[0.95rem] font-bold leading-snug ${t.sourceTitre}`}>{s.titre}</span>
@@ -202,6 +202,7 @@ export function Assistant({
                                 <span className={`mt-0.5 block text-xs ${t.mute}`}>
                                   {[s.auteur, s.type, s.annee].filter(Boolean).join(' · ')}
                                   {s.acces === 'Résumé seul (embargo)' && ' · résumé seul'}
+                                  {s.acces === 'Notice seule (bibliothèque du Groupe)' && ' · notice (ouvrage de la bibliothèque du Groupe)'}
                                 </span>
                                 {!compact && <span className={`mt-1.5 line-clamp-2 text-[0.85rem] leading-relaxed ${t.mute}`}>{s.extrait}</span>}
                               </a>

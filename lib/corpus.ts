@@ -1,20 +1,21 @@
 import { reader, getEditos, getActualites, getPublications, getRevue, sousEmbargo, motsCles, sansEmail } from './content';
 import { corpsBrut } from './raw';
 import { adressesStatiques, pageStatique } from './gabarits';
+import { bibliothequePrivee } from './bibliotheque-privee';
 
 /* Corpus documentaire de JOGOO AI : uniquement les textes publiés par le Groupe JOGOO sur ce site
    (droits maîtrisés). Les articles de revue sous embargo n'y figurent que par leur résumé. */
 
 export type Notice = {
   id: string;
-  type: 'Note de lecture' | 'Article de revue' | 'Édito' | 'Actualité' | 'Flash' | 'Fiche auteur' | 'Page du portail';
+  type: 'Note de lecture' | 'Article de revue' | 'Édito' | 'Actualité' | 'Flash' | 'Fiche auteur' | 'Page du portail' | 'Ouvrage' | 'Revue Terroirs' | 'Cours';
   titre: string;
   auteur: string;
   annee: string;
   source: string; // revue, rubrique…
   url: string;
   langue: string;
-  acces: 'Texte intégral' | 'Résumé seul (embargo)' | 'Texte en ligne';
+  acces: 'Texte intégral' | 'Résumé seul (embargo)' | 'Texte en ligne' | 'Notice seule (bibliothèque du Groupe)' | 'Texte intégral (bibliothèque du Groupe)';
   resume: string;
   motsCles: string[];
   texte: string; // texte interrogeable par l'assistant
@@ -196,47 +197,65 @@ const racine = (m: string) => m.replace(/(ions|ion|ites|ite|ismes|isme|istes|ist
 
 export type Passage = { notice: Notice; extrait: string; score: number };
 
-export async function rechercher(question: string, max = 6): Promise<Passage[]> {
-  const notices = await corpus();
-  const q = [...new Set(mots(question).map(racine))].filter(Boolean);
-  if (!q.length) return [];
-  const passages: { notice: Notice; extrait: string; termes: string[] }[] = [];
+type Entree = { notice: Notice; extrait: string; tf: Map<string, number>; long: number; tete: Set<string> };
+let index: { quand: number; passages: Entree[]; df: Map<string, number>; moy: number } | null = null;
+
+/** Index des passages (corpus du site + bibliothèque privée), construit une fois puis gardé une heure. */
+async function indexer() {
+  if (index && Date.now() - index.quand < 3600_000) return index;
+  const notices = [...(await corpus()), ...(await bibliothequePrivee())];
+  const passages: Entree[] = [];
+  const ajouter = (no: Notice, extrait: string) => {
+    const termes = mots(`${no.titre}. ${no.auteur}. ${no.motsCles.join(', ')} ${extrait}`).map(racine);
+    const tf = new Map<string, number>();
+    for (const t of termes) tf.set(t, (tf.get(t) ?? 0) + 1);
+    passages.push({ notice: no, extrait, tf, long: termes.length, tete: new Set(mots(`${no.titre} ${no.auteur}`).map(racine)) });
+  };
   for (const no of notices) {
     const blocs = no.texte.split(/\n\s*\n/).map((b) => b.trim()).filter((b) => b.length > 60);
     // passages d'environ 900 caractères
     let courant = '';
-    const tete = `${no.titre}. ${no.auteur}. ${no.motsCles.join(', ')}`;
     for (const b of blocs.length ? blocs : [no.resume || no.titre]) {
       if ((courant + b).length > 900 && courant) {
-        passages.push({ notice: no, extrait: courant.trim(), termes: mots(tete + ' ' + courant).map(racine) });
+        ajouter(no, courant.trim());
         courant = '';
       }
       courant += b + '\n\n';
     }
-    if (courant.trim()) passages.push({ notice: no, extrait: courant.trim(), termes: mots(tete + ' ' + courant).map(racine) });
+    if (courant.trim()) ajouter(no, courant.trim());
   }
-  const N = passages.length;
   const df = new Map<string, number>();
-  for (const t of q) df.set(t, passages.filter((p) => p.termes.includes(t)).length);
-  const moy = passages.reduce((s, p) => s + p.termes.length, 0) / Math.max(1, N);
-  const scores = passages.map((p) => {
+  for (const p of passages) for (const t of p.tf.keys()) df.set(t, (df.get(t) ?? 0) + 1);
+  const moy = passages.reduce((s, p) => s + p.long, 0) / Math.max(1, passages.length);
+  index = { quand: Date.now(), passages, df, moy };
+  return index;
+}
+
+export async function rechercher(question: string, max = 6): Promise<Passage[]> {
+  const q = [...new Set(mots(question).map(racine))].filter(Boolean);
+  if (!q.length) return [];
+  const { passages, df, moy } = await indexer();
+  const N = passages.length;
+  const scores: Passage[] = [];
+  for (const p of passages) {
     let s = 0;
     for (const t of q) {
-      const tf = p.termes.filter((x) => x === t).length;
+      const tf = p.tf.get(t);
       if (!tf) continue;
-      const idf = Math.log(1 + (N - df.get(t)! + 0.5) / (df.get(t)! + 0.5));
-      s += idf * ((tf * 2.2) / (tf + 1.2 * (0.25 + 0.75 * (p.termes.length / moy))));
+      const d = df.get(t) ?? 0;
+      const idf = Math.log(1 + (N - d + 0.5) / (d + 0.5));
+      s += idf * ((tf * 2.2) / (tf + 1.2 * (0.25 + 0.75 * (p.long / moy))));
     }
+    if (!s) continue;
     // bonus si le terme est dans le titre ou l'auteur
-    const tete = mots(`${p.notice.titre} ${p.notice.auteur}`).map(racine);
-    s += q.filter((t) => tete.includes(t)).length * 1.5;
-    return { notice: p.notice, extrait: p.extrait, score: s };
-  });
-  const tries = scores.filter((s) => s.score > 1).sort((a, b) => b.score - a.score);
+    s += q.filter((t) => p.tete.has(t)).length * 1.5;
+    if (s > 1) scores.push({ notice: p.notice, extrait: p.extrait, score: s });
+  }
+  scores.sort((a, b) => b.score - a.score);
   // au plus deux passages par document
   const parDoc = new Map<string, number>();
   const res: Passage[] = [];
-  for (const s of tries) {
+  for (const s of scores) {
     const k = parDoc.get(s.notice.id) ?? 0;
     if (k >= 2) continue;
     parDoc.set(s.notice.id, k + 1);
