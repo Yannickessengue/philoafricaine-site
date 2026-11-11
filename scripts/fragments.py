@@ -296,3 +296,9 @@ h = open(f).read()
 if 'href="/notre-histoire"' not in h:
     h = h.replace('</dl></section>', '</dl></section><section class="border-b border-ink/10 bg-terra"><a href="/notre-histoire" class="group mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 text-white sm:flex-row sm:items-center sm:justify-between"><span><span class="font-brand text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/75">Mémoire du Groupe · 2010 → aujourd’hui</span><span class="mt-1 block font-brand text-2xl font-bold">Notre histoire : conférences, colloques et journées d’étude, en images</span></span><span class="font-brand text-xs font-bold uppercase tracking-[0.14em] transition-transform group-hover:translate-x-1">Voir la chronologie →</span></a></section>', 1)
     open(f, 'w').write(h)
+# Crédits (11 nov. 2026) : historique du site, mention de la première version réalisée par le webmaster
+f = OUT + '/page__credits.html'
+h = open(f).read()
+if 'Historique du site' not in h:
+    h = h.replace('Illustration du coq penseur et visuels de citation : Groupe JOGOO.</p>', 'Illustration du coq penseur et visuels de citation : Groupe JOGOO.</p><h3>Historique du site</h3><p>La première version du portail philoafricaine.org (2026) a été conçue et développée par <strong>Claude Hussein Nianga</strong>, webmaster du Groupe JOGOO : architecture des sous-sites, édito de la semaine, Revue JOGOO, Fonds Eboussi Boulaga et back-office. La version actuelle prolonge ce travail ; le Groupe JOGOO le remercie chaleureusement.</p>', 1)
+    open(f, 'w').write(h)
