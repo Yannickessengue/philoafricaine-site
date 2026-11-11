@@ -87,12 +87,14 @@ export async function POST(req: Request) {
         model: process.env.JOGOO_AI_MODELE || 'claude-sonnet-5-5',
         max_tokens: 1800,
         system: SYSTEME,
-        ...(avecWeb ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3, allowed_domains: SITES }] } : {}),
+        ...(avecWeb ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2, allowed_domains: SITES }] } : {}),
         messages: [...fil, { role: 'user', content: `<documents>\n${documents || '(aucun document du corpus ne correspond)'}\n</documents>\n\nQuestion : ${question}` }],
       }),
     });
   try {
-    let r = await appeler(true);
+    // La recherche en ligne ajoute 5 à 15 s : on ne la lance que si le corpus répond mal à la question
+    const corpusSuffit = passages.length >= 4 && (passages[0]?.score ?? 0) >= 10;
+    let r = await appeler(!corpusSuffit);
     if (!r.ok) {
       console.error('JOGOO AI (avec recherche en ligne)', r.status, await r.text());
       r = await appeler(false);
