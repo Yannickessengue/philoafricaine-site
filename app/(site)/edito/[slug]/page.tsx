@@ -22,7 +22,7 @@ const chapeau: Classes = {
   pFort: 'my-5 border-l-2 border-terra pl-4 font-brand text-[1.05rem] font-bold leading-snug text-terra-deep',
   ul: 'mb-4 space-y-1.5 text-[1.05rem] leading-relaxed text-ink',
   ol: 'mb-4 list-decimal space-y-1.5 pl-5 text-[1.05rem] leading-relaxed text-ink',
-  li: 'relative pl-5 before:absolute before:left-0 before:text-terra before:content-["✳"] [ol_&]:pl-0 [ol_&]:before:content-none',
+  li: 'relative pl-5 before:absolute before:left-0 before:text-terra before:content-["✱"] [ol_&]:pl-0 [ol_&]:before:content-none',
   blockquote: 'my-6 border-l-[3px] border-terra pl-4 font-serif italic text-ink',
   a: 'text-terra-deep underline underline-offset-2 hover:text-terra',
   img: 'my-6 h-auto w-full border border-ink/10',

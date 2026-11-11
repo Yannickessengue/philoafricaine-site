@@ -318,3 +318,7 @@ for f in _g.glob(OUT + '/*.html'):
     n = h.replace('class="h-12 flex-1 border border-ink/20 bg-white px-4 text-sm outline-none focus:border-terra" id="nl-email"',
                   'class="h-12 min-h-12 w-full flex-1 border border-ink/20 bg-white px-4 text-base outline-none focus:border-terra sm:min-w-0 sm:text-sm" id="nl-email"')
     if n != h: open(f, 'w').write(n)
+# Astérisque (11 nov. 2026) : « ✳ » s'affiche en émoji vert sous Windows → « ✱ » (toujours typographique)
+for f in _g.glob(OUT + '/*.html'):
+    h = open(f).read()
+    if '✳' in h: open(f, 'w').write(h.replace('✳️', '✱').replace('✳', '✱'))

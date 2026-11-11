@@ -54,7 +54,7 @@ export default async function AppelsPostes() {
           <ul className="mt-4 grid gap-x-8 gap-y-2 text-sm leading-relaxed text-ink-soft sm:grid-cols-2">
             {COMMUNES.map((c) => (
               <li key={c} className="pl-4 -indent-4">
-                <span className="text-terra">✳</span> {c}
+                <span className="text-terra">✱</span> {c}
               </li>
             ))}
           </ul>

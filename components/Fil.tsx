@@ -12,7 +12,7 @@ export function Fil({ elements }: { elements: { etiquette: string; texte: string
       >
         <span className="bg-terra px-2 py-0.5 font-brand text-[0.6rem] font-bold uppercase tracking-[0.14em] text-white">{e.etiquette}</span>
         <span className="whitespace-nowrap font-medium group-hover:underline group-hover:underline-offset-4">{e.texte}</span>
-        <span className="text-gold" aria-hidden="true">✳</span>
+        <span className="text-gold" aria-hidden="true">✱</span>
       </a>
     ));
   return (
