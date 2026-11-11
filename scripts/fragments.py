@@ -311,3 +311,10 @@ for nom, avant, apres in [
     h = open(f).read()
     if avant in h and apres not in h:
         open(f, 'w').write(h.replace(avant, apres, 1))
+# Lettre d'information (11 nov. 2026) : champ e-mail écrasé sur mobile (flex-1 en colonne) → hauteur minimale
+import glob as _g
+for f in _g.glob(OUT + '/*.html'):
+    h = open(f).read()
+    n = h.replace('class="h-12 flex-1 border border-ink/20 bg-white px-4 text-sm outline-none focus:border-terra" id="nl-email"',
+                  'class="h-12 min-h-12 w-full flex-1 border border-ink/20 bg-white px-4 text-base outline-none focus:border-terra sm:min-w-0 sm:text-sm" id="nl-email"')
+    if n != h: open(f, 'w').write(n)
