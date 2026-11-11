@@ -3,8 +3,10 @@ import { config, collection, singleton, fields } from '@keystatic/core';
 
 // En production (Vercel), l'Espace rédaction enregistre directement dans le dépôt GitHub.
 // En local, il écrit dans les fichiers du dossier content/.
+// NEXT_PUBLIC_KEYSTATIC_REPO (« propriétaire/dépôt ») permet de pointer vers un autre dépôt que celui du Groupe.
+const depot = (process.env.NEXT_PUBLIC_KEYSTATIC_REPO || 'Yannickessengue/philoafricaine-site') as `${string}/${string}`;
 const storage = process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
-  ? ({ kind: 'github', repo: 'Yannickessengue/philoafricaine-site' } as const)
+  ? ({ kind: 'github', repo: depot } as const)
   : ({ kind: 'local' } as const);
 
 // Éditeur de texte riche : gras, italique, intertitres, listes, citations, liens, images, tableaux.
