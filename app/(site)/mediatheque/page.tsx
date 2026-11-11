@@ -29,6 +29,15 @@ export default async function Mediatheque() {
           </span>
           <span className="font-brand text-xs font-bold uppercase tracking-[0.12em] text-gold transition-transform group-hover:translate-x-1">Regarder →</span>
         </a>
+        <a href="/notre-histoire" className="group mb-4 flex flex-col items-start gap-5 bg-terra p-6 text-white transition-colors hover:bg-terra-deep sm:flex-row sm:items-center sm:p-8">
+          <img src="/medias/histoire/cinquantenaire-essai-marcien-towa-2021/photo-23-v.jpg" alt="" className="h-24 w-24 shrink-0 object-cover sm:h-28 sm:w-28" />
+          <span className="flex-1">
+            <span className="font-brand text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white/75">Galeries · Mémoire</span>
+            <span className="mt-1 block font-brand text-2xl font-bold">Notre histoire en images</span>
+            <span className="mt-1 block text-sm text-white/75">Affiches et photos des conférences, colloques et journées d’étude depuis 2010.</span>
+          </span>
+          <span className="font-brand text-xs font-bold uppercase tracking-[0.12em] transition-transform group-hover:translate-x-1">Voir →</span>
+        </a>
         <a href="/podcasts" className="group mb-14 flex flex-col items-start gap-5 bg-ink p-6 text-paper transition-colors hover:bg-[#241c18] sm:flex-row sm:items-center sm:p-8">
           <img src="/medias/podcasts/couverture-podcast.jpg" alt="" className="w-24 shrink-0 sm:w-28" />
           <span className="flex-1">

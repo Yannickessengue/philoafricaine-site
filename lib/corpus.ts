@@ -109,6 +109,23 @@ export async function corpus(): Promise<Notice[]> {
       texte: nettoyer([e.accroche, corpsBrut('editos', x.slug), e.conclusion].filter(Boolean).join('\n\n')),
     });
   }
+  for (const x of await reader.collections.chronologie.all()) {
+    const e = x.entry;
+    n.push({
+      id: `histoire-${x.slug}`,
+      type: 'Actualité',
+      titre: e.titre,
+      auteur: 'Groupe JOGOO',
+      annee: annee(e.date),
+      source: 'Notre histoire (chronologie des activités du Groupe JOGOO)',
+      url: `/notre-histoire#${x.slug}`,
+      langue: 'Français',
+      acces: 'Texte intégral',
+      resume: e.presentation ?? '',
+      motsCles: ['histoire du Groupe JOGOO', e.categorie],
+      texte: nettoyer([`${e.titre}. ${e.dateAffichee ?? ''}, ${e.lieu ?? ''} (${e.format ?? ''}).`, e.presentation, e.intervenants].filter(Boolean).join('\n\n')),
+    });
+  }
   for (const x of actus) {
     const e = x.entry;
     n.push({

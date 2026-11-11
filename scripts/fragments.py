@@ -290,3 +290,9 @@ for nom in ('page__sous-sites__fonds-eboussi-boulaga.html', 'page__sous-sites__f
             f'<span class="th"><img alt="" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/{v.group(1)}/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></span>', 1)
     h = _re.sub(r'<a class="vid"[^>]*>.*?</a>', _vignette, h, flags=_re.S)
     open(f, 'w').write(h)
+# Le Groupe (11 nov. 2026) : bandeau vers la page « Notre histoire » (chronologie des activités, collection chronologie)
+f = OUT + '/page__le-groupe.html'
+h = open(f).read()
+if 'href="/notre-histoire"' not in h:
+    h = h.replace('</dl></section>', '</dl></section><section class="border-b border-ink/10 bg-terra"><a href="/notre-histoire" class="group mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 text-white sm:flex-row sm:items-center sm:justify-between"><span><span class="font-brand text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/75">Mémoire du Groupe · 2010 → aujourd’hui</span><span class="mt-1 block font-brand text-2xl font-bold">Notre histoire : conférences, colloques et journées d’étude, en images</span></span><span class="font-brand text-xs font-bold uppercase tracking-[0.14em] transition-transform group-hover:translate-x-1">Voir la chronologie →</span></a></section>', 1)
+    open(f, 'w').write(h)
