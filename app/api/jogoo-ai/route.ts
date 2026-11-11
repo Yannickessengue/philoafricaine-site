@@ -54,6 +54,11 @@ type Message = { role: 'user' | 'assistant'; content: string };
 export async function POST(req: Request) {
   const t0 = Date.now();
   const corps = await req.json().catch(() => ({}));
+  // Préchauffage : charge (et déchiffre) le corpus pendant que l'utilisateur tape sa question
+  if (corps.prechauffer) {
+    await rechercher('philosophie africaine', 1, codeValide(corps.code)).catch(() => []);
+    return NextResponse.json({ ok: true, ms: Date.now() - t0 });
+  }
   const question = String(corps.question ?? '').trim().slice(0, 1200);
   const fil: Message[] = Array.isArray(corps.historique)
     ? corps.historique.slice(-6).map((m: Message) => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: String(m.content ?? '').slice(0, 3000) }))

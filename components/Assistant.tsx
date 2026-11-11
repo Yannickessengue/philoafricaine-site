@@ -128,6 +128,18 @@ export function Assistant({
       if (localStorage.getItem('jogoo-ai-longueur') === 'developpee') setLongueur('developpee');
     } catch {}
   }, []);
+  // Préchauffage du corpus (une fois par code) dès que l'utilisateur s'apprête à écrire
+  const chauffe = useRef('');
+  const prechauffer = () => {
+    const cle = code || '-';
+    if (chauffe.current === cle) return;
+    chauffe.current = cle;
+    fetch('/api/jogoo-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prechauffer: true, code: code || undefined }), keepalive: true }).catch(() => {});
+  };
+  useEffect(() => {
+    if (code) prechauffer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code]);
   const choisirLongueur = (l: Longueur) => {
     setLongueur(l);
     try {
@@ -307,6 +319,7 @@ export function Assistant({
         <textarea
           value={q}
           onChange={(e) => setQ(e.target.value)}
+          onFocus={prechauffer}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
