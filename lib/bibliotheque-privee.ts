@@ -1,4 +1,4 @@
-// JOGOO AI : variables ANTHROPIC_API_KEY et JOGOO_AI_CORPUS_CLE (Vercel).
+// JOGOO AI : variables ANTHROPIC_API_KEY et JOGOO_AI_CORPUS_CLE (Vercel). Clé Anthropic renouvelée le 11/11/2026.
 import 'server-only';
 import { createDecipheriv } from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
