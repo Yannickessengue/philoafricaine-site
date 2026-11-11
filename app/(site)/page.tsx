@@ -10,6 +10,7 @@ import { SOUS_SITES } from '@/lib/liste-sous-sites';
 import { fragment } from '@/lib/gabarits';
 import { toutesLesNotes } from '@/lib/notes';
 import { AgendaAccueil } from '@/components/AgendaAccueil';
+import { DefileHistoire } from '@/components/DefileHistoire';
 
 export const revalidate = 3600;
 
@@ -26,7 +27,20 @@ export default async function Accueil() {
     reader.collections.videos.all(),
     reader.collections.podcasts.all(),
   ]);
-  const [revue, minutes, appels, notes] = await Promise.all([getRevue(), getMinutes(), reader.collections.appels.all(), toutesLesNotes()]);
+  const [revue, minutes, appels, notes, histoire] = await Promise.all([getRevue(), getMinutes(), reader.collections.appels.all(), toutesLesNotes(), reader.collections.chronologie.all()]);
+  const jourHistoire = new Date().toISOString().slice(0, 10);
+  const moments = histoire
+    .filter((h) => (h.entry.date ?? '') <= jourHistoire)
+    .sort((a, b) => (b.entry.date ?? '').localeCompare(a.entry.date ?? ''))
+    .map((h) => ({
+      slug: h.slug,
+      annee: (h.entry.date ?? '').slice(0, 4),
+      date: h.entry.dateAffichee ?? '',
+      titre: h.entry.titre,
+      lieu: h.entry.lieu && h.entry.lieu !== '—' ? h.entry.lieu : '',
+      image: (h.entry.photos.length > 2 ? h.entry.photos[Math.min(h.entry.photos.length - 1, 3)] : h.entry.affiche || h.entry.photos[0] || '')?.replace(/\.jpg$/, '-v.jpg') || null,
+      enSalle: /présentiel|hybride/i.test(h.entry.format ?? ''),
+    }));
   const livres = notes
     .filter((n) => n.couverture)
     .sort((x, y) => Number(y.une) - Number(x.une) || (y.annee ?? '').localeCompare(x.annee ?? ''))
@@ -267,6 +281,27 @@ export default async function Accueil() {
           />
         </div>
       </section>
+
+      {/* Notre histoire : frise qui défile (collection chronologie) */}
+      {moments.length > 0 && (
+        <section className="border-b border-ink/10 bg-paper">
+          <div className="mx-auto max-w-6xl px-5 pt-14 pb-12">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="kicker">Depuis 2010</p>
+                <h2 className="mt-1 display-title text-2xl text-ink sm:text-3xl">Notre histoire</h2>
+                <p className="mt-2 max-w-xl text-sm text-ink/65">Conférences, colloques, journées d’étude et webinaires, d’Abidjan à Yaoundé, de Cotonou à Toulouse et Montréal.</p>
+              </div>
+              <a className="text-sm font-semibold uppercase tracking-wide text-terra-deep hover:text-terra" href="/notre-histoire">
+                Toute la chronologie →
+              </a>
+            </div>
+          </div>
+          <div className="pb-14 pl-5 sm:pl-[max(1.25rem,calc((100vw-72rem)/2+1.25rem))]">
+            <DefileHistoire moments={moments} />
+          </div>
+        </section>
+      )}
 
       {/* Nos projets : logos et noms seulement */}
       <section className="mx-auto max-w-6xl px-5 py-16">
