@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     extrait: p.extrait.slice(0, 420),
   }));
 
-  const cle = process.env.ANTHROPIC_API_KEY;
+  const cle = process.env.ANTHROPIC_API_KEY?.trim().replace(/^["']|["']$/g, '');
   if (!cle) return NextResponse.json({ mode: 'bibliotheque', reponse: null, sources });
   if (!passages.length) return NextResponse.json({ mode: 'assistant', reponse: AUCUNE_SOURCE, sources: [] });
 

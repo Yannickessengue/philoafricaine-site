@@ -16,7 +16,7 @@ let cache: Notice[] | null = null;
 
 export async function bibliothequePrivee(): Promise<Notice[]> {
   if (cache) return cache;
-  const cle = process.env.JOGOO_AI_CORPUS_CLE;
+  const cle = process.env.JOGOO_AI_CORPUS_CLE?.trim();
   if (!cle) return (cache = []);
   try {
     const brut = await readFile(path.join(process.cwd(), 'content/jogoo-ai/bibliotheque.enc'));
