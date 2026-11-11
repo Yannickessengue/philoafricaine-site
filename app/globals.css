@@ -117,14 +117,15 @@ input[type='search']::-webkit-search-cancel-button { -webkit-appearance: none; d
    Paragraphes, listes et citations sont justifiés avec césure ; on garde l'alignement voulu
    pour les textes centrés ou à droite, les sur-titres, les boutons et la navigation. */
 @layer components {
-  main :is(p, li, dd, blockquote, figcaption):not(.kicker, .eyebrow, [class*='text-center'], [class*='text-right'], [class*='uppercase']):not(:is([class*='text-center'], [class*='text-right'], nav, button, label, summary, [role='dialog']) *) {
+  main :is(p, li, dd, blockquote, figcaption):not(.kicker, .eyebrow, [class*='text-center'], [class*='text-right'], [class*='uppercase'], [class*='leading-snug'], [class*='leading-tight'], [class*='leading-none']):not(:is([class*='text-center'], [class*='text-right'], nav, button, label, summary, [role='dialog']) *) {
     text-align: justify;
     -webkit-hyphens: auto;
     hyphens: auto;
     hyphenate-limit-chars: 7 3 3;
   }
   /* Sur-titres en capitales placés dans un élément justifié : ils n'héritent pas de la justification */
-  main :is(p, li, dd, blockquote, figcaption) :is([class*='uppercase'], .kicker, .eyebrow):not([class*='text-center'], [class*='text-right']) {
+  /* …et les titres de cartes (interlignage serré, liens en bloc) restent alignés à gauche : pas de grands blancs */
+  main :is(p, li, dd, blockquote, figcaption) :is([class*='uppercase'], .kicker, .eyebrow, [class*='leading-snug'], [class*='leading-tight'], [class*='leading-none'], a.block, h2, h3, h4):not([class*='text-center'], [class*='text-right']) {
     text-align: start;
     hyphens: manual;
   }
