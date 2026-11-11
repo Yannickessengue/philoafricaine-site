@@ -1,3 +1,4 @@
+// JOGOO AI : variables ANTHROPIC_API_KEY et JOGOO_AI_CORPUS_CLE (Vercel).
 import 'server-only';
 import { createDecipheriv } from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
