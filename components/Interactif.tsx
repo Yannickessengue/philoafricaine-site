@@ -101,25 +101,71 @@ export function Interactif() {
     if (langueCourante() !== 'fr') chargerTraducteur();
     const clic = (e: MouseEvent) => {
       const cible = e.target as HTMLElement;
-      // Fonds : agrandir une image (galerie, accueil)
-      const agrandir = cible.closest<HTMLButtonElement>('.fonds figure > button[aria-label^="Agrandir"]');
+      // Fonds : visionneuse (bande de l'accueil du Fonds, galerie) avec défilement ← →
+      const agrandir = cible.closest<HTMLButtonElement>('.fonds .strip > button[aria-label^="Agrandir"], .fonds figure > button[aria-label^="Agrandir"]');
       if (agrandir) {
-        const img = agrandir.querySelector('img');
-        if (!img) return;
-        const legende = agrandir.parentElement?.querySelector('figcaption')?.textContent ?? img.alt;
+        const conteneur = agrandir.closest('.strip, .masonry, .gal-sec, .fonds') ?? document;
+        const boutons = Array.from(conteneur.querySelectorAll<HTMLButtonElement>('.strip > button[aria-label^="Agrandir"], figure > button[aria-label^="Agrandir"]'));
+        const images = boutons
+          .map((b) => {
+            const img = b.querySelector('img');
+            if (!img) return null;
+            const legende = (b.parentElement?.tagName === 'FIGURE' ? b.parentElement.querySelector('figcaption')?.textContent : '') || img.alt;
+            return { src: img.getAttribute('src') ?? '', alt: img.alt, legende };
+          })
+          .filter((x): x is { src: string; alt: string; legende: string } => Boolean(x?.src));
+        let n = Math.max(0, boutons.indexOf(agrandir));
         const fond = document.createElement('div');
         fond.className = 'fixed inset-0 z-[95] flex flex-col items-center justify-center gap-3 bg-black/90 p-4 flash-fade';
         fond.setAttribute('role', 'dialog');
         fond.setAttribute('aria-modal', 'true');
-        fond.innerHTML = `<img src="${img.getAttribute('src')}" alt="" class="max-h-[82vh] max-w-full object-contain shadow-2xl"/><p class="max-w-2xl text-center text-sm text-white/80"></p><button type="button" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center border border-white/30 text-white hover:bg-white hover:text-black" aria-label="Fermer">✕</button>`;
-        (fond.querySelector('img') as HTMLImageElement).alt = img.alt;
-        fond.querySelector('p')!.textContent = legende;
-        const fermer = () => { fond.remove(); document.body.style.overflow = ''; window.removeEventListener('keydown', esc); };
-        const esc = (k: KeyboardEvent) => k.key === 'Escape' && fermer();
-        fond.addEventListener('click', fermer);
-        window.addEventListener('keydown', esc);
+        fond.setAttribute('aria-label', 'Image agrandie');
+        const fleche = 'absolute top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center border border-white/30 bg-black/40 text-2xl text-white hover:bg-white hover:text-black';
+        fond.innerHTML = `<img alt="" class="max-h-[78vh] max-w-full object-contain shadow-2xl"/><p class="max-w-2xl text-center text-sm text-white/80"></p><p class="text-xs tracking-widest text-white/50" data-compteur></p>
+<button type="button" class="${fleche} left-3" aria-label="Image précédente" data-dir="-1">←</button><button type="button" class="${fleche} right-3" aria-label="Image suivante" data-dir="1">→</button>
+<button type="button" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center border border-white/30 text-white hover:bg-white hover:text-black" aria-label="Fermer" data-fermer>✕</button>`;
+        const vue = fond.querySelector('img') as HTMLImageElement;
+        const afficher = () => {
+          const im = images[n];
+          vue.src = im.src;
+          vue.alt = im.alt;
+          (fond.querySelector('p') as HTMLElement).textContent = im.legende;
+          (fond.querySelector('[data-compteur]') as HTMLElement).textContent = images.length > 1 ? `${n + 1} / ${images.length}` : '';
+        };
+        const aller = (d: number) => {
+          n = (n + d + images.length) % images.length;
+          afficher();
+        };
+        if (images.length < 2) fond.querySelectorAll('[data-dir]').forEach((b) => b.remove());
+        const fermer = () => {
+          fond.remove();
+          document.body.style.overflow = '';
+          window.removeEventListener('keydown', touche);
+          agrandir.focus();
+        };
+        const touche = (k: KeyboardEvent) => {
+          if (k.key === 'Escape') fermer();
+          else if (k.key === 'ArrowRight') aller(1);
+          else if (k.key === 'ArrowLeft') aller(-1);
+        };
+        fond.addEventListener('click', (ev) => {
+          const t = ev.target as HTMLElement;
+          const dir = t.closest<HTMLElement>('[data-dir]');
+          if (dir) return aller(Number(dir.dataset.dir));
+          if (t === vue) return;
+          fermer();
+        });
+        let x0 = 0;
+        fond.addEventListener('touchstart', (ev) => (x0 = ev.touches[0].clientX), { passive: true });
+        fond.addEventListener('touchend', (ev) => {
+          const dx = ev.changedTouches[0].clientX - x0;
+          if (Math.abs(dx) > 45) aller(dx < 0 ? 1 : -1);
+        });
+        window.addEventListener('keydown', touche);
         document.body.style.overflow = 'hidden';
         document.body.appendChild(fond);
+        afficher();
+        (fond.querySelector('[data-fermer]') as HTMLElement).focus();
         return;
       }
       // Fonds : filtres de la bibliographie

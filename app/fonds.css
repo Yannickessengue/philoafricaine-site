@@ -26,3 +26,13 @@
 .fonds .vid .vt{font-size:1.15rem}
 .fonds .vid .vd{font-size:.88rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .fonds .vid .vs{padding-top:.55rem;font-size:.7rem}
+
+/* ——— Ajustements (11 nov. 2026) ———
+   Vidéos : grille régulière (1, 2 puis 4 colonnes) et espacement plus aéré.
+   Blocs : séparation nette entre la galerie, les vidéos et Eboussi Studies. */
+.fonds .vids{grid-template-columns:1fr;gap:1.5rem}
+@media (min-width:640px){.fonds .vids{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1024px){.fonds .vids{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.fonds .vid{min-width:0}
+.fonds .strip + dialog + .sec-title,.fonds .strip ~ .sec-title{margin-top:4.5rem;padding-top:3rem;border-top:1px solid var(--line)}
+.fonds .feature{margin-top:5rem;border-top:1px solid var(--line)}
