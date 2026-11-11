@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
     '/api/jogoo-ai': ['./bibliotheque-chercheurs/**/*'],
     '/edito/[slug]/pdf': ['./lib/pdf/**/*'],
   },
+  // Polices immuables : mises en cache un an par le navigateur
+  async headers() {
+    return [{ source: '/fonts/:file*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] }];
+  },
   async redirects() {
     return [
       { source: '/admin', destination: '/keystatic', permanent: false },

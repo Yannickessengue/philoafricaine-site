@@ -338,7 +338,7 @@ export function Interactif() {
       loader.addEventListener('click', fermer);
       const touche = (e: KeyboardEvent) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') fermer(); };
       window.addEventListener('keydown', touche, { once: true });
-      t1 = window.setTimeout(fermer, 4700);
+      t1 = window.setTimeout(fermer, 2500);
     }
 
     // Compte à rebours (bloc colloque de l'accueil)
