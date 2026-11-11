@@ -3,6 +3,9 @@
 import { useRef, useState } from 'react';
 import { compterMots, EXTENSIONS, FICHIER_MAX, type Champ } from '@/lib/formulaires';
 
+const ACCORD_DEFAUT =
+  'J’accepte que ces informations soient transmises aux organisateurs (Groupe JOGOO et Fonds Eboussi Boulaga) pour le traitement de ma demande. Elles ne sont ni publiées ni cédées.';
+
 type Etat = { t: 'repos' } | { t: 'envoi' } | { t: 'ok'; email: string } | { t: 'erreur'; message: string; secours?: boolean };
 
 const base =
@@ -42,7 +45,7 @@ function ChampSaisie({ c }: { c: Champ }) {
       </select>
     );
   else if (c.type === 'fichier')
-    saisie = <input id={id} name={c.nom} type="file" required={c.requis} accept={EXTENSIONS.join(',')} className={`${base} file:mr-3 file:border-0 file:bg-ink file:px-3 file:py-1.5 file:font-brand file:text-xs file:font-bold file:uppercase file:text-paper`} />;
+    saisie = <input id={id} name={c.nom} type="file" required={c.requis} accept={(c.accept ?? EXTENSIONS).join(',')} className={`${base} file:mr-3 file:border-0 file:bg-ink file:px-3 file:py-1.5 file:font-brand file:text-xs file:font-bold file:uppercase file:text-paper`} />;
   else
     saisie = (
       <input
@@ -73,12 +76,16 @@ export function FormulaireEnLigne({
   champs,
   bouton,
   contact,
+  accord = ACCORD_DEFAUT,
+  merci = 'Une copie vient de partir à {email}, avec le document de l’activité. Pensez à regarder dans vos courriers indésirables.',
 }: {
-  sorte: 'inscription' | 'candidature';
+  sorte: 'inscription' | 'candidature' | 'adhesion';
   slug: string;
   champs: Champ[];
   bouton: string;
   contact: string;
+  accord?: string;
+  merci?: string;
 }) {
   const [etat, setEtat] = useState<Etat>({ t: 'repos' });
   const debut = useRef(Date.now());
@@ -86,11 +93,15 @@ export function FormulaireEnLigne({
   async function envoyer(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const f = fd.get('fichier');
-    if (f instanceof File && f.size > 0) {
-      if (f.size > FICHIER_MAX) return setEtat({ t: 'erreur', message: 'Le fichier dépasse 4 Mo. Allégez-le (images, PDF) ou envoyez-le par e-mail.' });
-      if (!EXTENSIONS.some((x) => f.name.toLowerCase().endsWith(x))) return setEtat({ t: 'erreur', message: `Format accepté : ${EXTENSIONS.join(', ')}.` });
+    let total = 0;
+    for (const c of champs.filter((x) => x.type === 'fichier')) {
+      const f = fd.get(c.nom);
+      if (!(f instanceof File) || f.size === 0) continue;
+      total += f.size;
+      const ext = c.accept ?? EXTENSIONS;
+      if (!ext.some((x) => f.name.toLowerCase().endsWith(x))) return setEtat({ t: 'erreur', message: `${c.libelle} : formats acceptés ${ext.join(', ')}.` });
     }
+    if (total > FICHIER_MAX) return setEtat({ t: 'erreur', message: 'Les fichiers dépassent 4 Mo au total. Allégez-les (photos, PDF) ou envoyez-les par e-mail.' });
     fd.set('sorte', sorte);
     fd.set('slug', slug);
     fd.set('duree', String(Date.now() - debut.current));
@@ -113,7 +124,9 @@ export function FormulaireEnLigne({
         <p className="kicker text-terra-deep">C’est envoyé</p>
         <p className="mt-2 font-serif text-xl text-ink">Merci, votre envoi a bien été reçu.</p>
         <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-          Une copie vient de partir à <strong className="text-ink">{etat.email}</strong>, avec le document de l’activité. Pensez à regarder dans vos courriers indésirables.
+          {merci.split('{email}')[0]}
+          <strong className="text-ink">{etat.email}</strong>
+          {merci.split('{email}')[1]}
         </p>
       </div>
     );
@@ -131,9 +144,7 @@ export function FormulaireEnLigne({
       </div>
       <label className="flex items-start gap-3 text-sm leading-relaxed text-ink-soft sm:col-span-2">
         <input type="checkbox" name="accord" required className="mt-1 h-4 w-4 accent-[#b3200e]" />
-        <span>
-          J’accepte que ces informations soient transmises aux organisateurs (Groupe JOGOO et Fonds Eboussi Boulaga) pour le traitement de ma demande. Elles ne sont ni publiées ni cédées.
-        </span>
+        <span>{accord}</span>
       </label>
       {etat.t === 'erreur' && (
         <p className="border-l-4 border-terra-deep bg-terra/5 px-4 py-3 text-sm text-terra-deep sm:col-span-2" role="alert">

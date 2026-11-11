@@ -8,7 +8,7 @@ export const revalidate = 86400;
 
 /** Plan du site pour les moteurs de recherche. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const fixes = ['', '/actualites', '/publications', '/mediatheque', '/podcasts', '/la-minute-du-chant-du-coq', '/recherche/appels-a-contributions', '/direct', '/notre-histoire', '/en'];
+  const fixes = ['', '/actualites', '/publications', '/mediatheque', '/podcasts', '/la-minute-du-chant-du-coq', '/recherche/appels-a-contributions', '/direct', '/notre-histoire', '/adhesion', '/en'];
   const statiques = adressesStatiques();
   const [editos, actus, pubs, minutes] = await Promise.all([
     reader.collections.editos.list(),

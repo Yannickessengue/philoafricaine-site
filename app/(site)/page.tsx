@@ -59,6 +59,12 @@ export default async function Accueil() {
   const mois = new Date().toISOString().slice(0, 7);
   const prochains = agenda.filter((a) => a.entry.date!.slice(0, 7) >= mois);
   const ouverts = postes.filter((p) => !p.entry.pourvu).length;
+  // Conférence à la une : prochaine diffusion en direct dans les dix jours
+  const dans10 = new Date(Date.now() + 10 * 864e5).toISOString().slice(0, 10);
+  const aLaUne = agenda
+    .filter((a) => a.entry.enDirect && !a.entry.aConfirmer && a.entry.date! >= aujourdhui && a.entry.date! <= dans10)
+    .sort((a, b) => a.entry.date!.localeCompare(b.entry.date!))[0];
+  const uneTitre = aLaUne ? aLaUne.entry.intitule.split(' · ') : [];
   const flashsTries = flashs.sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0));
 
   return (
@@ -79,6 +85,48 @@ export default async function Accueil() {
           ...(podcasts[0] ? [{ etiquette: 'Podcast', texte: 'Écouter Marcien Towa', href: '/podcasts' }] : []),
         ]}
       />
+      {/* Conférence à la une, à suivre en direct sur le site */}
+      {aLaUne && (
+        <section className="relative isolate overflow-hidden border-b-4 border-terra bg-[#1a1512] text-paper">
+          <img
+            src="/medias/site/jogoo/fonds-eboussi/portrait-dessine-orange.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden h-full w-auto object-cover opacity-35 [mask-image:linear-gradient(to_left,black_45%,transparent)] md:block"
+          />
+          <div className="mx-auto max-w-6xl px-5 py-12 sm:py-14">
+            <p className="inline-flex items-center gap-2 font-brand text-[0.7rem] font-bold uppercase tracking-[0.2em] text-gold">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#e53935] opacity-60" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#e53935]" />
+              </span>
+              {aLaUne.entry.date === aujourdhui ? 'Aujourd’hui · en direct sur le site' : 'À suivre en direct sur le site'}
+            </p>
+            {uneTitre.length > 1 && <p className="mt-4 max-w-2xl font-serif text-lg italic text-paper/75">{uneTitre[0]}</p>}
+            <h2 className="mt-2 max-w-3xl font-serif text-3xl leading-tight text-paper sm:text-[2.6rem]">{uneTitre.slice(uneTitre.length > 1 ? 1 : 0).join(' · ')}</h2>
+            <p className="mt-5 font-brand text-sm font-bold uppercase tracking-[0.12em] text-gold">
+              {aLaUne.entry.dateAffichee || dateFr(aLaUne.entry.date)}
+              {aLaUne.entry.heure ? ` · ${aLaUne.entry.heure}` : ''}
+            </p>
+            {aLaUne.entry.presentation && <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed text-paper/80">{aLaUne.entry.presentation}</p>}
+            <div className="mt-7 flex flex-wrap gap-3">
+              <a href="/direct" className="inline-flex items-center gap-2 bg-terra px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-white hover:text-ink">
+                <span className="h-2 w-2 rounded-full bg-white" /> Regarder en direct sur le site
+              </a>
+              {aLaUne.entry.inscription && (
+                <a href={`/inscription/${aLaUne.slug}`} className="border border-paper/40 px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-paper hover:bg-paper hover:text-ink">
+                  S’inscrire (lien Zoom)
+                </a>
+              )}
+              {aLaUne.entry.fichier && (
+                <a href={aLaUne.entry.fichier} target="_blank" rel="noreferrer" className="px-2 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-paper/75 underline underline-offset-4 hover:text-gold">
+                  Le résumé (PDF)
+                </a>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
       {/* La minute du chant du coq */}
       <section className="relative isolate overflow-hidden bg-[#140f0c] text-paper">
         <img src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="coq-flotte pointer-events-none absolute bottom-0 right-[-3rem] -z-10 h-[92%] max-h-[24rem] opacity-80 sm:right-6" />

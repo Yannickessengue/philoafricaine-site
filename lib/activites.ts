@@ -4,7 +4,7 @@ import { FORMULAIRES, type Champ, type Genre } from '@/lib/formulaires';
 
 export type Activite = {
   slug: string;
-  sorte: 'inscription' | 'candidature';
+  sorte: 'inscription' | 'candidature' | 'adhesion';
   genre: Genre;
   titre: string;
   type: string;
@@ -78,4 +78,23 @@ export async function slugsInscription() {
 }
 export async function slugsCandidature() {
   return (await reader.collections.appels.all()).filter((a) => a.entry.formulaire && a.entry.formulaire !== 'aucun').map((a) => a.slug);
+}
+
+/** Adhésion annuelle à l’association (formulaire numérique de la fiche d’adhésion). */
+export const ANNEE_ADHESION = '2026-2027';
+export function getAdhesion(): Activite {
+  return {
+    slug: `adhesion-${ANNEE_ADHESION}`,
+    sorte: 'adhesion',
+    genre: 'adhesion',
+    titre: `Adhésion ${ANNEE_ADHESION} au Groupe JOGOO`,
+    type: 'Adhésion',
+    quand: `Année ${ANNEE_ADHESION}`,
+    lieu: '',
+    limite: '',
+    fichier: '/documents/fiche-adhesion-jogoo-2026-2027.pdf',
+    ouvert: true,
+    organisateur: 'Groupe JOGOO',
+    champs: FORMULAIRES.adhesion.champs,
+  };
 }

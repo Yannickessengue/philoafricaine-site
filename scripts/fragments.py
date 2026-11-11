@@ -302,3 +302,12 @@ h = open(f).read()
 if 'Historique du site' not in h:
     h = h.replace('Illustration du coq penseur et visuels de citation : Groupe JOGOO.</p>', 'Illustration du coq penseur et visuels de citation : Groupe JOGOO.</p><h3>Historique du site</h3><p>La première version du portail philoafricaine.org (2026) a été conçue et développée par <strong>Claude Hussein Nianga</strong>, webmaster du Groupe JOGOO : architecture des sous-sites, édito de la semaine, Revue JOGOO, Fonds Eboussi Boulaga et back-office. La version actuelle prolonge ce travail ; le Groupe JOGOO le remercie chaleureusement.</p>', 1)
     open(f, 'w').write(h)
+# Adhésion (11 nov. 2026) : liens vers la page /adhesion
+for nom, avant, apres in [
+    ('footer.html', 'href="/contact">Nous rejoindre</a>', 'href="/adhesion">Adhérer au Groupe</a>'),
+    ('page__le-groupe.html', 'Comité scientifique, statuts, adhésion et soutien : écrire à <a', 'Pour devenir membre : <a class="text-terra-deep underline underline-offset-2" href="/adhesion">adhérer en ligne ou télécharger la fiche d’adhésion</a>. Comité scientifique, statuts et soutien : écrire à <a'),
+]:
+    f = OUT + '/' + nom
+    h = open(f).read()
+    if avant in h and apres not in h:
+        open(f, 'w').write(h.replace(avant, apres, 1))

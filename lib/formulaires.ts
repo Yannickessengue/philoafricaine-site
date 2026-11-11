@@ -14,13 +14,15 @@ export type Champ = {
   options?: string[];
   lignes?: number;
   demi?: boolean; // moitié de ligne sur ordinateur
+  accept?: string[]; // extensions acceptées (fichiers), par défaut EXTENSIONS
 };
 
-export type Genre = 'inscription' | 'communication' | 'article' | 'seminaire' | 'masterclass';
+export type Genre = 'inscription' | 'communication' | 'article' | 'seminaire' | 'masterclass' | 'adhesion';
 
 export const DESTINATAIRES = ['philoafricaine@gmail.com', 'fondseboussi@gmail.com'];
 export const FICHIER_MAX = 4 * 1024 * 1024; // 4 Mo (limite des fonctions Vercel : 4,5 Mo par envoi)
 export const EXTENSIONS = ['.docx', '.doc', '.odt', '.pdf', '.rtf'];
+export const EXTENSIONS_PIECES = ['.pdf', '.jpg', '.jpeg', '.png', '.heic', '.webp'];
 
 const identite: Champ[] = [
   { nom: 'prenom', libelle: 'Prénom', type: 'texte', requis: true, max: 80, demi: true },
@@ -38,6 +40,8 @@ const notice: Champ = { nom: 'notice', libelle: 'Notice biobibliographique', typ
 const titre: Champ = { nom: 'titre', libelle: 'Titre de la proposition', type: 'texte', requis: true, max: 300 };
 const langue: Champ = { nom: 'langue', libelle: 'Langue', type: 'choix', requis: true, options: ['Français', 'Anglais'], demi: true };
 
+/** Adhésion à l’association (article 8 des statuts) : formulaire numérique, équivalent de la fiche PDF. */
+export const TYPES_MEMBRES = ['Membre actif·ve (sociétaire)', 'Membre bienfaiteur·trice', 'Membre d’honneur', 'Membre bénévole'];
 export const FORMULAIRES: Record<Genre, { titre: string; intro: string; champs: Champ[]; bouton: string }> = {
   inscription: {
     titre: 'Inscription',
@@ -100,6 +104,31 @@ export const FORMULAIRES: Record<Genre, { titre: string; intro: string; champs: 
       { nom: 'fichier', libelle: 'Extrait du travail', type: 'fichier', requis: true, aide: 'Problématique ou extrait (10 000 mots au plus) : .docx, .odt ou .pdf, 4 Mo au plus.' },
     ],
   },
+  adhesion: {
+  titre: 'Demande d’adhésion',
+  intro: 'Votre demande est transmise au bureau du Groupe JOGOO (philoafricaine@gmail.com) ; une copie vous est envoyée par e-mail.',
+  bouton: 'Envoyer ma demande d’adhésion',
+  champs: [
+    { nom: 'prenom', libelle: 'Prénom', type: 'texte', requis: true, max: 80, demi: true },
+    { nom: 'nom', libelle: 'Nom', type: 'texte', requis: true, max: 80, demi: true },
+    { nom: 'naissance', libelle: 'Date de naissance', type: 'texte', requis: true, max: 40, demi: true, aide: 'Ex. : 12/03/1990.' },
+    { nom: 'email', libelle: 'Adresse e-mail', type: 'email', requis: true, max: 160, demi: true },
+    { nom: 'telephone', libelle: 'Téléphone (WhatsApp)', type: 'tel', requis: true, max: 40, demi: true },
+    { nom: 'ville', libelle: 'Ville / pays', type: 'texte', requis: true, max: 120, demi: true },
+    { nom: 'adresse', libelle: 'Adresse postale', type: 'texte', requis: true, max: 300 },
+    { nom: 'etudes', libelle: 'Domaine et niveau d’études', type: 'texte', requis: true, max: 200, demi: true },
+    { nom: 'titreAcademique', libelle: 'Titre académique', type: 'texte', max: 120, demi: true, aide: 'Facultatif.' },
+    { nom: 'interet', libelle: 'Centre d’intérêt philosophique', type: 'zone', requis: true, max: 1000, lignes: 3 },
+    { nom: 'ancien', libelle: 'Étiez-vous adhérent·e l’année dernière ?', type: 'choix', requis: true, options: ['Oui', 'Non'], demi: true },
+    { nom: 'typeMembre', libelle: 'Type de membre souhaité', type: 'choix', requis: true, options: TYPES_MEMBRES, demi: true },
+    { nom: 'paiement', libelle: 'Mode de règlement de la cotisation', type: 'choix', options: ['PayPal', 'Virement bancaire', 'Mobile money / sur place', 'Sans objet (membre d’honneur ou bénévole)'], demi: true },
+    { nom: 'initiales', libelle: 'Signature (vos initiales)', type: 'texte', requis: true, max: 12, demi: true, aide: 'Valent signature pour un enregistrement électronique.' },
+    { nom: 'photo', libelle: 'Photo récente (4 × 4)', type: 'fichier', accept: EXTENSIONS_PIECES, aide: 'JPG, PNG ou PDF. Facultatif ici : vous pouvez aussi l’envoyer par e-mail.' },
+    { nom: 'identite', libelle: 'Pièce d’identité', type: 'fichier', accept: EXTENSIONS_PIECES, aide: 'JPG, PNG ou PDF. Facultatif ici : vous pouvez aussi l’envoyer par e-mail.' },
+    { nom: 'justificatif', libelle: 'Justificatif de paiement', type: 'fichier', accept: EXTENSIONS_PIECES, aide: 'Reçu PayPal, virement… Facultatif ici : vous pouvez aussi l’envoyer par e-mail.' },
+    { nom: 'lettres', libelle: 'Deux lettres de présentation (membres bénévoles)', type: 'fichier', accept: EXTENSIONS_PIECES, aide: 'Un seul fichier PDF réunissant les deux lettres, signées par des membres déjà agréés.' },
+  ],
+},
 };
 
 export const compterMots = (s: string) => (s.trim() ? s.trim().split(/\s+/).length : 0);
