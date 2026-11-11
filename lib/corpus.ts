@@ -1,7 +1,7 @@
 import { reader, getEditos, getActualites, getPublications, getRevue, sousEmbargo, motsCles, sansEmail } from './content';
 import { corpsBrut } from './raw';
 import { adressesStatiques, pageStatique } from './gabarits';
-import { bibliothequePrivee } from './bibliotheque-privee';
+import { bibliothequeChercheurs, bibliothequePrivee } from './bibliotheque-privee';
 
 /* Corpus documentaire de JOGOO AI : uniquement les textes publiés par le Groupe JOGOO sur ce site
    (droits maîtrisés). Les articles de revue sous embargo n'y figurent que par leur résumé. */
@@ -198,12 +198,21 @@ const racine = (m: string) => m.replace(/(ions|ion|ites|ite|ismes|isme|istes|ist
 export type Passage = { notice: Notice; extrait: string; score: number };
 
 type Entree = { notice: Notice; extrait: string; tf: Map<string, number>; long: number; tete: Set<string> };
-let index: { quand: number; passages: Entree[]; df: Map<string, number>; moy: number } | null = null;
+type Index = { quand: number; passages: Entree[]; df: Map<string, number>; moy: number };
+const index = new Map<boolean, Index>();
 
 /** Index des passages (corpus du site + bibliothèque privée), construit une fois puis gardé une heure. */
-async function indexer() {
-  if (index && Date.now() - index.quand < 3600_000) return index;
-  const notices = [...(await corpus()), ...(await bibliothequePrivee())];
+async function indexer(chercheurs: boolean) {
+  const deja = index.get(chercheurs);
+  if (deja && Date.now() - deja.quand < 3600_000) return deja;
+  const prives = await bibliothequePrivee();
+  let notices = [...(await corpus()), ...prives];
+  if (chercheurs) {
+    // dans l'espace chercheurs, le texte intégral remplace la notice du même ouvrage
+    const complets = await bibliothequeChercheurs();
+    const ids = new Set(complets.map((c) => c.id));
+    notices = [...notices.filter((n) => !ids.has(n.id)), ...complets];
+  }
   const passages: Entree[] = [];
   const ajouter = (no: Notice, extrait: string) => {
     const termes = mots(`${no.titre}. ${no.auteur}. ${no.motsCles.join(', ')} ${extrait}`).map(racine);
@@ -227,14 +236,15 @@ async function indexer() {
   const df = new Map<string, number>();
   for (const p of passages) for (const t of p.tf.keys()) df.set(t, (df.get(t) ?? 0) + 1);
   const moy = passages.reduce((s, p) => s + p.long, 0) / Math.max(1, passages.length);
-  index = { quand: Date.now(), passages, df, moy };
-  return index;
+  const ix = { quand: Date.now(), passages, df, moy };
+  index.set(chercheurs, ix);
+  return ix;
 }
 
-export async function rechercher(question: string, max = 6): Promise<Passage[]> {
+export async function rechercher(question: string, max = 6, chercheurs = false): Promise<Passage[]> {
   const q = [...new Set(mots(question).map(racine))].filter(Boolean);
   if (!q.length) return [];
-  const { passages, df, moy } = await indexer();
+  const { passages, df, moy } = await indexer(chercheurs);
   const N = passages.length;
   const scores: Passage[] = [];
   for (const p of passages) {

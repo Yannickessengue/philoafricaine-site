@@ -116,6 +116,23 @@ export function Assistant({
   const [tours, setTours] = useState<Tour[]>([]);
   const zone = useRef<HTMLDivElement>(null);
   const occupe = tours.some((x) => x.enCours);
+  // Espace chercheurs : code d'accès gardé dans ce navigateur
+  const [code, setCode] = useState('');
+  const [chercheurs, setChercheurs] = useState(false);
+  const [saisieCode, setSaisieCode] = useState(false);
+  useEffect(() => {
+    try {
+      setCode(localStorage.getItem('jogoo-ai-code') ?? '');
+    } catch {}
+  }, []);
+  const enregistrerCode = (c: string) => {
+    setCode(c);
+    setChercheurs(false);
+    try {
+      if (c) localStorage.setItem('jogoo-ai-code', c);
+      else localStorage.removeItem('jogoo-ai-code');
+    } catch {}
+  };
 
   const poser = async (question: string) => {
     const texte = question.trim();
@@ -127,8 +144,9 @@ export function Assistant({
     setTours((ts) => [...ts, { question: texte, reponse: null, sources: [], enCours: true }]);
     setQ('');
     try {
-      const r = await fetch('/api/jogoo-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: texte, historique }) });
+      const r = await fetch('/api/jogoo-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: texte, historique, code: code || undefined }) });
       const j = await r.json();
+      setChercheurs(Boolean(j.chercheurs));
       setTours((ts) => ts.map((x, i) => (i === ts.length - 1 ? { question: texte, reponse: j.reponse ?? null, sources: j.sources ?? [], mode: j.mode, erreur: j.erreur } : x)));
     } catch {
       setTours((ts) => ts.map((x, i) => (i === ts.length - 1 ? { question: texte, reponse: null, sources: [], erreur: 'La connexion a échoué. Réessayez dans un instant.' } : x)));
@@ -270,6 +288,37 @@ export function Assistant({
               {e}
             </button>
           ))}
+        </div>
+      )}
+      {!compact && (
+        <div className={`flex flex-wrap items-center justify-end gap-x-3 gap-y-1 px-4 pb-3 text-[0.72rem] ${t.mute}`}>
+          {chercheurs ? (
+            <>
+              <span className="font-bold uppercase tracking-[0.12em] text-[#d99a0e]">Espace chercheurs actif : toute la bibliothèque du Groupe</span>
+              <button type="button" className="underline underline-offset-2" onClick={() => enregistrerCode('')}>
+                Quitter
+              </button>
+            </>
+          ) : saisieCode ? (
+            <form
+              className="flex items-center gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const v = (new FormData(e.currentTarget).get('code') as string).trim();
+                enregistrerCode(v);
+                setSaisieCode(false);
+              }}
+            >
+              <input name="code" type="password" autoComplete="off" placeholder="Code d'accès" aria-label="Code d'accès chercheurs" className="w-36 border border-current/30 bg-transparent px-2 py-1 outline-none" />
+              <button type="submit" className="font-bold uppercase tracking-[0.1em] underline underline-offset-2">
+                Valider
+              </button>
+            </form>
+          ) : (
+            <button type="button" className="underline underline-offset-2" onClick={() => setSaisieCode(true)}>
+              {code ? 'Code chercheurs enregistré (posez une question pour l’activer)' : 'Accès chercheurs'}
+            </button>
+          )}
         </div>
       )}
     </div>
