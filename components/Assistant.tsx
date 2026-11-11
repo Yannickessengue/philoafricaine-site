@@ -42,15 +42,15 @@ const THEMES = {
     lien: 'text-[#6a0d0d]',
   },
   sombre: {
-    boite: 'overflow-hidden rounded-3xl bg-white/[0.06] ring-1 ring-white/[0.12] backdrop-blur-xl shadow-[0_40px_90px_-50px_rgba(0,0,0,0.7)]',
+    boite: 'bg-[#0b1626]/70 ring-1 ring-[#d99a0e]/25 backdrop-blur-xl shadow-[0_0_80px_-20px_rgba(217,154,14,0.35)]',
     zone: 'max-h-[62vh] min-h-[6rem] px-5 py-6 sm:px-8',
-    texte: 'text-[#ece6d9] font-light text-[0.96rem]',
+    texte: 'text-[#e9e2d0] font-light text-[0.96rem]',
     titre: 'text-[#f9f5ec]',
-    bulleQ: 'rounded-2xl rounded-br-md bg-[#d99a0e]/[0.16] text-[#f9f5ec]',
-    source: 'rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08]',
+    bulleQ: 'bg-[#6a0d0d] text-[#f9f5ec]',
+    source: 'bg-white/[0.06] ring-1 ring-white/10',
     sourceTitre: 'text-[#f9f5ec] group-hover:text-[#ffc94a]',
-    puce: 'rounded-full bg-white/[0.06] text-[#ece6d9] ring-1 ring-white/15 hover:bg-[#d99a0e] hover:text-[#16223a]',
-    pied: 'border-t border-white/10 bg-white/[0.03]',
+    puce: 'bg-white/[0.06] text-[#e9e2d0] ring-1 ring-[#d99a0e]/30 hover:bg-[#d99a0e] hover:text-[#0d1b2a]',
+    pied: 'bg-black/30',
     mute: 'text-[#e9e2d0]/55',
     lien: 'text-[#ffc94a]',
   },
@@ -331,13 +331,13 @@ export function Assistant({
           maxLength={1200}
           placeholder="Posez votre question sur la philosophie africaine…"
           aria-label="Votre question"
-          className={`max-h-40 min-h-[2.75rem] flex-1 resize-none rounded-full px-5 py-2.5 text-[0.95rem] outline-none ${sombre ? 'bg-white/[0.07] text-[#f9f5ec] placeholder:text-[#e9e2d0]/45 focus:bg-white/[0.11]' : 'bg-white/95 text-[#0d1b2a] placeholder:text-[#333]/45 focus:bg-white'}`}
+          className={`max-h-40 min-h-[2.75rem] flex-1 resize-none px-4 py-2.5 text-[0.95rem] outline-none ${sombre ? 'bg-white/[0.07] text-[#f9f5ec] placeholder:text-[#e9e2d0]/45 focus:bg-white/[0.11]' : 'bg-white/95 text-[#0d1b2a] placeholder:text-[#333]/45 focus:bg-white'}`}
         />
         <button
           type="submit"
           disabled={occupe || q.trim().length < 3}
           aria-label="Envoyer la question"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#d99a0e] text-[#0d1b2a] transition-colors hover:bg-[#ffc94a] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto sm:px-5"
+          className="flex h-11 w-11 shrink-0 items-center justify-center bg-[#d99a0e] text-[#0d1b2a] transition-colors hover:bg-[#ffc94a] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto sm:px-5"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={compact ? '' : 'sm:hidden'}>
             <path d="M5 12h14M13 6l6 6-6 6" />

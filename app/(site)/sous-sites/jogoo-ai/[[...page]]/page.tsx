@@ -61,13 +61,13 @@ const MENU: [string, string, string][] = [
   ['a-propos', 'Méthode', 'M12 8h.01M11 12h1v5h1M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z'],
 ];
 
-const verre = 'rounded-2xl bg-white/[0.055] ring-1 ring-white/[0.08] backdrop-blur-sm transition-all duration-300';
+const verre = 'bg-white/[0.045] backdrop-blur-sm transition-all duration-300';
 
 export default async function JogooAI({ params }: { params: Promise<{ page?: string[] }> }) {
   const p = (await params).page?.join('/') ?? '';
   if (!(PAGES as readonly string[]).includes(p)) notFound();
   return (
-    <div className="jogoo-ai-doux bg-[#16223a] text-[#ece6d9]">
+    <div className="jogoo-ai-doux bg-[#070d16] text-[#e9e2d0]">
       <Bandeau site={S} actif={p === 'interroger' ? '' : p} />
       {(p === '' || p === 'interroger') && <Espace />}
       {p === 'bibliotheque' && <PageBibliotheque />}
@@ -85,7 +85,7 @@ function Fond({ children, plein = false }: { children: ReactNode; plein?: boolea
   return (
     <section className={`ai-lignes relative isolate overflow-hidden ${plein ? 'min-h-[calc(100dvh-9rem)]' : ''}`}>
       <div className="ai-motif absolute inset-0 -z-10" aria-hidden="true" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_20%,rgba(255,214,140,0.13),transparent_60%),radial-gradient(ellipse_at_80%_90%,rgba(140,175,230,0.12),transparent_55%)]" aria-hidden="true" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_20%,rgba(106,13,13,0.35),transparent_60%),radial-gradient(ellipse_at_80%_90%,rgba(217,154,14,0.12),transparent_55%)]" aria-hidden="true" />
       <Constellation className="-z-10" />
       {children}
     </section>
@@ -118,7 +118,7 @@ async function Espace() {
 
         <nav aria-label="Explorer JOGOO AI" className="mt-10 grid w-full grid-cols-2 gap-3 sm:grid-cols-5">
           {MENU.map(([slug, nom, d]) => (
-            <a key={slug} href={`${B}/${slug}`} className={`group flex flex-col items-center gap-2.5 px-3 py-5 text-center ${verre} hover:bg-white/[0.09] hover:shadow-[0_20px_50px_-30px_rgba(255,201,74,0.35)]`}>
+            <a key={slug} href={`${B}/${slug}`} className={`group flex flex-col items-center gap-2.5 px-3 py-5 text-center ${verre} hover:bg-white/[0.09] hover:shadow-[0_0_40px_-10px_rgba(255,201,74,0.45)]`}>
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#d99a0e]/15 text-[#ffc94a] transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#d99a0e] group-hover:text-[#070d16]">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d={d} />
@@ -157,8 +157,8 @@ async function Philosophes() {
       <Titre sur="Philosophes" titre="Des voix à explorer" />
       <div className="mx-auto grid max-w-6xl gap-4 px-6 pb-16 pt-8 sm:grid-cols-2 lg:grid-cols-4">
         {PHILOSOPHES.map((p, i) => (
-          <div key={p.nom} className={`group flex flex-col p-6 ${verre} hover:bg-white/[0.08] hover:shadow-[0_20px_50px_-30px_rgba(255,201,74,0.35)]`}>
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#6a0d0d] to-[#b02424] font-brand text-lg font-black text-[#f9f5ec]">
+          <div key={p.nom} className={`group flex flex-col p-6 ${verre} hover:bg-white/[0.08] hover:shadow-[0_0_40px_-12px_rgba(255,201,74,0.4)]`}>
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#6a0d0d] to-[#b02424] font-brand text-lg font-black text-[#f9f5ec] shadow-[0_0_24px_rgba(176,36,36,0.5)]">
               {p.nom
                 .split(' ')
                 .filter((m) => /^[A-Z]/.test(m))
@@ -172,11 +172,11 @@ async function Philosophes() {
               {sources[i]} doc.
             </p>
             <div className="mt-auto flex flex-wrap gap-2 pt-5">
-              <a href={`${B}/interroger?q=${encodeURIComponent(`Que dit le corpus sur ${p.nom} ?`)}`} className="rounded-full bg-[#d99a0e] px-3 py-1.5 font-brand text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#070d16] hover:bg-[#ffc94a]">
+              <a href={`${B}/interroger?q=${encodeURIComponent(`Que dit le corpus sur ${p.nom} ?`)}`} className="bg-[#d99a0e] px-3 py-1.5 font-brand text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#070d16] hover:bg-[#ffc94a]">
                 Interroger
               </a>
               {p.fiche && (
-                <a href={p.fiche} className="rounded-full bg-white/10 px-3 py-1.5 font-brand text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f9f5ec] hover:bg-white/20">
+                <a href={p.fiche} className="bg-white/10 px-3 py-1.5 font-brand text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f9f5ec] hover:bg-white/20">
                   Fiche
                 </a>
               )}
@@ -198,7 +198,7 @@ async function Concepts() {
           <a
             key={c}
             href={`${B}/interroger?q=${encodeURIComponent(`Quels sont les usages et les débats autour de la notion de « ${c.toLowerCase()} » ?`)}`}
-            className={`group relative flex min-h-[9rem] flex-col justify-between overflow-hidden p-6 ${verre} hover:bg-white/[0.08] hover:shadow-[0_20px_50px_-30px_rgba(255,201,74,0.35)]`}
+            className={`group relative flex min-h-[9rem] flex-col justify-between overflow-hidden p-6 ${verre} hover:bg-white/[0.08] hover:shadow-[0_0_40px_-12px_rgba(255,201,74,0.45)]`}
           >
             <span className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[#d99a0e]/10 blur-xl transition-all duration-500 group-hover:bg-[#d99a0e]/30" aria-hidden="true" />
             <span className="font-brand text-2xl font-black tracking-tight text-[#f9f5ec] group-hover:text-[#ffc94a]">{c}</span>
@@ -256,10 +256,10 @@ function APropos() {
           ))}
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <a href={`${B}/interroger`} className="rounded-full bg-[#d99a0e] px-5 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-[#070d16] hover:bg-[#ffc94a]">
+          <a href={`${B}/interroger`} className="bg-[#d99a0e] px-5 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-[#070d16] hover:bg-[#ffc94a]">
             Interroger JOGOO AI →
           </a>
-          <a href={`mailto:${S.email}?subject=${encodeURIComponent('JOGOO AI — signalement')}`} className="rounded-full bg-white/10 px-5 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-[#f9f5ec] hover:bg-white/20">
+          <a href={`mailto:${S.email}?subject=${encodeURIComponent('JOGOO AI — signalement')}`} className="bg-white/10 px-5 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-[#f9f5ec] hover:bg-white/20">
             Signaler une erreur
           </a>
         </div>

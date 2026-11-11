@@ -240,10 +240,8 @@ main :is(div, article, li, a):is([class~='border']):is([class*='border-ink/1'], 
   .fil { overflow-x: auto; }
 }
 
-/* ——— JOGOO AI adouci (nov. 2026) : graisses légères, nuit éclaircie, sans lignes de balayage ——— */
+/* ——— JOGOO AI (nov. 2026) : écritures affinées (graisses légères), fond et effets d'origine conservés ——— */
 .jogoo-ai-doux .font-black { font-weight: 300; }
 .jogoo-ai-doux .font-extrabold { font-weight: 400; }
 .jogoo-ai-doux .font-bold, .jogoo-ai-doux .font-semibold { font-weight: 500; }
 .jogoo-ai-doux strong { font-weight: 500; }
-.jogoo-ai-doux .ai-lignes::after { display: none; }
-.jogoo-ai-doux .ai-motif { opacity: .45; }
