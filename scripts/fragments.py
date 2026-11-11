@@ -328,3 +328,10 @@ for f in _g.glob(OUT + '/*.html'):
     h = open(f).read()
     n = _re.sub('([\u2197\u25b6])(?!\ufe0e)', '\\1\ufe0e', h)
     if n != h: open(f, 'w').write(n)
+
+# Intro d'accueil : fondu plus court, filigrane chargé immédiatement
+_p = OUT + '/home-00.html'
+_h = open(_p).read()
+_h = _h.replace('transition-opacity duration-400 opacity-100', 'transition-opacity duration-300 opacity-100')
+_h = _h.replace('decoding="async" height="1254" loading="lazy" src="/medias/site/jogoo/coq-penseur.jpg"', 'decoding="async" fetchpriority="high" height="1254" loading="eager" src="/medias/site/jogoo/coq-penseur.jpg"')
+open(_p, 'w').write(_h)

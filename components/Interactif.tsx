@@ -325,7 +325,7 @@ export function Interactif() {
     if (loader && !document.documentElement.classList.contains('intro-vue')) {
       document.body.style.overflow = 'hidden';
       const passer = loader.querySelector<HTMLElement>('span[aria-hidden="true"].relative');
-      t3 = window.setTimeout(() => passer?.classList.replace('opacity-0', 'opacity-100'), 1400);
+      t3 = window.setTimeout(() => passer?.classList.replace('opacity-0', 'opacity-100'), Math.max(0, 900 - performance.now()));
       const fermer = () => {
         if (loader.dataset.ferme) return;
         loader.dataset.ferme = '1';
@@ -333,12 +333,13 @@ export function Interactif() {
         loader.classList.replace('opacity-100', 'opacity-0');
         loader.style.pointerEvents = 'none';
         document.body.style.overflow = '';
-        t2 = window.setTimeout(() => { loader.style.display = 'none'; document.documentElement.classList.add('intro-vue'); }, 450);
+        t2 = window.setTimeout(() => { loader.style.display = 'none'; document.documentElement.classList.add('intro-vue'); }, 350);
       };
       loader.addEventListener('click', fermer);
       const touche = (e: KeyboardEvent) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') fermer(); };
       window.addEventListener('keydown', touche, { once: true });
-      t1 = window.setTimeout(fermer, 2500);
+      // Compté depuis le début du chargement (l'animation CSS démarre au premier affichage) : fermeture à ~2,15 s + fondu 0,35 s = 2,5 s
+      t1 = window.setTimeout(fermer, Math.max(300, 2150 - performance.now()));
     }
 
     // Compte à rebours (bloc colloque de l'accueil)
