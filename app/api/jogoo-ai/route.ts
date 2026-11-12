@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
-import { rechercher } from '@/lib/corpus';
+import { rechercher, definitionLalande, termeDefini } from '@/lib/corpus';
 
 /* Sites consultés en ligne au moment de la question (outil de recherche web de l'API Claude). */
 const SITES = ['plato.stanford.edu', 'iep.utm.edu', 'philpapers.org', 'persee.fr', 'journals.openedition.org', 'books.openedition.org', 'erudit.org', 'hal.science', 'codesria.org', 'cairn.info', 'philoafricaine.org'];
@@ -88,6 +88,11 @@ export async function POST(req: Request) {
   const derniere = fil.filter((m) => m.role === 'user').slice(-1)[0]?.content ?? '';
   const chercheurs = codeValide(corps.code);
   const passages = await rechercher(`${question} ${derniere}`.trim(), 6, chercheurs);
+  // Question de définition (espace chercheurs) : l'article du Vocabulaire de Lalande passe en premier
+  if (chercheurs && estDefinition(question)) {
+    const lal = await definitionLalande(termeDefini(question)).catch(() => null);
+    if (lal) passages.splice(0, passages.length, lal, ...passages.filter((p) => p.notice.id !== lal.notice.id).slice(0, 5));
+  }
   const sources = passages.map((p, i) => ({
     n: i + 1,
     titre: nettoyerTitre(p.notice.titre),

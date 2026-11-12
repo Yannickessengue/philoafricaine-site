@@ -354,3 +354,37 @@ export async function rechercher(question: string, max = 6, chercheurs = false):
   }
   return res;
 }
+
+/* ——— Vocabulaire de Lalande (espace chercheurs) ———
+   Pour une question de définition, on va chercher directement l'article du Vocabulaire technique et critique
+   de la philosophie consacré au terme, repéré par son mot-vedette en capitales. */
+export async function definitionLalande(terme: string): Promise<Passage | null> {
+  if (!terme || terme.length < 3) return null;
+  const docs = await integraux();
+  const lal = docs.find((d) => /vocabulaire technique et critique/i.test(d.notice.titre));
+  if (!lal) return null;
+  const texte = lal.notice.texte;
+  const sansAccent = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const vedette = terme.toLocaleUpperCase('fr');
+  const motifs = [vedette, sansAccent(vedette)].map((v) => new RegExp(`(^|\\n)\\s*${v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'));
+  for (const m of motifs) {
+    const r = m.exec(texte);
+    if (r) {
+      const debut = r.index + (r[1] ? 1 : 0);
+      const extrait = texte.slice(debut, debut + 2200).trim();
+      return { notice: lal.notice, extrait, score: 100 };
+    }
+  }
+  return null;
+}
+
+/** Terme à définir dans une question (« qu'est-ce que l'altérité ? » → « altérité »). */
+export function termeDefini(question: string): string {
+  const q = question.trim().replace(/[?!.…]+$/, '');
+  const m =
+    q.match(/(?:qu['’]\s*est[- ]ce\s+qu(?:e|['’])|que\s+(?:signifie|veut\s+dire)|d[ée]finition\s+(?:de\s+(?:la\s+|l['’]\s*)?|du\s+|des\s+|d['’]\s*)|d[ée]finir|notion\s+(?:de\s+(?:la\s+|l['’]\s*)?|du\s+|d['’]\s*)|concept\s+(?:de\s+(?:la\s+|l['’]\s*)?|du\s+|d['’]\s*))\s*(?:(?:le|la|les|l['’]|un|une|du|des)\s*)?(.+)$/i);
+  const reste = (m ? m[1] : q).trim();
+  const mots = reste.split(/\s+/).filter((w) => !/^(le|la|les|l['’].*|un|une|du|des|de|en|selon|chez|dans|pour)$/i.test(w));
+  return (mots[0] || '').replace(/^l['’]/i, '').replace(/[,;:]$/, '');
+}
+
