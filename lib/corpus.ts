@@ -366,7 +366,7 @@ export async function definitionLalande(terme: string): Promise<Passage | null> 
   const texte = lal.notice.texte;
   const sansAccent = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const vedette = terme.toLocaleUpperCase('fr');
-  const motifs = [vedette, sansAccent(vedette)].map((v) => new RegExp(`(^|\\n)\\s*${v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'));
+  const motifs = [vedette, sansAccent(vedette)].map((v) => new RegExp(`(^|\\n)\\s*${v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-zÀ-ÿ])`, 'g'));
   for (const m of motifs) {
     const r = m.exec(texte);
     if (r) {
