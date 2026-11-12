@@ -5,6 +5,14 @@ import { rechercher } from '@/lib/corpus';
 /* Sites consultés en ligne au moment de la question (outil de recherche web de l'API Claude). */
 const SITES = ['plato.stanford.edu', 'iep.utm.edu', 'philpapers.org', 'persee.fr', 'journals.openedition.org', 'books.openedition.org', 'erudit.org', 'hal.science', 'codesria.org', 'cairn.info', 'philoafricaine.org'];
 
+/* Ouvrages de référence pour les définitions : encyclopédies de philosophie générale. */
+const ENCYCLOPEDIES = ['plato.stanford.edu', 'iep.utm.edu'];
+/* Question de définition (« qu'est-ce que… », « que signifie… », « la notion de… », ou simple mot-clé) */
+const DEFINITION = /(qu['’]\s*est[- ]ce\s+qu|que\s+(signifie|veut\s+dire)|d[ée]fini(r|tion|ssez)|\b(la\s+)?notion\s+d|\bconcept\s+d|\bsens\s+d[eu]|what\s+is|meaning\s+of|\bdefin)/i;
+const estDefinition = (q: string) => DEFINITION.test(q) || q.trim().split(/\s+/).length <= 3;
+
+const CONSIGNE_DEFINITION = `- Question de définition : commence par un paragraphe « Définition générale » qui donne le sens de la notion en philosophie générale. Cherche pour cela l'article correspondant de la Stanford Encyclopedia of Philosophy (à défaut, de l'Internet Encyclopedia of Philosophy) et nomme-le (« Stanford Encyclopedia of Philosophy, article "…" ») ; si le Vocabulaire technique et critique de la philosophie d'André Lalande figure parmi les documents, cite d'abord sa définition. Reformule en français, sans traduire de longs passages. Puis, dans un second temps (« En philosophie africaine »), montre comment la notion est reprise, discutée ou transformée, en t'appuyant sur les documents numérotés.`;
+
 function codeValide(code: unknown) {
   const attendu = process.env.JOGOO_AI_CODE_CHERCHEURS?.trim();
   if (!attendu || typeof code !== 'string') return false;
@@ -101,6 +109,9 @@ export async function POST(req: Request) {
 
   const longueur = corps.longueur === 'developpee' ? 'developpee' : 'courte';
   const corpusSuffit = passages.length >= 4 && (passages[0]?.score ?? 0) >= 10;
+  const definition = estDefinition(question);
+  // Recherche en ligne : toujours pour une définition (encyclopédies), sinon seulement si le corpus répond mal
+  const web = definition || !corpusSuffit;
   const appeler = (avecWeb: boolean, flux: boolean) =>
     fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -108,9 +119,9 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: process.env.JOGOO_AI_MODELE || 'claude-sonnet-5-5',
         max_tokens: LONGUEURS[longueur].jetons,
-        system: `${SYSTEME}\n- ${LONGUEURS[longueur].consigne}`,
+        system: `${SYSTEME}${definition ? `\n${CONSIGNE_DEFINITION}` : ''}\n- ${LONGUEURS[longueur].consigne}`,
         stream: flux,
-        ...(avecWeb ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2, allowed_domains: SITES }] } : {}),
+        ...(avecWeb ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2, allowed_domains: definition && corpusSuffit ? ENCYCLOPEDIES : SITES }] } : {}),
         messages: [...fil, { role: 'user', content: `<documents>\n${documents || '(aucun document du corpus ne correspond)'}\n</documents>\n\nQuestion : ${question}` }],
       }),
     });
@@ -142,7 +153,7 @@ export async function POST(req: Request) {
         const envoyer = (o: object) => ctrl.enqueue(enc.encode(JSON.stringify(o) + '\n'));
         envoyer({ t: 'meta', sources, chercheurs, recherche: Date.now() - t0 });
         try {
-          let r = await appeler(!corpusSuffit, true);
+          let r = await appeler(web, true);
           if (!r.ok || !r.body) {
             console.error('JOGOO AI (flux, avec recherche en ligne)', r.status, await r.text());
             r = await appeler(false, true);
@@ -190,7 +201,7 @@ export async function POST(req: Request) {
 
   try {
     // La recherche en ligne ajoute 5 à 15 s : on ne la lance que si le corpus répond mal à la question
-    let r = await appeler(!corpusSuffit, false);
+    let r = await appeler(web, false);
     if (!r.ok) {
       console.error('JOGOO AI (avec recherche en ligne)', r.status, await r.text());
       r = await appeler(false, false);
