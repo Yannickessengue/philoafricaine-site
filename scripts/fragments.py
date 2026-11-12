@@ -389,3 +389,9 @@ _h = open(_p).read()
 _h = _h.replace('<a class="relative whitespace-nowrap px-2 py-2 text-[0.85rem] font-medium transition-colors hover:text-terra xl:text-[0.9rem] text-ink" href="/">Accueil</a>',
                 '<a class="relative whitespace-nowrap px-2 py-2 text-[0.85rem] font-medium transition-colors hover:text-terra xl:hidden 2xl:inline text-ink" href="/">Accueil</a>')
 open(_p, 'w').write(_h)
+_p = OUT + '/header.html'
+_h = open(_p).read().replace('xl:hidden 2xl:inline text-ink" href="/">Accueil', 'xl:hidden text-ink" href="/">Accueil')
+open(_p, 'w').write(_h)
+_p = OUT + '/home-09.html'
+_h = open(_p).read().replace('>Remplir le formulaire d’adhésion</span>', '>Adhérer en ligne</span>')
+open(_p, 'w').write(_h)

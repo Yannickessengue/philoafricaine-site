@@ -61,10 +61,10 @@ export default async function Actualites() {
       <div className="mx-auto max-w-6xl space-y-16 px-5 py-16">
         {prochain && (
           <section className="relative overflow-hidden border border-terra/25 bg-terra-deep text-paper">
-            <div className={`relative grid gap-6 p-7 sm:p-10 md:items-center md:gap-10 ${prochain.entry.affiche ? 'md:grid-cols-[auto_1fr_auto]' : 'md:grid-cols-[auto_1fr]'}`}>
+            <div className={`relative grid gap-6 p-7 sm:p-10 md:items-center md:gap-10 ${prochain.entry.affiche ? 'md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)_auto]' : 'md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]'}`}>
               <div className="shrink-0">
                 <p className="font-brand text-[0.68rem] font-bold uppercase tracking-[0.14em] text-gold">Prochain événement</p>
-                <p className="mt-2 font-brand text-4xl font-black leading-none text-paper sm:text-5xl">
+                <p className="mt-2 font-brand text-4xl font-black leading-[0.95] text-paper">
                   {prochain.entry.aConfirmer ? 'Date à confirmer' : prochain.entry.dateAffichee || dateFr(prochain.entry.date)}
                 </p>
               </div>
