@@ -147,7 +147,9 @@ function EnLigne({ n }: { n: Numero }) {
           <p className="kicker text-[#e5a220]">Le magazine en ligne</p>
           <h2 className="mt-2 font-serif text-2xl font-bold leading-tight sm:text-3xl">Feuilletez le n° {n.slug} dans votre navigateur</h2>
           <p className="mt-3 max-w-2xl text-[0.98rem] leading-relaxed text-[#f7f1e6]/75">
-            {n.embargo
+            {n.maquette
+              ? 'La lecture en ligne sera bientôt disponible. En attendant, le numéro peut être commandé en version papier ou numérique.'
+              : n.embargo
               ? `La couverture, l’éditorial et le sommaire sont en lecture libre. Le numéro complet (${n.total} pages) sera en accès libre le ${n.fin} ; d’ici là, il est disponible en version papier ou numérique.`
               : `Le numéro complet (${n.total} pages) est en accès libre.`}
           </p>
@@ -180,7 +182,7 @@ function Kiosque({ numeros }: { numeros: Numero[] }) {
                 <span className={`absolute left-3 top-3 px-2 py-1 font-brand text-[0.62rem] font-bold uppercase tracking-[0.12em] ${n.embargo ? 'bg-[#1a1714] text-[#e5a220]' : 'bg-[#e5a220] text-[#1a1714]'}`}>
                   {n.embargo ? `Aperçu · libre le ${n.fin}` : 'Accès libre'}
                 </span>
-                {n.maquette && <span className="absolute right-3 top-3 bg-white/90 px-2 py-1 font-brand text-[0.62rem] font-bold uppercase tracking-[0.12em] text-[#c8461f]">Maquette</span>}
+                {n.maquette && <span className="absolute right-3 top-3 bg-white/90 px-2 py-1 font-brand text-[0.62rem] font-bold uppercase tracking-[0.12em] text-[#c8461f]">Bientôt en ligne</span>}
               </span>
               <span className="mt-4 block">
                 <span className="kicker text-[#c8461f]">
@@ -189,7 +191,7 @@ function Kiosque({ numeros }: { numeros: Numero[] }) {
                 </span>
                 <span className="mt-1 block font-serif text-xl font-bold leading-snug text-[#1a1714] group-hover:text-[#c8461f]">{n.titre}</span>
                 <span className="mt-1 block text-sm text-ink-soft">
-                  {n.total} pages · {n.embargo ? `${Math.min(n.pagesApercu ?? 5, n.total)} pages en lecture libre` : 'texte intégral'}
+                  {n.maquette ? 'Lecture en ligne bientôt disponible' : <>{n.total} pages · {n.embargo ? `${Math.min(n.pagesApercu ?? 5, n.total)} pages en lecture libre` : 'texte intégral'}</>}
                 </span>
               </span>
             </a>
@@ -207,6 +209,20 @@ function Lecture({ n }: { n: Numero }) {
       <section className="bg-[#1a1714]">
         <h1 className="sr-only">{`Philo Africaine Magazine n° ${n.slug} : ${n.titre}`}</h1>
         <div className="mx-auto max-w-6xl px-0 sm:px-6 sm:py-6">
+          {n.maquette ? (
+            <div className="px-6 py-10 sm:py-14">
+              <div className="relative mx-auto grid w-full max-w-3xl grid-cols-2 gap-1">
+                {[0, 1].map((i) => (
+                  <div key={i} aria-hidden="true" className="aspect-[595/780] border border-[#f7f1e6]/10 bg-[#f7f1e6]/[0.04]" />
+                ))}
+                <p className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+                  <span className="font-brand text-sm font-semibold text-[#e5a220]">Visionneuse</span>
+                  <span className="mt-2 font-serif text-3xl text-[#f7f1e6] sm:text-4xl">Bientôt disponible</span>
+                  <span className="mt-3 max-w-sm text-sm text-[#f7f1e6]/60">Le n° {n.slug} pourra être feuilleté ici dès sa parution en ligne.</span>
+                </p>
+              </div>
+            </div>
+          ) : (
           <Visionneuse
             url={url}
             titre={`Philo Africaine Magazine · N° ${n.slug} — ${n.titre}`}
@@ -217,6 +233,7 @@ function Lecture({ n }: { n: Numero }) {
             commander={`${B}/acheter`}
             telecharger={n.embargo ? undefined : n.pdf!}
           />
+          )}
         </div>
       </section>
       <Section site={S} kicker={`N° ${n.slug}${n.periode ? ` · ${n.periode}` : ''}`} titre={n.titre ?? ''}>
@@ -241,7 +258,15 @@ function Lecture({ n }: { n: Numero }) {
           </div>
           <aside className="h-fit border-t-2 border-[#c8461f] bg-[#f7f1e6] p-6">
             <p className="kicker text-[#c8461f]">Accès</p>
-            {n.embargo ? (
+            {n.maquette ? (
+              <>
+                <p className="mt-2 font-serif text-lg font-bold leading-snug text-[#1a1714]">Bientôt en ligne</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">La lecture en ligne ouvrira prochainement. Le numéro peut déjà être commandé.</p>
+                <a href={`${B}/acheter`} className="mt-5 inline-flex items-center gap-2 bg-[#c8461f] px-5 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-[#1a1714]">
+                  Commander →
+                </a>
+              </>
+            ) : n.embargo ? (
               <>
                 <p className="mt-2 font-serif text-lg font-bold leading-snug text-[#1a1714]">Lecture libre de {Math.min(n.pagesApercu ?? 5, n.total)} pages</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink-soft">
@@ -254,7 +279,6 @@ function Lecture({ n }: { n: Numero }) {
             ) : (
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">Texte intégral en accès libre. Le PDF peut être téléchargé depuis la visionneuse.</p>
             )}
-            {n.maquette && <p className="mt-5 border-t border-ink/10 pt-4 text-xs leading-relaxed text-ink/55">Version de travail (maquette) : certaines pages contiennent encore des emplacements d’images à remplacer.</p>}
           </aside>
         </div>
       </Section>

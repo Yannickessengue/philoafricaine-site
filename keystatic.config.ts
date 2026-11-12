@@ -390,7 +390,7 @@ export default config({
           fields.object({ page: fields.text({ label: 'Page' }), rubrique: fields.text({ label: 'Rubrique' }), titre: fields.text({ label: 'Titre' }) }),
           { label: 'Sommaire', itemLabel: (p) => `${p.fields.page.value} · ${p.fields.rubrique.value} — ${p.fields.titre.value}` },
         ),
-        maquette: fields.checkbox({ label: 'Version de travail (maquette)', description: 'Affiche la mention « maquette » sur le site.' }),
+        maquette: fields.checkbox({ label: 'Version de travail (maquette)', description: 'Numéro en préparation : la visionneuse reste vide avec la mention « Bientôt disponible », et aucun PDF n’est servi.' }),
       },
     }),
     commentaires: collection({

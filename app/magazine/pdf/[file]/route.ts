@@ -21,7 +21,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ file: st
   const { file } = await params;
   const numero = await trouver(file);
   const chemin = path.join(process.cwd(), 'magazine-pdf', file);
-  if (!numero || !fs.existsSync(chemin)) return new Response('Fichier introuvable', { status: 404 });
+  // Numéro encore en préparation : aucun PDF n'est servi
+  if (!numero || numero.entry.maquette || !fs.existsSync(chemin)) return new Response('Fichier introuvable', { status: 404 });
   const { datePublication, embargoMois, pagesApercu } = numero.entry;
   const url = new URL(req.url);
   const enteteBase = { 'content-type': 'application/pdf', 'accept-ranges': 'bytes', 'cache-control': 'public, max-age=3600, s-maxage=86400' };
