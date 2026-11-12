@@ -373,3 +373,12 @@ if 'data-adherer' not in _h:
     _h = _h.replace('<div class="flex items-center gap-2"><button aria-label="Rechercher sur le site"',
         '<div class="flex items-center gap-2"><a data-adherer="" href="/adhesion" class="hidden h-10 items-center bg-terra px-4 font-brand text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-terra-deep sm:inline-flex">Adhérer</a><button aria-label="Rechercher sur le site"', 1)
     open(_p, 'w').write(_h)
+
+# En-tête : place pour « Adhérer » (liens un peu plus serrés ; bouton masqué entre lg et xl faute de place)
+_p = OUT + '/header.html'
+_h = open(_p).read()
+_h = _h.replace('class="relative whitespace-nowrap px-2.5 py-2 text-[0.85rem]', 'class="relative whitespace-nowrap px-2 py-2 text-[0.85rem]')
+_h = _h.replace('hidden h-10 items-center bg-terra px-4 font-brand text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-terra-deep sm:inline-flex"',
+                'hidden h-10 items-center bg-terra px-4 font-brand text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-terra-deep sm:inline-flex lg:hidden xl:inline-flex"')
+_h = _h.replace('<div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5">', '<div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3.5">')
+open(_p, 'w').write(_h)
