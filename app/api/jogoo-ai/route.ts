@@ -118,7 +118,8 @@ export async function POST(req: Request) {
       headers: { 'x-api-key': cle, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       body: JSON.stringify({
         model: process.env.JOGOO_AI_MODELE || 'claude-sonnet-5-5',
-        max_tokens: LONGUEURS[longueur].jetons,
+        // Marge pour la réflexion et la recherche en ligne : la longueur de la réponse est réglée par la consigne
+        max_tokens: LONGUEURS[longueur].jetons + (avecWeb ? 3000 : 1500),
         system: `${SYSTEME}${definition ? `\n${CONSIGNE_DEFINITION}` : ''}\n- ${LONGUEURS[longueur].consigne}`,
         stream: flux,
         ...(avecWeb ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2, allowed_domains: definition && corpusSuffit ? ENCYCLOPEDIES : SITES }] } : {}),
