@@ -382,3 +382,10 @@ _h = _h.replace('hidden h-10 items-center bg-terra px-4 font-brand text-xs font-
                 'hidden h-10 items-center bg-terra px-4 font-brand text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-terra-deep sm:inline-flex lg:hidden xl:inline-flex"')
 _h = _h.replace('<div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5">', '<div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3.5">')
 open(_p, 'w').write(_h)
+
+# En-tête : le logo mène déjà à l'accueil ; le lien « Accueil » cède sa place au bouton « Adhérer » sur grand écran
+_p = OUT + '/header.html'
+_h = open(_p).read()
+_h = _h.replace('<a class="relative whitespace-nowrap px-2 py-2 text-[0.85rem] font-medium transition-colors hover:text-terra xl:text-[0.9rem] text-ink" href="/">Accueil</a>',
+                '<a class="relative whitespace-nowrap px-2 py-2 text-[0.85rem] font-medium transition-colors hover:text-terra xl:hidden 2xl:inline text-ink" href="/">Accueil</a>')
+open(_p, 'w').write(_h)
