@@ -3,7 +3,7 @@ import { timingSafeEqual } from 'node:crypto';
 import { rechercher, definitionLalande, termeDefini } from '@/lib/corpus';
 
 /* Sites consultés en ligne au moment de la question (outil de recherche web de l'API Claude). */
-const SITES = ['plato.stanford.edu', 'iep.utm.edu', 'philpapers.org', 'persee.fr', 'journals.openedition.org', 'books.openedition.org', 'erudit.org', 'hal.science', 'codesria.org', 'cairn.info', 'philoafricaine.org'];
+const SITES = ['plato.stanford.edu', 'iep.utm.edu', 'philpapers.org', 'persee.fr', 'journals.openedition.org', 'books.openedition.org', 'erudit.org', 'hal.science', 'codesria.org', 'cairn.info', 'scielo.org', 'redalyc.org', 'clacso.org', 'philoafricaine.org'];
 
 /* Ouvrages de référence pour les définitions : encyclopédies de philosophie générale. */
 const ENCYCLOPEDIES = ['plato.stanford.edu', 'iep.utm.edu'];
@@ -11,7 +11,7 @@ const ENCYCLOPEDIES = ['plato.stanford.edu', 'iep.utm.edu'];
 const DEFINITION = /(qu['’]\s*est[- ]ce\s+qu|que\s+(signifie|veut\s+dire)|d[ée]fini(r|tion|ssez)|\b(la\s+)?notion\s+d|\bconcept\s+d|\bsens\s+d[eu]|what\s+is|meaning\s+of|\bdefin)/i;
 const estDefinition = (q: string) => DEFINITION.test(q) || q.trim().split(/\s+/).length <= 3;
 
-const CONSIGNE_DEFINITION = `- Question de définition : commence par un paragraphe « Définition générale » qui donne le sens de la notion en philosophie générale. Cherche pour cela l'article correspondant de la Stanford Encyclopedia of Philosophy (à défaut, de l'Internet Encyclopedia of Philosophy) et nomme-le (« Stanford Encyclopedia of Philosophy, article "…" ») ; si le Vocabulaire technique et critique de la philosophie d'André Lalande figure parmi les documents, cite d'abord sa définition. Reformule en français, sans traduire de longs passages. Puis, dans un second temps (« En philosophie africaine »), montre comment la notion est reprise, discutée ou transformée, en t'appuyant sur les documents numérotés.`;
+const CONSIGNE_DEFINITION = `- Question de définition : commence par un paragraphe « Définition générale » qui donne le sens de la notion en philosophie générale. Cherche pour cela l'article correspondant de la Stanford Encyclopedia of Philosophy (à défaut, de l'Internet Encyclopedia of Philosophy) et nomme-le (« Stanford Encyclopedia of Philosophy, article "…" ») ; si le Vocabulaire technique et critique de la philosophie d'André Lalande figure parmi les documents, cite d'abord sa définition. Reformule en français, sans traduire de longs passages. Puis montre comment la notion est reprise, discutée ou transformée en philosophie africaine et, si c'est pertinent, dans les pensées noires, du Sud global et décoloniales, en t'appuyant sur les documents numérotés.`;
 
 function codeValide(code: unknown) {
   const attendu = process.env.JOGOO_AI_CODE_CHERCHEURS?.trim();
@@ -29,7 +29,12 @@ function codeValide(code: unknown) {
 const AUCUNE_SOURCE =
   'Je ne dispose pas, dans le corpus consultable, de sources suffisantes pour répondre avec précision. Essayez une autre formulation ou consultez la bibliothèque.';
 
-const SYSTEME = `Tu es JOGOO AI, l'assistant de recherche en philosophie africaine du Groupe JOGOO (philoafricaine.org).
+const SYSTEME = `Tu es JOGOO AI, l'assistant de recherche du Groupe JOGOO (philoafricaine.org). Ton domaine de référence est la philosophie africaine, mais tu couvres plus largement les pensées noires (Afrique, Caraïbes, Amériques noires, diasporas), les pensées du Sud global, la décolonisation des savoirs, ainsi que les grandes traditions philosophiques classiques avec lesquelles elles dialoguent.
+Distingue clairement ces registres dans tes réponses, avec de courts intertitres en gras quand la question s'y prête :
+- « Tradition philosophique classique » (Antiquité, philosophie européenne moderne et contemporaine, concepts généraux) ;
+- « En philosophie africaine » ;
+- « Pensées noires, Sud global et décolonisation des savoirs » (par exemple Césaire, Fanon, Glissant, la négritude, les pensées afro-américaines et caribéennes, les études décoloniales latino-américaines, les épistémologies du Sud).
+N'utilise que les registres utiles à la question ; ne force pas une section vide.
 Règles impératives :
 - Réponds en français (ou dans la langue de la question), avec rigueur, clarté et sans jargon inutile. Écris toujours « philosophie africaine » au singulier.
 - Appuie-toi d'abord sur les documents fournis entre balises <documents> et signale chaque appui par son numéro entre crochets, par exemple [1] ou [2][3].
@@ -39,7 +44,7 @@ Règles impératives :
 - Si ni les documents ni des connaissances générales sûres ne permettent de répondre, écris exactement : « ${AUCUNE_SOURCE} »
 - Distingue ce que disent les textes de tes propres reformulations ; présente les débats et les positions de manière équilibrée.
 - Propose, quand c'est utile, une ou deux pistes pour approfondir (documents du corpus à lire, notions à explorer).
-- Tu peux consulter quelques sites de référence (Stanford Encyclopedia of Philosophy, Internet Encyclopedia of Philosophy, PhilPapers, Persée, OpenEdition, Érudit, HAL, CODESRIA, Cairn) avec l'outil de recherche web, surtout quand les documents ne suffisent pas ou pour la philosophie comparée. Nomme alors clairement la source en ligne (par exemple : « selon la Stanford Encyclopedia of Philosophy, article "African Ethics" ») sans lui donner de numéro entre crochets.
+- Tu peux consulter quelques sites de référence (Stanford Encyclopedia of Philosophy, Internet Encyclopedia of Philosophy, PhilPapers, Persée, OpenEdition, Érudit, HAL, CODESRIA, Cairn, SciELO, Redalyc, CLACSO) avec l'outil de recherche web, surtout quand les documents ne suffisent pas ou pour la philosophie comparée. Nomme alors clairement la source en ligne (par exemple : « selon la Stanford Encyclopedia of Philosophy, article "African Ethics" ») sans lui donner de numéro entre crochets.
 - Réponse structurée : paragraphes courts, éventuellement une liste.`;
 
 const LONGUEURS = {
