@@ -88,13 +88,16 @@ export default async function Accueil() {
       {/* Conférence à la une, à suivre en direct sur le site */}
       {aLaUne && (
         <section className="relative isolate overflow-hidden border-b-4 border-terra bg-[#1a1512] text-paper">
-          <img
-            src="/medias/site/jogoo/fonds-eboussi/portrait-dessine-orange.jpg"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden h-full w-auto object-cover opacity-35 [mask-image:linear-gradient(to_left,black_45%,transparent)] md:block"
-          />
-          <div className="mx-auto max-w-6xl px-5 py-12 sm:py-14">
+          {!aLaUne.entry.affiche && (
+            <img
+              src="/medias/site/jogoo/fonds-eboussi/portrait-dessine-orange.jpg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden h-full w-auto object-cover opacity-35 [mask-image:linear-gradient(to_left,black_45%,transparent)] md:block"
+            />
+          )}
+          <div className={`mx-auto max-w-6xl px-5 py-12 sm:py-14 ${aLaUne.entry.affiche ? 'grid gap-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-center' : ''}`}>
+          <div>
             <p className="inline-flex items-center gap-2 font-brand text-[0.7rem] font-bold uppercase tracking-[0.2em] text-gold">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#e53935] opacity-60" />
@@ -124,6 +127,12 @@ export default async function Accueil() {
                 </a>
               )}
             </div>
+          </div>
+          {aLaUne.entry.affiche && (
+            <a href={aLaUne.entry.affiche} target="_blank" rel="noreferrer" className="block justify-self-center md:justify-self-end">
+              <img src={aLaUne.entry.affiche} alt={`Affiche : ${aLaUne.entry.intitule}`} decoding="async" className="max-h-[30rem] w-auto max-w-full shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] ring-1 ring-white/10 transition-transform duration-500 hover:scale-[1.02]" />
+            </a>
+          )}
           </div>
         </section>
       )}

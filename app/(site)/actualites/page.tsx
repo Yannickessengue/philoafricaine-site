@@ -61,7 +61,7 @@ export default async function Actualites() {
       <div className="mx-auto max-w-6xl space-y-16 px-5 py-16">
         {prochain && (
           <section className="relative overflow-hidden border border-terra/25 bg-terra-deep text-paper">
-            <div className="relative grid gap-6 p-7 sm:p-10 md:grid-cols-[auto_1fr] md:items-center md:gap-10">
+            <div className={`relative grid gap-6 p-7 sm:p-10 md:items-center md:gap-10 ${prochain.entry.affiche ? 'md:grid-cols-[auto_1fr_auto]' : 'md:grid-cols-[auto_1fr]'}`}>
               <div className="shrink-0">
                 <p className="font-brand text-[0.68rem] font-bold uppercase tracking-[0.14em] text-gold">Prochain événement</p>
                 <p className="mt-2 font-brand text-4xl font-black leading-none text-paper sm:text-5xl">
@@ -98,6 +98,11 @@ export default async function Actualites() {
                   )}
                 </div>
               </div>
+              {prochain.entry.affiche && (
+                <a href={prochain.entry.affiche} target="_blank" rel="noreferrer" className="block justify-self-center">
+                  <img src={prochain.entry.affiche} alt={`Affiche : ${prochain.entry.intitule}`} decoding="async" className="max-h-80 w-auto max-w-full shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)]" />
+                </a>
+              )}
             </div>
           </section>
         )}

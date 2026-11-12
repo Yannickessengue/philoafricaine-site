@@ -94,7 +94,13 @@ export function GrilleVideos({ videos }: { videos: (Video & { rubrique?: string 
               className="group block"
             >
               <span className="relative block aspect-video overflow-hidden bg-ink shadow-[0_18px_40px_-24px_rgba(0,0,0,0.6)]">
-                {vid && <img src={`https://i.ytimg.com/vi/${vid}/hqdefault.jpg`} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.04] group-hover:opacity-100" />}
+                {vid ? (
+                  <img src={`https://i.ytimg.com/vi/${vid}/hqdefault.jpg`} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.04] group-hover:opacity-100" />
+                ) : (
+                  <span aria-hidden="true" className="absolute inset-0 flex items-start bg-gradient-to-br from-terra-deep via-[#5a2412] to-[#1a1512] p-5 transition duration-500 group-hover:scale-[1.04]">
+                    <span className="line-clamp-3 max-w-[85%] font-serif text-lg italic leading-snug text-paper/90">{v.titre.split(', ').slice(1).join(', ') || v.titre}</span>
+                  </span>
+                )}
                 <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" aria-hidden="true" />
                 <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-terra text-white shadow-lg transition-transform duration-300 group-hover:scale-110" aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7Z" /></svg>

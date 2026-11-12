@@ -103,7 +103,7 @@ export default async function Minutes() {
           <div className="mt-10 flex flex-col items-start justify-between gap-6 bg-gold p-8 sm:flex-row sm:items-center">
             <div>
               <p className="font-brand text-2xl font-black uppercase text-ink">Premier épisode très bientôt</p>
-              <p className="mt-1 text-ink/75">Il sera annoncé dans la lettre du lundi.</p>
+              <p className="mt-1 text-ink/75">Il sera annoncé dans notre newsletter.</p>
             </div>
             <a
               href={`mailto:philoafricaine@gmail.com?subject=${encodeURIComponent('La minute du chant du coq — proposition')}&body=${encodeURIComponent('Concept proposé :\nPhilosophe pressenti (vous, ou une autre personne) :\nQuelques mots sur l’angle choisi :\n')}`}

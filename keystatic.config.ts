@@ -112,6 +112,7 @@ export default config({
         }),
         presentation: fields.text({ label: 'Présentation courte', multiline: true }),
         fichier: fichier('Document à télécharger (PDF)', 'agenda'),
+        affiche: fields.text({ label: 'Visuel / affiche (chemin de l’image)', description: 'Affiché dans le bandeau « à la une » de l’accueil et dans les Actualités. Ex. : /medias/agenda/ma-conference.jpg' }),
         inscription: fields.checkbox({ label: 'Formulaire d’inscription en ligne', description: 'Ajoute un bouton « S’inscrire » et une page d’inscription.' }),
         enDirect: fields.checkbox({ label: 'Retransmis en direct sur le site', description: 'Zoom diffusé sur YouTube : la page /direct affiche le flux.' }),
       },

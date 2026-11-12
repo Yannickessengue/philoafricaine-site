@@ -12,6 +12,26 @@ const RESEAUX: [string, string, string][] = [
   ['YouTube', 'https://www.youtube.com/channel/UChS2D_zSk2vch6rN9QC52lw', 'M23 9.5c-.2-1.6-1-2.7-2.6-2.9C18 6.3 13 6.3 13 6.3s-5 0-7.4.3C4 6.8 3.2 7.9 3 9.5c-.3 2.3-.3 4.7 0 7 .2 1.6 1 2.7 2.6 2.9 2.4.3 7.4.3 7.4.3s5 0 7.4-.3c1.6-.2 2.4-1.3 2.6-2.9.3-2.3.3-4.7 0-7ZM11 16V10l5 3-5 3Z'],
 ];
 
+const DECOUVRIR: [string, string, string, string][] = [
+  ['/direct', 'En direct', 'Conférences retransmises sur le site', '/medias/site/vignettes/portrait-dessine-orange.jpg'],
+  ['/sous-sites/jogoo-ai', 'JOGOO AI', 'Interroger la bibliothèque du Groupe', '/medias/site/vignettes/coq-penseur.jpg'],
+  ['/sous-sites/fonds-eboussi-boulaga', 'Fonds Eboussi Boulaga', 'Archives, activités, Eboussi Studies', '/medias/site/vignettes/logo-fonds-2026.jpg'],
+  ['/la-minute-du-chant-du-coq', 'La minute du chant du coq', 'Un concept, un philosophe, cinq minutes', '/medias/site/vignettes/coq-penseur-gauche.jpg'],
+  ['/podcasts', 'Podcasts', 'Écouter la philosophie africaine', '/medias/site/vignettes/couverture-podcast.jpg'],
+];
+
+const UTILES: [string, string][] = [
+  ['/notre-histoire', 'Notre histoire en images'],
+  ['/mediatheque', 'Médiathèque'],
+  ['/publications', 'Publications et notes de lecture'],
+  ['/sous-sites/editions-jogoo', 'Éditions JOGOO'],
+  ['/sous-sites/philo-africaine-magazine', 'Philo Africaine Magazine'],
+  ['/recherche/appels-a-contributions', 'Appels à contributions'],
+  ['/adhesion', 'Adhérer au Groupe'],
+  ['/le-groupe', 'Le Groupe JOGOO'],
+  ['/contact', 'Nous écrire'],
+];
+
 function Bloc({ titre, lien, children, sombre = false }: { titre: string; lien?: [string, string]; children: React.ReactNode; sombre?: boolean }) {
   return (
     <section className={`border p-5 ${sombre ? 'border-ink bg-ink text-paper' : 'border-ink/12 bg-white'}`}>
@@ -62,6 +82,12 @@ export async function Lateral({ sansAgenda = false }: { sansAgenda?: boolean }) 
           </a>
         </Bloc>
       )}
+
+      <a href="/adhesion" className="group relative block overflow-hidden bg-terra p-5 text-white transition-colors hover:bg-terra-deep">
+        <span className="block font-brand text-2xl font-black uppercase leading-[0.95]">Devenir membre</span>
+        <span className="mt-2 block text-sm leading-snug text-white/85">Adhésion 2026-2027 : formulaire en ligne ou PDF.</span>
+        <span className="mt-4 inline-block bg-white px-3 py-1.5 font-brand text-[0.68rem] font-bold uppercase tracking-[0.1em] text-terra-deep group-hover:bg-ink group-hover:text-white">Adhérer</span>
+      </a>
 
       {!sansAgenda && rdv.length > 0 && (
         <Bloc titre="Prochains rendez-vous" lien={['/actualites#agenda', 'Agenda']}>
@@ -121,7 +147,7 @@ export async function Lateral({ sansAgenda = false }: { sansAgenda?: boolean }) 
         </Bloc>
       )}
 
-      <Bloc titre="Lettre d’information" sombre>
+      <Bloc titre="Newsletter" sombre>
         <p className="text-sm leading-relaxed text-paper/75">Recevez les éditos, les actualités et les appels du Groupe JOGOO.</p>
         <form data-newsletter="" className="mt-3">
           <input data-piege="" aria-hidden="true" tabIndex={-1} autoComplete="off" className="hidden" type="text" defaultValue="" />
@@ -154,6 +180,35 @@ export async function Lateral({ sansAgenda = false }: { sansAgenda?: boolean }) 
           {reglages?.email ?? 'philoafricaine@gmail.com'}
         </a>
       </Bloc>
+      <Bloc titre="À découvrir">
+          <ul className="grid grid-cols-1 gap-2">
+            {DECOUVRIR.map(([h, t, d, img]) => (
+              <li key={h}>
+                <a href={h} className="group flex items-center gap-3 border border-ink/10 p-2 transition-colors hover:border-terra">
+                  <img src={img} alt="" loading="lazy" decoding="async" className="h-12 w-12 shrink-0 object-cover" />
+                  <span className="min-w-0">
+                    <span className="block text-[0.85rem] font-semibold leading-snug text-ink group-hover:text-terra">{t}</span>
+                    <span className="block text-xs leading-snug text-ink/50">{d}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Bloc>
+      <div className="lg:sticky lg:top-24">
+        <Bloc titre="Liens utiles">
+          <ul className="space-y-1.5 text-sm">
+            {UTILES.map(([h, t]) => (
+              <li key={h}>
+                <a href={h} className="group flex items-center justify-between gap-2 py-0.5 text-ink hover:text-terra">
+                  {t}
+                  <span aria-hidden="true" className="text-ink/30 transition-transform group-hover:translate-x-0.5 group-hover:text-terra">›</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Bloc>
+      </div>
     </aside>
   );
 }

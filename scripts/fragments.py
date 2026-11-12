@@ -335,3 +335,41 @@ _h = open(_p).read()
 _h = _h.replace('transition-opacity duration-400 opacity-100', 'transition-opacity duration-300 opacity-100')
 _h = _h.replace('decoding="async" height="1254" loading="lazy" src="/medias/site/jogoo/coq-penseur.jpg"', 'decoding="async" fetchpriority="high" height="1254" loading="eager" src="/medias/site/jogoo/coq-penseur.jpg"')
 open(_p, 'w').write(_h)
+
+# Accueil : « S'abonner à notre newsletter » + grand carré rouge « Devenir membre » (vers /adhesion)
+_p = OUT + '/home-09.html'
+_h = open(_p).read()
+if 'data-devenir-membre' not in _h:
+    _deb = _h.index('<div class="mx-auto max-w-2xl px-5 py-16 text-center">')
+    _fin = _h.index('</form></div>', _deb) + len('</form></div>')
+    _form = _h[_h.index('<form', _deb):_h.index('</form>', _deb) + len('</form>')]
+    _form = _form.replace('<form class="mx-auto mt-8 max-w-md">', '<form class="mt-7 max-w-lg">')
+    _bloc = (
+        '<div class="mx-auto grid max-w-5xl gap-6 px-5 py-16 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:items-stretch md:gap-8">'
+        '<div class="flex flex-col justify-center border border-ink/10 bg-paper p-7 sm:p-10">'
+        '<h2 class="display-title text-3xl text-terra sm:text-4xl">S’abonner à notre newsletter</h2>'
+        '<p class="mt-3 max-w-lg text-ink-soft">L’édito de chaque lundi, et aussi les nouvelles publications, les appels en cours, '
+        'les conférences à venir et la vie des projets du Groupe JOGOO. '
+        '<a href="/lettre" target="_blank" class="font-semibold text-terra-deep underline underline-offset-2 hover:text-terra">Voir la prochaine lettre</a></p>'
+        + _form +
+        '</div>'
+        '<a data-devenir-membre="" href="/adhesion" class="group relative flex aspect-square flex-col justify-between overflow-hidden bg-terra p-8 text-white transition-colors hover:bg-terra-deep md:aspect-auto">'
+        '<img alt="" aria-hidden="true" src="/medias/site/jogoo/coq-penseur.jpg" loading="lazy" decoding="async" class="pointer-events-none absolute -bottom-10 -right-10 h-56 w-56 object-contain opacity-15 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"/>'
+        '<span class="relative font-brand text-sm font-semibold text-white/80">Groupe JOGOO · année 2026-2027</span>'
+        '<span class="relative">'
+        '<span class="block font-brand text-4xl font-black uppercase leading-[0.95] tracking-tight sm:text-5xl">Devenir<br/>membre</span>'
+        '<span class="mt-4 block max-w-[17rem] text-sm leading-relaxed text-white/85">Membre actif, bienfaiteur ou bénévole : rejoignez le Groupe et soutenez ses projets.</span>'
+        '<span class="mt-6 inline-flex items-center gap-2 bg-white px-4 py-2.5 font-brand text-xs font-bold uppercase tracking-[0.1em] text-terra-deep transition-colors group-hover:bg-ink group-hover:text-white">Remplir le formulaire d’adhésion</span>'
+        '</span></a>'
+        '</div>'
+    )
+    _h = _h[:_deb] + _bloc + _h[_fin:]
+    open(_p, 'w').write(_h)
+
+# En-tête : bouton rouge « Adhérer » toujours visible (formulaire d'adhésion)
+_p = OUT + '/header.html'
+_h = open(_p).read()
+if 'data-adherer' not in _h:
+    _h = _h.replace('<div class="flex items-center gap-2"><button aria-label="Rechercher sur le site"',
+        '<div class="flex items-center gap-2"><a data-adherer="" href="/adhesion" class="hidden h-10 items-center bg-terra px-4 font-brand text-xs font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-terra-deep sm:inline-flex">Adhérer</a><button aria-label="Rechercher sur le site"', 1)
+    open(_p, 'w').write(_h)

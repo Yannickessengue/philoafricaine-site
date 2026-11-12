@@ -453,6 +453,13 @@ export function Interactif() {
               </a>
             );
           })}
+          <a href="/adhesion" className="mt-6 flex items-center justify-between bg-terra px-5 py-4 text-white hover:bg-terra-deep">
+            <span>
+              <span className="block font-brand text-lg font-black uppercase leading-tight">Devenir membre</span>
+              <span className="block text-xs text-white/80">Formulaire d’adhésion 2026-2027</span>
+            </span>
+            <span aria-hidden="true">→</span>
+          </a>
           <p className="kicker mt-8">Nos projets</p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
             {[

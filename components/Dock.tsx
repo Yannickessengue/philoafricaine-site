@@ -91,7 +91,7 @@ export function Dock() {
       masque: surAI,
     },
     { id: 'facebook', libelle: 'Notre page Facebook', icone: <Ico d={I.fb} fill /> },
-    { id: 'lettre', libelle: 'La lettre du lundi', icone: <Ico d={I.lettre} /> },
+    { id: 'lettre', libelle: 'S’abonner à la newsletter', icone: <Ico d={I.lettre} /> },
     { id: 'partage', libelle: 'Partager cette page', icone: <Ico d={I.partage} />, action: partagerNatif },
   ];
 
@@ -155,7 +155,7 @@ export function Dock() {
             )}
             {ouvert === 'lettre' && (
               <form onSubmit={inscrire} className="p-5">
-                <p className="font-serif text-xl font-bold leading-snug text-ink">Chaque lundi : l’édito de la semaine, les nouvelles publications, les appels en cours et l’agenda.</p>
+                <p className="font-serif text-xl font-bold leading-snug text-ink">L’édito du lundi, les nouvelles publications, les appels en cours et les conférences à venir.</p>
                 <div className="mt-5 flex">
                   <input
                     type="email"
