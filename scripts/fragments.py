@@ -422,3 +422,12 @@ for _p in (OUT + '/page__sous-sites__eboussi-studies.html', OUT + '/page__sous-s
         _h = _h.replace('Éditée par le Groupe JOGOO, adossée', 'Éditée par les Éditions JOGOO (Groupe JOGOO), adossée')
         _h = _h.replace('éditée par le Groupe JOGOO et adossée', 'éditée par les Éditions JOGOO (Groupe JOGOO) et adossée')
         open(_p, 'w', encoding='utf-8').write(_h)
+
+# Revue JOGOO : lecture en ligne libre dès la parution, PDF téléchargeable après six mois, licence CC BY-NC 4.0
+_BADGE = '<span class="ml-2 rounded-full bg-gold/20 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-gold-deep">en préparation</span>'
+for _p in _glob.glob(OUT + '/*revue*.html'):
+    _h = open(_p, encoding='utf-8').read(); _o = _h
+    _h = _h.replace('Accès &amp; licence' + _BADGE + '</dt><dd class="text-sm text-ink-soft">Les articles signalés sont disponibles en libre accès. La licence de diffusion et les droits des auteurs sont en cours de décision.</dd>',
+                    'Accès &amp; licence</dt><dd class="text-sm text-ink-soft">Lecture en ligne libre et gratuite de tous les articles dès leur parution. Le téléchargement des PDF est ouvert six mois après la parution du numéro (barrière mobile). Licence Creative Commons CC BY-NC 4.0.</dd>')
+    _h = _h.replace('<dd>Articles signalés en libre accès</dd>', '<dd>Lecture en ligne libre</dd>')
+    if _h != _o: open(_p, 'w', encoding='utf-8').write(_h)

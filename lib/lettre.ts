@@ -111,7 +111,7 @@ export function lettreHTML(l: Lettre, { desabonnement = '{{ unsubscribe }}', web
 </td></tr>`);
   }
   if (l.minute) {
-    blocs.push(titreSection('La minute du chant du coq'));
+    blocs.push(titreSection('Les 5 minutes du chant du coq'));
     blocs.push(ligne(`▶︎ ${l.minute.titre}`, l.minute.url, `Expliqué par ${l.minute.philosophe} · 5 minutes en vidéo`, l.minute.definition));
   }
   if (l.actualites.length) {

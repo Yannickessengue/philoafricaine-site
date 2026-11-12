@@ -16,7 +16,7 @@ const DECOUVRIR: [string, string, string, string][] = [
   ['/direct', 'En direct', 'Conférences retransmises sur le site', '/medias/site/vignettes/portrait-dessine-orange.jpg'],
   ['/sous-sites/jogoo-ai', 'JOGOO AI', 'Interroger la bibliothèque du Groupe', '/medias/site/vignettes/coq-penseur.jpg'],
   ['/sous-sites/fonds-eboussi-boulaga', 'Fonds Eboussi Boulaga', 'Archives, activités, Eboussi Studies', '/medias/site/vignettes/logo-fonds-2026.jpg'],
-  ['/la-minute-du-chant-du-coq', 'La minute du chant du coq', 'Un concept, un philosophe, cinq minutes', '/medias/site/vignettes/coq-penseur-gauche.jpg'],
+  ['/les-5-minutes-du-chant-du-coq', 'Les 5 minutes du chant du coq', 'Un concept, un philosophe, cinq minutes', '/medias/site/vignettes/coq-penseur-gauche.jpg'],
   ['/podcasts', 'Podcasts', 'Écouter la philosophie africaine', '/medias/site/vignettes/couverture-podcast.jpg'],
 ];
 
@@ -127,7 +127,7 @@ export async function Lateral({ sansAgenda = false }: { sansAgenda?: boolean }) 
           <img alt="Revue JOGOO" src="/medias/site/jogoo/logo-revue-jogoo.png" loading="lazy" className="h-14 w-auto shrink-0" />
           <span className="min-w-0">
             <span className="block font-serif text-[0.95rem] italic leading-snug text-ink group-hover:text-terra-deep">N° 1 — « L’être africain »</span>
-            <span className="mt-0.5 block text-xs text-ink/50">{embargo ? 'Résumés en ligne · texte intégral après embargo' : 'Texte intégral en libre accès'}</span>
+            <span className="mt-0.5 block text-xs text-ink/50">{embargo ? 'Lecture en ligne libre · PDF après six mois' : 'Texte intégral en libre accès'}</span>
           </span>
         </a>
       </Bloc>

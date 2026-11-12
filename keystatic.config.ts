@@ -329,7 +329,7 @@ export default config({
     }),
 
     minutes: collection({
-      label: 'La minute du chant du coq',
+      label: 'Les 5 minutes du chant du coq',
       slugField: 'titre',
       path: 'content/minutes/*',
       format: { contentField: 'contenu' },

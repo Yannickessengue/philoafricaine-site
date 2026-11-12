@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Externe } from './Consentement';
 
-/** Lecteur de « La minute du chant du coq » : fichier MP4 du site, ou vidéo YouTube / Vimeo / WebTV après accord. */
+/** Lecteur de « Les 5 minutes du chant du coq » : fichier MP4 du site, ou vidéo YouTube / Vimeo / WebTV après accord. */
 export function VideoMinute({
   titre,
   fichier,

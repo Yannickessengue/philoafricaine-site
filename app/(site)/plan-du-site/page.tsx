@@ -16,7 +16,7 @@ export default function PlanDuSite() {
     )
     .replace(
       '<li><a class="text-ink underline underline-offset-2 hover:text-terra" href="/mediatheque">Médiathèque</a></li>',
-      `${lien('/mediatheque', 'Médiathèque')}${lien('/la-minute-du-chant-du-coq', 'La minute du chant du coq')}${lien('/podcasts', 'Podcasts')}`,
+      `${lien('/mediatheque', 'Médiathèque')}${lien('/les-5-minutes-du-chant-du-coq', 'Les 5 minutes du chant du coq')}${lien('/podcasts', 'Podcasts')}`,
     )
     .replace(
       'href="/recherche/appels-a-postes">Appels à postes</a></li>',

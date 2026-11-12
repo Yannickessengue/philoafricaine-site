@@ -76,8 +76,8 @@ export default async function Accueil() {
         elements={[
           ...(editos[0] ? [{ etiquette: 'Édito', texte: editos[0].entry.titre, href: `/edito/${editos[0].slug}` }] : []),
           ...(minute
-            ? [{ etiquette: 'Vidéo', texte: `La minute du chant du coq : ${minute.entry.titre}`, href: `${MINUTE.base}/${minute.slug}` }]
-            : [{ etiquette: 'Nouveau', texte: 'La minute du chant du coq : un concept, un philosophe, cinq minutes', href: MINUTE.base }]),
+            ? [{ etiquette: 'Vidéo', texte: `Les 5 minutes du chant du coq : ${minute.entry.titre}`, href: `${MINUTE.base}/${minute.slug}` }]
+            : [{ etiquette: 'Nouveau', texte: 'Les 5 minutes du chant du coq : un concept, un philosophe, cinq minutes', href: MINUTE.base }]),
           ...actus.slice(0, 3).map((a) => ({ etiquette: 'Actualité', texte: a.entry.titre, href: `/actualites/${a.slug}` })),
           { etiquette: 'Revue', texte: 'Revue JOGOO n° 1 : « L’être africain »', href: '/sous-sites/revue-jogoo' },
           ...appelsOuverts.slice(0, 2).map((a) => ({ etiquette: 'Appel', texte: a.entry.titre, href: a.entry.formulaire && a.entry.formulaire !== 'aucun' ? `/candidature/${a.slug}` : '/recherche/appels-a-contributions' })),
@@ -136,7 +136,7 @@ export default async function Accueil() {
           </div>
         </section>
       )}
-      {/* La minute du chant du coq */}
+      {/* Les 5 minutes du chant du coq */}
       <section className="relative isolate overflow-hidden bg-[#140f0c] text-paper">
         <img loading="lazy" decoding="async" src="/medias/site/jogoo/coq-penseur-gauche.png" alt="" className="coq-flotte pointer-events-none absolute bottom-0 right-[-3rem] -z-10 h-[92%] max-h-[24rem] opacity-80 sm:right-6" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_50%,rgba(168,54,27,0.5),transparent_60%)]" aria-hidden="true" />
@@ -150,7 +150,7 @@ export default async function Accueil() {
               {minute ? 'Nouvel épisode' : 'Nouvelle rubrique'}
             </p>
             <h2 className="mt-3 font-brand text-3xl font-black uppercase leading-[0.95] text-white sm:text-5xl">
-              La minute <span className="font-serif font-bold normal-case italic text-gold">du chant du coq</span>
+              Les 5 minutes <span className="font-serif font-bold normal-case italic text-gold">du chant du coq</span>
             </h2>
             <p className="mt-4 max-w-md font-serif text-lg italic text-paper/80">{minute ? minute.entry.definition || MINUTE.devise : MINUTE.devise}</p>
             <a href={minute ? `${MINUTE.base}/${minute.slug}` : MINUTE.base} className="mt-6 inline-block bg-terra px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-terra-deep">

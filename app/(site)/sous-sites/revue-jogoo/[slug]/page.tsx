@@ -134,34 +134,31 @@ export default async function RevuePage({ params }: { params: Promise<{ slug: st
                   </a>
                 )}
               </div>
-              {embargo ? (
-                <div className="mt-4 border border-terra/40 bg-cream/50 px-6 py-8 text-center">
-                  <p className="display-title text-lg text-terra">Sous embargo</p>
-                  <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-ink-soft">
-                    Le texte intégral sera librement accessible en ligne à partir du <strong className="text-ink">{fin}</strong>, six mois après la parution du numéro. D’ici là, il est disponible dans
-                    l’édition imprimée de la revue.
-                  </p>
-                  <a href="mailto:philoafricaine@gmail.com?subject=Revue%20JOGOO%20n%C2%B0%201" className="mt-5 inline-flex items-center gap-2 bg-ink px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-terra">
-                    Se procurer le numéro
-                  </a>
-                </div>
-              ) : a.pdf ? (
+              {a.pdf ? (
                 <>
-                  <object aria-label={`Texte intégral — ${a.titre}`} className="mt-4 h-[85vh] w-full border border-ink/12 bg-ink/[0.03]" data={`${a.pdf}#navpanes=0&view=FitH`} type="application/pdf">
+                  <object aria-label={`Texte intégral — ${a.titre}`} className="mt-4 h-[85vh] w-full border border-ink/12 bg-ink/[0.03]" data={embargo ? `${a.pdf}?lecture=1#toolbar=0&navpanes=0&view=FitH` : `${a.pdf}#navpanes=0&view=FitH`} type="application/pdf">
                     <div className="grid h-full place-items-center p-6 text-center text-sm text-ink-soft">
-                      <p>
-                        L’aperçu du PDF ne s’affiche pas dans ce navigateur.{' '}
-                        <a className="font-semibold text-terra-deep underline" href={a.pdf} target="_blank" rel="noreferrer">
-                          Télécharger le texte intégral
-                        </a>
-                        .
-                      </p>
+                      {embargo ? (
+                        <p>L’aperçu du texte ne s’affiche pas dans ce navigateur. Essayez depuis un ordinateur ou un autre navigateur.</p>
+                      ) : (
+                        <p>
+                          L’aperçu du PDF ne s’affiche pas dans ce navigateur.{' '}
+                          <a className="font-semibold text-terra-deep underline" href={a.pdf} target="_blank" rel="noreferrer">
+                            Télécharger le texte intégral
+                          </a>
+                          .
+                        </p>
+                      )}
                     </div>
                   </object>
-                  <p className="mt-2 text-xs text-ink/45">Le fac-similé PDF fait foi. Sur mobile, utilisez le bouton « Télécharger ».</p>
+                  <p className="mt-2 text-xs text-ink/45">
+                    {embargo
+                      ? <>Lecture en ligne libre dès la parution. Le téléchargement du PDF sera ouvert à partir du <strong className="text-ink/70">{fin}</strong>, six mois après la parution du numéro.</>
+                      : 'Le fac-similé PDF fait foi. Sur mobile, utilisez le bouton « Télécharger ».'}
+                  </p>
                 </>
               ) : null}
-              {aDuTexte && !embargo && <Prose node={node} className="mt-8 !max-w-none" />}
+              {aDuTexte && <Prose node={node} className="mt-8 !max-w-none" />}
             </section>
 
             {a.bio && (
@@ -221,7 +218,7 @@ export default async function RevuePage({ params }: { params: Promise<{ slug: st
                 </div>
                 <div className="flex justify-between gap-3">
                   <dt className="text-ink/50">Accès</dt>
-                  <dd className={`text-right ${embargo ? 'text-terra-deep' : 'text-ink'}`}>{embargo ? `Embargo jusqu’au ${fin}` : 'Libre'}</dd>
+                  <dd className={`text-right ${embargo ? 'text-terra-deep' : 'text-ink'}`}>{embargo ? `Lecture libre · PDF le ${fin}` : 'Libre'}</dd>
                 </div>
               </dl>
               {a.pdf && !embargo && (

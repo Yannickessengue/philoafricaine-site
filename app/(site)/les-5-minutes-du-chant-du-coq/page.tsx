@@ -33,7 +33,7 @@ export default async function Minutes() {
             Rubrique vidéo
           </p>
           <h1 className="mt-4 max-w-2xl font-brand text-4xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-6xl">
-            La minute
+            Les 5 minutes
             <br />
             <span className="font-serif text-[1.05em] font-bold normal-case italic text-gold">du chant du coq</span>
           </h1>
@@ -106,7 +106,7 @@ export default async function Minutes() {
               <p className="mt-1 text-ink/75">Il sera annoncé dans notre newsletter.</p>
             </div>
             <a
-              href={`mailto:philoafricaine@gmail.com?subject=${encodeURIComponent('La minute du chant du coq — proposition')}&body=${encodeURIComponent('Concept proposé :\nPhilosophe pressenti (vous, ou une autre personne) :\nQuelques mots sur l’angle choisi :\n')}`}
+              href={`mailto:philoafricaine@gmail.com?subject=${encodeURIComponent('Les 5 minutes du chant du coq — proposition')}&body=${encodeURIComponent('Concept proposé :\nPhilosophe pressenti (vous, ou une autre personne) :\nQuelques mots sur l’angle choisi :\n')}`}
               className="bg-ink px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-paper hover:bg-terra"
             >
               Proposer un concept ou intervenir
