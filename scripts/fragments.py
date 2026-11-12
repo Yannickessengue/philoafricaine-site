@@ -395,3 +395,30 @@ open(_p, 'w').write(_h)
 _p = OUT + '/home-09.html'
 _h = open(_p).read().replace('>Remplir le formulaire d’adhésion</span>', '>Adhérer en ligne</span>')
 open(_p, 'w').write(_h)
+
+# Philo Africaine Magazine trimestriel ; éditeur des revues = Éditions JOGOO (Groupe JOGOO, Yaoundé) ; ISSN en cours
+import re as _re, glob as _glob, os as _os
+EDITEUR = 'Éditions JOGOO — Groupe JOGOO (ASPHICC-JOGOO), Yaoundé (Cameroun)'
+for _p in _glob.glob(OUT + '/*.html') + [OUT + '/index.json']:
+    _h = open(_p, encoding='utf-8').read(); _o = _h
+    _h = _h.replace('Magazine semestriel', 'Magazine trimestriel').replace('magazine semestriel', 'magazine trimestriel')
+    _h = _re.sub(r'édité par «[\s ]*Philosophie Africaine\. Débats (?:&amp;|&) Questions[\s ]*»', 'édité par les Éditions JOGOO (Groupe JOGOO)', _h)
+    if 'magazine' in _os.path.basename(_p):
+        _h = _h.replace('Semestrielle', 'Trimestrielle')
+        _h = _re.sub(r'(Éditeur</dt><dd[^>]*>)\s*Philosophie Africaine\. Débats (?:&amp;|&) Questions', r'\1' + EDITEUR, _h)
+    if 'revue-jogoo' in _os.path.basename(_p) or 'revue-accueil' in _os.path.basename(_p):
+        _h = _re.sub(r'(Éditeur</dt><dd[^>]*>)\s*Éditions JOGOO\.?', r'\1' + EDITEUR + '.', _h)
+        _h = _re.sub(r'(ISSN imprimé)(\s*<[^>]+>\s*)*en préparation', r'\1', _h)
+        _h = _h.replace('À obtenir.', 'En cours d’attribution.')
+    if _h != _o: open(_p, 'w', encoding='utf-8').write(_h)
+_p = OUT + '/page__sous-sites__philo-africaine-magazine.html'
+_h = open(_p, encoding='utf-8').read()
+_h = _re.sub(r'(Éditeur</dt><dd[^>]*>(?:<[^>]+>)*)Philosophie Africaine\. Débats &amp; Questions', r'\1' + EDITEUR, _h, count=1)
+open(_p, 'w', encoding='utf-8').write(_h)
+for _p in (OUT + '/page__sous-sites__eboussi-studies.html', OUT + '/page__sous-sites__fonds-eboussi-boulaga__eboussi-studies.html'):
+    if _os.path.exists(_p):
+        _h = open(_p, encoding='utf-8').read()
+        _h = _h.replace('<li>Éditeur : Groupe JOGOO</li>', '<li>Éditeur : ' + EDITEUR + '</li>')
+        _h = _h.replace('Éditée par le Groupe JOGOO, adossée', 'Éditée par les Éditions JOGOO (Groupe JOGOO), adossée')
+        _h = _h.replace('éditée par le Groupe JOGOO et adossée', 'éditée par les Éditions JOGOO (Groupe JOGOO) et adossée')
+        open(_p, 'w', encoding='utf-8').write(_h)
