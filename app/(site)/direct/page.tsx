@@ -48,6 +48,11 @@ export default async function Direct() {
                 <ul className="mt-3 space-y-4">
                   {prochains.map((a) => (
                     <li key={a.slug} className="border-l-2 border-terra pl-3">
+                      {a.entry.affiche && (
+                        <a href={a.entry.affiche} target="_blank" rel="noreferrer" className="mb-3 block">
+                          <img src={a.entry.afficheApercu || a.entry.affiche} alt={`Affiche : ${a.entry.intitule}`} loading="lazy" decoding="async" className="w-full ring-1 ring-white/10" />
+                        </a>
+                      )}
                       <p className="text-xs uppercase tracking-wide text-paper/55">
                         {a.entry.aConfirmer ? 'Date à préciser' : a.entry.dateAffichee || dateFr(a.entry.date)}
                         {a.entry.heure ? ` · ${a.entry.heure}` : ''}

@@ -130,7 +130,7 @@ export default async function Accueil() {
           </div>
           {aLaUne.entry.affiche && (
             <a href={aLaUne.entry.affiche} target="_blank" rel="noreferrer" className="block justify-self-center md:justify-self-end">
-              <img src={aLaUne.entry.affiche} alt={`Affiche : ${aLaUne.entry.intitule}`} decoding="async" className="max-h-[30rem] w-auto max-w-full shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] ring-1 ring-white/10 transition-transform duration-500 hover:scale-[1.02]" />
+              <img src={aLaUne.entry.afficheApercu || aLaUne.entry.affiche} alt={`Affiche : ${aLaUne.entry.intitule}`} decoding="async" className="max-h-[30rem] w-auto max-w-full shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] ring-1 ring-white/10 transition-transform duration-500 hover:scale-[1.02]" />
             </a>
           )}
           </div>

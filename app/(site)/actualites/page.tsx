@@ -100,7 +100,7 @@ export default async function Actualites() {
               </div>
               {prochain.entry.affiche && (
                 <a href={prochain.entry.affiche} target="_blank" rel="noreferrer" className="block justify-self-center">
-                  <img src={prochain.entry.affiche} alt={`Affiche : ${prochain.entry.intitule}`} decoding="async" className="max-h-80 w-auto max-w-full shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)]" />
+                  <img src={prochain.entry.afficheApercu || prochain.entry.affiche} alt={`Affiche : ${prochain.entry.intitule}`} decoding="async" className="max-h-72 w-auto max-w-full shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)] md:max-w-[18rem]" />
                 </a>
               )}
             </div>
