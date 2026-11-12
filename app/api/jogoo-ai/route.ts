@@ -167,6 +167,8 @@ export async function POST(req: Request) {
           const dec = new TextDecoder();
           let tampon = '', texte = '', premier = 0;
           const citations: Citation[] = [];
+          let arret = '';
+          const diag: string[] = [];
           for (;;) {
             const { value, done } = await lecteur.read();
             if (done) break;
@@ -176,8 +178,11 @@ export async function POST(req: Request) {
               const ligne = tampon.slice(0, k).trim();
               tampon = tampon.slice(k + 1);
               if (!ligne.startsWith('data:')) continue;
-              let ev: { type?: string; delta?: { type?: string; text?: string; citation?: Citation }; content_block?: { type?: string } };
+              let ev: { type?: string; delta?: { type?: string; text?: string; citation?: Citation; stop_reason?: string }; content_block?: { type?: string; content?: unknown }; error?: unknown };
               try { ev = JSON.parse(ligne.slice(5)); } catch { continue; }
+              if (ev.type === 'message_delta' && ev.delta?.stop_reason) arret = ev.delta.stop_reason;
+              if (ev.type === 'error') diag.push(JSON.stringify(ev.error).slice(0, 300));
+              if (ev.type === 'content_block_start' && ev.content_block?.type === 'web_search_tool_result') diag.push(JSON.stringify(ev.content_block.content).slice(0, 300));
               if (ev.type === 'content_block_start' && ev.content_block?.type === 'server_tool_use') envoyer({ t: 'etat', d: 'Consultation des sites de référence…' });
               if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta' && ev.delta.text) {
                 if (!premier) premier = Date.now() - t0;
@@ -188,7 +193,8 @@ export async function POST(req: Request) {
             }
           }
           if (!texte.trim()) envoyer({ t: 'texte', d: AUCUNE_SOURCE });
-          envoyer({ t: 'fin', mode: 'assistant', sources: [...sources, ...sourcesEnLigne(citations)], premier, total: Date.now() - t0 });
+          if (!texte.trim() || arret !== 'end_turn') console.error('JOGOO AI (flux) arrêt', arret, diag.join(' | '));
+          envoyer({ t: 'fin', mode: 'assistant', sources: [...sources, ...sourcesEnLigne(citations)], premier, total: Date.now() - t0, ...(corps.diag ? { arret, diag } : {}) });
         } catch (e) {
           console.error('JOGOO AI (flux)', e);
           envoyer({ t: 'fin', mode: 'bibliotheque', sources, erreur: indisponible });
