@@ -36,3 +36,11 @@
 .fonds .vid{min-width:0}
 .fonds .strip + dialog + .sec-title,.fonds .strip ~ .sec-title{margin-top:4.5rem;padding-top:3rem;border-top:1px solid var(--line)}
 .fonds .feature{margin-top:5rem;border-top:1px solid var(--line)}
+
+/* Pas de barres colorées sur les bords (choix de la direction artistique, 13 nov. 2026) */
+.fonds .pull{border-left:0;padding-left:0;position:relative}
+.fonds .pull::before{content:"«";display:block;font-family:var(--quote);font-style:normal;font-size:3.2rem;line-height:.5;color:var(--brand);margin-bottom:1rem}
+.fonds .embargo{border-left:0}
+/* Grille des vidéos : un élément injecté par une extension du navigateur (bouton de téléchargement, etc.)
+   ne doit pas occuper une case de la grille et décaler les cartes. */
+.fonds .vids>:not(.vid){position:absolute!important}

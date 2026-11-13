@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-type Source = { n: number; titre: string; auteur: string; type: string; source: string; annee: string; url: string; acces: string; extrait: string };
+type Source = { n: number; titre: string; pages?: string; auteur: string; type: string; source: string; annee: string; url: string; acces: string; extrait: string };
 type Longueur = 'courte' | 'developpee';
 type Tour = { question: string; reponse: string | null; sources: Source[]; mode?: string; erreur?: string; enCours?: boolean; etat?: string; longueur?: Longueur };
 export type Variante = 'clair' | 'sombre' | 'compact';
@@ -273,14 +273,17 @@ export function Assistant({
                               <a href={s.url || undefined} className="group block">
                                 <span className="flex items-baseline gap-2">
                                   <span className={`font-brand text-[0.68rem] font-bold ${t.lien}`}>[{s.n}]</span>
-                                  <span className={`font-serif text-[0.93rem] leading-snug ${t.sourceTitre}`}>{s.titre}</span>
+                                  <span className={`font-serif text-[0.93rem] leading-snug ${t.sourceTitre}`}>
+                                    {s.titre}
+                                    {s.pages ? <span className="whitespace-nowrap">, {s.pages}</span> : null}
+                                  </span>
                                 </span>
                                 <span className={`mt-0.5 block text-xs ${t.mute}`}>
                                   {[s.auteur, s.type, s.annee].filter(Boolean).join(' · ')}
                                   {s.acces === 'Résumé seul (embargo)' && ' · résumé seul'}
                                   {s.acces === 'Notice seule (bibliothèque du Groupe)' && ' · notice (ouvrage de la bibliothèque du Groupe)'}
                                 </span>
-                                {!compact && <span className={`mt-1.5 line-clamp-2 text-[0.85rem] leading-relaxed ${t.mute}`}>{s.extrait}</span>}
+                                {!compact && s.extrait && <span className={`mt-1.5 line-clamp-2 text-[0.85rem] leading-relaxed ${t.mute}`}>{s.extrait}</span>}
                               </a>
                             </li>
                           ))}

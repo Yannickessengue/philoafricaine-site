@@ -62,14 +62,50 @@ function limite(ip: string) {
   return false;
 }
 
-/* Titres issus de noms de fichiers : on retire les traces de sites de téléchargement et les extensions. */
-const nettoyerTitre = (t: string) =>
-  t
+/* Titres issus de noms de fichiers : on ne garde que le titre de l’ouvrage
+   (sans traces de sites de téléchargement, mentions de scan, de version ni de poste de travail). */
+const TITRES_CONNUS: [RegExp, string][] = [
+  [/^s[ée]minaire\W+lire la crise du muntu/i, 'Séminaire « Lire La Crise du Muntu » (dossier)'],
+  [/^la crise du muntu\b/i, 'La Crise du Muntu. Authenticité africaine et philosophie'],
+  [/^christianisme sans f[ée]tiche/i, 'Christianisme sans fétiche. Révélation et domination'],
+  [/^lignes de r[ée]sistance/i, 'Lignes de résistance'],
+  [/^la d[ée]mocratie de transit/i, 'La Démocratie de transit au Cameroun'],
+  [/^les conf[ée]rences nationales/i, 'Les Conférences nationales en Afrique noire. Une affaire à suivre'],
+  [/^l.affaire de la philosophie africaine/i, 'L’Affaire de la philosophie africaine. Au-delà des querelles'],
+  [/^muntu in crisis/i, 'Muntu in Crisis. African Authenticity and Philosophy'],
+];
+const capitale = (t: string) => (/[a-zà-ÿ]/.test(t) ? t : t.toLowerCase().replace(/^\p{L}/u, (c) => c.toUpperCase()));
+const nettoyerTitre = (t: string, auteur = '') => {
+  let x = t
     .replace(/[\s_-]*\(?b-ok\.(xyz|cc|org)\)?/gi, '')
     .replace(/[\s_-]*\(?\b(z-?lib(rary)?\.(org|is|io)|b-ok\.(xyz|cc|org)|1lib\.\w+|libgen\.\w+|ok\.xyz)\)?/gi, '')
     .replace(/\.(pdf|epub|docx?|djvu)$/i, '')
+    .replace(/[-_ ]*DESKTOP-[A-Z0-9]+/gi, '')
+    .replace(/\b(scann?(é|e|er)?|scan|corr\d*|nb\d+(-\d+)?|v\d+|final|d[ée]finitif|copie|bat|ocr)\b/gi, '')
+    .replace(/\(\d+\)/g, '')
+    .replace(/_/g, ' ')
+    .replace(/\s{2,}/g, ' ')
     .replace(/[\s_-]+$/, '')
     .trim();
+  // « F EBOUSSI-BOULAGA - TITRE » : on retire l’auteur placé en tête du nom de fichier
+  const nom = auteur.split(',')[0]?.trim();
+  if (nom) {
+    const motif = nom.replace(/[-\s]+/g, '[-\\s]+').replace(/[éè]/gi, '[eéè]');
+    x = x.replace(new RegExp(`^(?:[A-Z]\\.?\\s+)?${motif}\\s*[-–:]\\s*`, 'i'), '');
+  }
+  for (const [re, titre] of TITRES_CONNUS) if (re.test(x)) return titre;
+  return capitale(x.replace(/\s+-\s+/g, ' · ').replace(/^[\s·-]+|[\s·-]+$/g, ''));
+};
+
+/** Page d’un extrait, quand le texte intégral garde ses sauts de page (\f). */
+function pageDe(texte: string, extrait: string): number | null {
+  if (!texte.includes('\f')) return null;
+  const i = texte.indexOf(extrait.slice(0, 120));
+  if (i < 0) return null;
+  let n = 1;
+  for (let k = texte.indexOf('\f'); k >= 0 && k < i; k = texte.indexOf('\f', k + 1)) n++;
+  return n;
+}
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
@@ -98,23 +134,43 @@ export async function POST(req: Request) {
     const lal = await definitionLalande(termeDefini(question)).catch(() => null);
     if (lal) passages.splice(0, passages.length, lal, ...passages.filter((p) => p.notice.id !== lal.notice.id).slice(0, 5));
   }
-  const sources = passages.map((p, i) => ({
+  // Un même ouvrage (souvent présent en plusieurs fichiers) n’apparaît qu’une fois, avec ses pages
+  type Groupe = { notice: (typeof passages)[number]['notice']; extraits: string[]; pages: number[]; score: number };
+  const groupes: Groupe[] = [];
+  for (const p of passages) {
+    const titre = nettoyerTitre(p.notice.titre, p.notice.auteur);
+    const cle = `${titre.toLowerCase()}|${p.notice.auteur.toLowerCase()}`;
+    let g = groupes.find((x) => `${nettoyerTitre(x.notice.titre, x.notice.auteur).toLowerCase()}|${x.notice.auteur.toLowerCase()}` === cle);
+    if (!g) groupes.push((g = { notice: p.notice, extraits: [], pages: [], score: p.score }));
+    else if (g.notice.acces === 'Notice seule (bibliothèque du Groupe)' && p.notice.acces !== g.notice.acces) g.notice = p.notice;
+    if (p.notice.acces !== 'Notice seule (bibliothèque du Groupe)') {
+      g.extraits.push(p.extrait);
+      const pg = pageDe(p.notice.texte, p.extrait);
+      if (pg && !g.pages.includes(pg)) g.pages.push(pg);
+    }
+  }
+  const pagesDe = (g: Groupe) => (g.pages.length ? (g.pages.length > 1 ? 'pp. ' : 'p. ') + g.pages.sort((a, b) => a - b).join(', ') : '');
+  const sources = groupes.map((g, i) => ({
     n: i + 1,
-    titre: nettoyerTitre(p.notice.titre),
-    auteur: p.notice.auteur,
-    type: p.notice.type,
-    source: p.notice.source,
-    annee: p.notice.annee,
-    url: p.notice.url,
-    acces: p.notice.acces,
-    extrait: p.extrait.slice(0, 420),
+    titre: nettoyerTitre(g.notice.titre, g.notice.auteur),
+    pages: pagesDe(g),
+    auteur: g.notice.auteur,
+    type: g.notice.type,
+    source: g.notice.source,
+    annee: g.notice.annee,
+    url: g.notice.url,
+    acces: g.notice.acces,
+    extrait: g.notice.acces === 'Notice seule (bibliothèque du Groupe)' ? '' : (g.extraits[0] ?? '').slice(0, 420),
   }));
 
   const cle = process.env.ANTHROPIC_API_KEY?.trim().replace(/^["']|["']$/g, '');
   if (!cle) return NextResponse.json({ mode: 'bibliotheque', reponse: null, sources, chercheurs });
 
-  const documents = passages
-    .map((p, i) => `<document numero="${i + 1}">\nTitre : ${nettoyerTitre(p.notice.titre)}\nAuteur : ${p.notice.auteur || 'non précisé'}\nType : ${p.notice.type} — ${p.notice.source}${p.notice.annee ? ` (${p.notice.annee})` : ''}\nAccès : ${p.notice.acces}\nExtrait :\n${p.extrait}\n</document>`)
+  const documents = groupes
+    .map(
+      (g, i) =>
+        `<document numero="${i + 1}">\nTitre : ${nettoyerTitre(g.notice.titre, g.notice.auteur)}\nAuteur : ${g.notice.auteur || 'non précisé'}\nType : ${g.notice.type} — ${g.notice.source}${g.notice.annee ? ` (${g.notice.annee})` : ''}${pagesDe(g) ? `\nPages : ${pagesDe(g)}` : ''}\nAccès : ${g.notice.acces}\nExtrait :\n${g.extraits.length ? g.extraits.join('\n[…]\n') : `Notice : ${nettoyerTitre(g.notice.titre, g.notice.auteur)}, ${g.notice.auteur || 'auteur à préciser'}. Ouvrage présent dans la bibliothèque du Groupe JOGOO ; texte non consultable par l’assistant.`}\n</document>`,
+    )
     .join('\n\n');
 
   const longueur = corps.longueur === 'developpee' ? 'developpee' : 'courte';
