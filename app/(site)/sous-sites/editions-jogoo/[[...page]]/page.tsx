@@ -608,27 +608,31 @@ function Politique() {
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <Texte>
             <p>
-              Notre vocation est d’abord africaine et humaine. Les textes savants que nous publions suivent donc les normes éditoriales du CAMES (Conseil africain et malgache pour l’enseignement supérieur), dites NORCAMES/LSH, en
-              usage dans les universités africaines francophones.
+              Notre vocation est d’abord africaine et humaine. Les textes savants que nous publions suivent donc les normes d’édition du CAMES (Conseil africain et malgache pour l’enseignement supérieur) pour les lettres et sciences
+              humaines, dites NORCAMES/LSH, adoptées à Bamako le 17 juillet 2016.
             </p>
             <p>Les modèles Word de la maison les appliquent déjà : il suffit d’écrire dans les styles prévus.</p>
           </Texte>
           <dl className="grid gap-5 bg-white p-6 text-[0.95rem] leading-relaxed">
             <div>
               <dt className="font-serif font-bold text-[#141414]">Références dans le texte</dt>
-              <dd className="mt-1 text-ink-soft">Entre parenthèses : initiale du prénom, nom, année, page. Exemple : (F. Eboussi Boulaga, 1977, p. 15).</dd>
+              <dd className="mt-1 text-ink-soft">Intégrées au texte : (F. Eboussi Boulaga, 1977, p. 15), ou F. Eboussi Boulaga (1977, p. 15) lorsque l’auteur est nommé dans la phrase.</dd>
+            </div>
+            <div>
+              <dt className="font-serif font-bold text-[#141414]">Citations</dt>
+              <dd className="mt-1 text-ink-soft">En romain et entre guillemets. Au-delà de trois lignes, à la ligne, en retrait, interligne simple, police réduite d’un point.</dd>
             </div>
             <div>
               <dt className="font-serif font-bold text-[#141414]">Notes de bas de page</dt>
-              <dd className="mt-1 text-ink-soft">Réservées aux explications et aux compléments.</dd>
+              <dd className="mt-1 text-ink-soft">Numérotées en série continue : sources historiques, informations orales, notes explicatives.</dd>
             </div>
             <div>
               <dt className="font-serif font-bold text-[#141414]">Plan</dt>
-              <dd className="mt-1 text-ink-soft">Articulations numérotées en chiffres arabes : 1., 1.1., 2., etc.</dd>
+              <dd className="mt-1 text-ink-soft">Articulations titrées et numérotées : 1. ; 1.1. ; 2. ; 2.2.1. Pour un article : résumé, mots clés, abstract et key words avant l’introduction.</dd>
             </div>
             <div>
               <dt className="font-serif font-bold text-[#141414]">Bibliographie</dt>
-              <dd className="mt-1 text-ink-soft">Par ordre alphabétique : NOM Prénom, année, Titre en italique, lieu, éditeur ; pour un article, « Titre » entre guillemets, puis la revue en italique, le volume, le numéro et les pages.</dd>
+              <dd className="mt-1 text-ink-soft">Seuls les documents cités, par ordre alphabétique : NOM Prénom, année, Titre en italique, lieu, éditeur. Pour un article : « Titre » entre guillemets, revue en italique, numéro, pages.</dd>
             </div>
           </dl>
         </div>
