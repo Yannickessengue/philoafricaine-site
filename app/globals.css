@@ -245,3 +245,6 @@ main :is(div, article, li, a):is([class~='border']):is([class*='border-ink/1'], 
 .jogoo-ai-doux .font-extrabold { font-weight: 400; }
 .jogoo-ai-doux .font-bold, .jogoo-ai-doux .font-semibold { font-weight: 500; }
 .jogoo-ai-doux strong { font-weight: 500; }
+
+/* Pas de barres d’accent sur les bords (choix de la direction artistique, nov. 2026) */
+main [class*="border-l-2"], main [class*="border-l-4"], main [class*="border-l-[3px]"] { border-left-width: 0 !important; }

@@ -52,13 +52,14 @@ export const EDITIONS: Site = {
   base: '/sous-sites/editions-jogoo',
   nom: 'Éditions JOGOO',
   devise: 'Penser l’Afrique, publier le monde.',
-  logo: '/medias/site/jogoo/editions/logo-horizontal.png',
+  logo: '/medias/site/jogoo/editions/horizontal.svg',
   logoAlt: 'Éditions JOGOO',
   logoClasse: 'h-12 sm:h-16',
   mention: 'Une maison d’édition du Groupe JOGOO',
   onglets: [
     ['', 'Accueil'],
     ['la-maison', 'La maison'],
+    ['politique-editoriale', 'Politique éditoriale'],
     ['catalogue', 'Catalogue'],
     ['publier', 'Publier chez nous'],
     ['actualites', 'Actualités'],
@@ -85,10 +86,10 @@ export const EDITIONS: Site = {
     piedAccent: 'text-[#cc7a05]',
   },
   pied: [
-    { titre: 'La maison', liens: [['/sous-sites/editions-jogoo/la-maison', 'Projet et ligne éditoriale'], ['/sous-sites/editions-jogoo/actualites', 'Actualités']] },
+    { titre: 'La maison', liens: [['/sous-sites/editions-jogoo/la-maison', 'Projet et ligne éditoriale'], ['/sous-sites/editions-jogoo/politique-editoriale', 'Politique éditoriale'], ['/sous-sites/editions-jogoo/actualites', 'Actualités']] },
     { titre: 'Les livres', liens: [['/sous-sites/editions-jogoo/catalogue', 'Collections et programme'], ['/sous-sites/revue-jogoo', 'Revue JOGOO'], ['/sous-sites/fonds-eboussi-boulaga/eboussi-studies', 'Eboussi Studies']] },
-    { titre: 'Auteurs et pros', liens: [['/sous-sites/editions-jogoo/publier', 'Présenter un projet'], ['/sous-sites/editions-jogoo/professionnels', 'Librairies, bibliothèques, presse'], ['/sous-sites/editions-jogoo/professionnels#identite', 'Logos à télécharger']] },
-    { titre: 'Contact', liens: [['mailto:editions@philoafricaine.org', 'editions@philoafricaine.org'], ['mailto:directeureditions@philoafricaine.org', 'Manuscrits : directeureditions@philoafricaine.org']] },
+    { titre: 'Auteurs et pros', liens: [['/sous-sites/editions-jogoo/publier', 'Présenter un projet'], ['/sous-sites/editions-jogoo/publier#modeles', 'Modèles Word et polices'], ['/sous-sites/editions-jogoo/professionnels', 'Librairies, bibliothèques, presse'], ['/sous-sites/editions-jogoo/professionnels#identite', 'Logos à télécharger']] },
+    { titre: 'Contact', liens: [['mailto:editions@philoafricaine.org', 'editions@philoafricaine.org'], ['mailto:directeureditions@philoafricaine.org', 'directeureditions@philoafricaine.org']] },
   ],
 };
 

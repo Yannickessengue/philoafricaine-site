@@ -241,9 +241,9 @@ export const DOCUMENTS = [
 ];
 
 export const LOGOS = {
-  horizontal: '/medias/site/jogoo/editions/logo-horizontal.png',
-  base: '/medias/site/jogoo/editions/logo-base.png',
-  symbole: '/medias/site/jogoo/editions/symbole.png',
-  symboleBlanc: '/medias/site/jogoo/editions/symbole-blanc.png',
+  horizontal: '/medias/site/jogoo/editions/horizontal.svg',
+  base: '/medias/site/jogoo/editions/base.svg',
+  symbole: '/medias/site/jogoo/editions/symbole.svg',
+  symboleBlanc: '/medias/site/jogoo/editions/symbole-blanc.svg',
   kit: '/medias/site/jogoo/editions/kit-logos-editions-jogoo.zip',
 };

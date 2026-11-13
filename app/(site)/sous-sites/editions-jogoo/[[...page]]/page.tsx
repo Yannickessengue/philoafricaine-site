@@ -9,10 +9,11 @@ const ancien = (n: string) => fragment(`ancien-editions-${n}`);
 
 const B = S.base;
 const MANUSCRITS = 'directeureditions@philoafricaine.org';
-const PAGES = ['', 'la-maison', 'catalogue', 'publier', 'actualites', 'professionnels'] as const;
+const PAGES = ['', 'la-maison', 'politique-editoriale', 'catalogue', 'publier', 'actualites', 'professionnels'] as const;
 const TITRES: Record<string, string> = {
   '': 'Éditions JOGOO',
   'la-maison': 'La maison',
+  'politique-editoriale': 'Politique éditoriale',
   catalogue: 'Catalogue : dix collections et programme inaugural',
   publier: 'Présenter un projet de livre',
   actualites: 'Actualités des Éditions',
@@ -100,7 +101,7 @@ function Aurore() {
             Le Groupe JOGOO a choisi pour symbole le coq, et non la chouette de Hegel. Les Éditions prolongent ce choix : publier une pensée qui réveille et qui met au travail.
           </p>
         </div>
-        <blockquote className="border-l-2 border-[#cc7a05] pl-6">
+        <blockquote>
           <p className="font-serif text-xl italic leading-relaxed sm:text-2xl">
             « Le coq est un animal de l’aurore, celui qui nous réveille ; celui qui nous met au travail ; celui qui féconde chacun de nos instants. »
           </p>
@@ -121,6 +122,7 @@ export default async function Editions({ params }: { params: Promise<{ page?: st
       {c && <FicheCollection c={c} />}
       {p === '' && <Accueil />}
       {p === 'la-maison' && <Maison />}
+      {p === 'politique-editoriale' && <Politique />}
       {p === 'catalogue' && <Catalogue />}
       {p === 'publier' && <Publier />}
       {p === 'actualites' && <Actualites />}
@@ -216,7 +218,7 @@ function Programme({ limite, liste }: { limite?: number; liste?: Projet[] }) {
               {l.auteurs && <p className="mt-2 text-sm text-ink/70">{l.auteurs}</p>}
               <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-soft">{l.texte}</p>
               {l.parties && (
-                <ul className="mt-3 space-y-1 border-l border-ink/15 pl-3 text-[0.9rem] leading-snug text-ink/80">
+                <ul className="mt-3 space-y-1 text-[0.9rem] leading-snug text-ink/80">
                   {l.parties.map((x) => (
                     <li key={x}>{x}</li>
                   ))}
@@ -301,8 +303,7 @@ function Catalogue() {
             return (
               <li key={c.slug}>
                 <a href={`${B}/catalogue/${c.slug}`} className="group flex h-full gap-4 border border-ink/12 bg-white p-5 transition-colors hover:border-ink/40">
-                  <span className="w-1.5 shrink-0" style={{ backgroundColor: c.couleur }} aria-hidden="true" />
-                  <span className="flex min-w-0 flex-1 flex-col">
+                                    <span className="flex min-w-0 flex-1 flex-col">
                     <span className="block font-serif text-xl font-bold leading-snug group-hover:underline" style={{ color: c.couleur }}>
                       {c.nom}
                     </span>
@@ -359,7 +360,7 @@ function FicheCollection({ c }: { c: Collection }) {
             ))}
           </Texte>
           {c.domaines && (
-            <div className="self-start border-l-2 pl-5" style={{ borderColor: c.couleur }}>
+            <div className="self-start bg-white p-5">
               <p className="font-serif text-lg font-bold text-[#141414]">Ce qu’elle accueille</p>
               <ul className={`mt-2 gap-x-6 text-[0.95rem] text-ink-soft ${c.domaines.length > 6 ? 'columns-2' : ''}`}>
                 {c.domaines.map((d) => (
@@ -408,7 +409,7 @@ function FicheCollection({ c }: { c: Collection }) {
           ].map(([x, l], k) => {
             const col = x as Collection;
             return (
-              <a key={col.slug} href={`${B}/catalogue/${col.slug}`} className={`group block border-l-4 py-1 pl-4 ${k ? 'sm:border-l-0 sm:border-r-4 sm:pl-0 sm:pr-4 sm:text-right' : ''}`} style={{ borderColor: col.couleur }}>
+              <a key={col.slug} href={`${B}/catalogue/${col.slug}`} className={`group block py-1 ${k ? 'sm:text-right' : ''}`}>
                 <span className="block text-sm text-ink/55">{l as string}</span>
                 <span className="block font-serif text-lg font-bold text-[#141414] group-hover:underline">{col.nom}</span>
               </a>
@@ -433,7 +434,7 @@ function Publier() {
             </p>
             <p>Vous pouvez joindre un chapitre ou un extrait et indiquer la collection dans laquelle vous pensez inscrire le livre.</p>
           </Texte>
-          <ul className="space-y-2 border-l-2 border-[#cc7a05] pl-5 text-sm text-ink-soft">
+          <ul className="space-y-2 bg-white p-5 text-sm text-ink-soft">
             {['Titre provisoire', 'Sujet et argument central', 'Lectorat', 'Plan', 'État d’avancement', 'Collection envisagée', 'Chapitre ou extrait (facultatif)'].map((x) => (
               <li key={x} className="flex gap-2">
                 <span className="text-[#ad0e0e]" aria-hidden="true">
@@ -444,6 +445,9 @@ function Publier() {
             ))}
           </ul>
         </div>
+      </Section>
+      <Section site={S} id="modeles" titre="Préparer son manuscrit">
+        <Modeles />
       </Section>
       <Section site={S} doux kicker="Après le premier contact" titre="Après le premier contact">
         <Texte>
@@ -507,10 +511,10 @@ function Professionnels() {
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>
             <Texte>
-              <p>Pour annoncer une parution ou une rencontre, utilisez les logos officiels des Éditions JOGOO : version complète, horizontale, symbole seul, en couleurs, en noir et en négatif.</p>
+              <p>Pour annoncer une parution ou une rencontre, utilisez les logos officiels des Éditions JOGOO : version complète, horizontale, symbole seul, en couleurs, en noir et en négatif. Les fichiers SVG s’ouvrent directement dans Illustrator, chaque couleur sur son propre calque.</p>
               <p>Ne déformez pas le logo et ne modifiez pas ses couleurs : rouge #ad0e0e, ocre #cc7a05, noir #141414.</p>
             </Texte>
-            <Boutons site={S} liens={[[LOGOS.kit, 'Télécharger les logos (zip, 1,4 Mo)']]} />
+            <Boutons site={S} liens={[[LOGOS.kit, 'Télécharger les logos SVG et PNG (zip, 1,5 Mo)']]} />
           </div>
           <div className="grid grid-cols-3 gap-3">
             <figure className="col-span-3 flex items-center justify-center border border-ink/10 bg-white p-6">
@@ -526,6 +530,117 @@ function Professionnels() {
               <img src={LOGOS.symboleBlanc} alt="Symbole des Éditions JOGOO sur fond rouge" className="w-full" loading="lazy" />
             </figure>
           </div>
+        </div>
+      </Section>
+    </>
+  );
+}
+
+const MODELES: [string, string, string, string][] = [
+  ['Livre', 'Essai, monographie, ouvrage collectif', '15,5 × 24 cm', 'JOGOO-modele-livre-essai-15.5x24.docx'],
+  ['Article de revue', 'Revue JOGOO, Eboussi Studies', '17 × 24 cm', 'JOGOO-modele-article-de-revue-17x24.docx'],
+  ['Roman', 'Récits longs', '14 × 21 cm', 'JOGOO-modele-roman-14x21.docx'],
+  ['Nouvelles et poésie', 'Nouvelles, poèmes, fragments', '13 × 20 cm', 'JOGOO-modele-nouvelles-poesie-13x20.docx'],
+  ['Catalogue', 'Expositions, catalogues illustrés', '21 × 27 cm', 'JOGOO-modele-catalogue-21x27.docx'],
+  ['Rapport annuel', 'Rapports d’activité', 'A4', 'JOGOO-modele-rapport-annuel-A4.docx'],
+];
+const M = '/medias/site/jogoo/editions/modeles';
+
+/** Modèles Word et polices à télécharger. */
+function Modeles() {
+  return (
+    <>
+      <Texte>
+        <p>
+          Chaque modèle Word a déjà la taille de page, les marges, les polices et les styles du livre imprimé. En écrivant dedans, vous voyez en temps réel le volume de votre ouvrage, et votre manuscrit nous parvient avec une
+          mise en forme de base : moins de reprises, des coûts et des délais de fabrication réduits.
+        </p>
+        <p>Installez d’abord les deux polices de la maison, Libre Baskerville et Montserrat, libres de droits.</p>
+      </Texte>
+      <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {MODELES.map(([nom, usage, format, fichier]) => (
+          <li key={fichier}>
+            <a href={`${M}/${fichier}`} download className="group flex h-full items-start justify-between gap-4 bg-white p-5 shadow-[0_1px_2px_rgba(20,20,20,0.06)] transition-shadow hover:shadow-[0_10px_30px_-18px_rgba(20,20,20,0.5)]">
+              <span>
+                <span className="block font-serif text-lg font-bold text-[#141414] group-hover:text-[#ad0e0e]">{nom}</span>
+                <span className="mt-0.5 block text-sm text-ink-soft">{usage}</span>
+              </span>
+              <span className="shrink-0 text-right">
+                <span className="block font-serif text-[#ad0e0e]">{format}</span>
+                <span className="mt-1 block text-xs text-ink/55">Word</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <Boutons
+        site={S}
+        liens={[
+          [`${M}/polices-editions-jogoo.zip`, 'Télécharger les polices (1 Mo)'],
+          [`${M}/modeles-word-editions-jogoo.zip`, 'Tout télécharger : modèles et polices', true],
+        ]}
+      />
+    </>
+  );
+}
+
+function Politique() {
+  const principes: [string, string][] = [
+    ['Un projet académique', 'Les Éditions JOGOO sont nées d’une démarche universitaire. Elles prolongent le projet du Groupe JOGOO : mieux faire connaître la philosophie africaine, en rendant le savoir lisible bien au-delà des cercles de spécialistes.'],
+    ['La science ouverte, avec exigence', 'Nous défendons l’accès ouvert aux savoirs. Il n’a de valeur que dans un cadre professionnel et rigoureux : évaluation scientifique des manuscrits en double aveugle, travail éditorial suivi, normes communes et fabrication soignée.'],
+    ['Le design au centre', 'La forme fait partie du sens. Couvertures, mise en page, typographie et images reçoivent la même attention que le texte, avec l’appui de Sankofa Communications, l’agence du Groupe.'],
+    ['La transtopicité appliquée', 'Nos espaces de vulgarisation portent les savoirs africains dans les lieux les plus compétitifs de la connaissance : bibliothèques, universités, salons, plateformes et revues internationales.'],
+  ];
+  return (
+    <>
+      <Ouverture site={S} kicker="Politique éditoriale" titre="Panser l’Afrique, penser l’Afrique" chapeau="Ce qui fait défaut à l’Afrique n’est pas la qualité de ses défauts, mais son défaut de qualité. Nous partons de la qualité des défauts, ce qu’il faut panser, pour répondre au défaut de qualité, ce qu’il faut penser." />
+      <Section site={S} titre="Nos principes">
+        <ul className="grid gap-x-12 gap-y-10 md:grid-cols-2">
+          {principes.map(([titre, texte]) => (
+            <li key={titre}>
+              <h3 className="font-serif text-xl font-bold leading-snug text-[#141414]">{titre}</h3>
+              <p className="mt-2 text-[1rem] leading-relaxed text-ink-soft">{texte}</p>
+            </li>
+          ))}
+        </ul>
+      </Section>
+      <Section site={S} doux titre="Les normes du CAMES">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <Texte>
+            <p>
+              Notre vocation est d’abord africaine et humaine. Les textes savants que nous publions suivent donc les normes éditoriales du CAMES (Conseil africain et malgache pour l’enseignement supérieur), dites NORCAMES/LSH, en
+              usage dans les universités africaines francophones.
+            </p>
+            <p>Les modèles Word de la maison les appliquent déjà : il suffit d’écrire dans les styles prévus.</p>
+          </Texte>
+          <dl className="grid gap-5 bg-white p-6 text-[0.95rem] leading-relaxed">
+            <div>
+              <dt className="font-serif font-bold text-[#141414]">Références dans le texte</dt>
+              <dd className="mt-1 text-ink-soft">Entre parenthèses : initiale du prénom, nom, année, page. Exemple : (F. Eboussi Boulaga, 1977, p. 15).</dd>
+            </div>
+            <div>
+              <dt className="font-serif font-bold text-[#141414]">Notes de bas de page</dt>
+              <dd className="mt-1 text-ink-soft">Réservées aux explications et aux compléments.</dd>
+            </div>
+            <div>
+              <dt className="font-serif font-bold text-[#141414]">Plan</dt>
+              <dd className="mt-1 text-ink-soft">Articulations numérotées en chiffres arabes : 1., 1.1., 2., etc.</dd>
+            </div>
+            <div>
+              <dt className="font-serif font-bold text-[#141414]">Bibliographie</dt>
+              <dd className="mt-1 text-ink-soft">Par ordre alphabétique : NOM Prénom, année, Titre en italique, lieu, éditeur ; pour un article, « Titre » entre guillemets, puis la revue en italique, le volume, le numéro et les pages.</dd>
+            </div>
+          </dl>
+        </div>
+      </Section>
+      <Section site={S} id="modeles" titre="Des modèles pour chaque publication">
+        <Texte>
+          <p>
+            Nous invitons les auteurs à prendre en charge une bonne part de la préparation de leur manuscrit. C’est un enjeu de formation, mais aussi de maîtrise des coûts et des délais dans toute la chaîne de production.
+          </p>
+        </Texte>
+        <div className="mt-8">
+          <Modeles />
         </div>
       </Section>
     </>

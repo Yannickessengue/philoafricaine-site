@@ -214,7 +214,7 @@ export function Repere({ site, date, titre, texte, href }: { site: Site; date: s
   const t = site.theme;
   const Tag = href ? 'a' : 'div';
   return (
-    <Tag href={href} className={`group flex gap-5 border-l-2 bg-white py-4 pl-5 pr-4 ${t.filet}`}>
+    <Tag href={href} className="group flex gap-5 bg-white p-5">
       <span className="min-w-0">
         <span className={`block font-brand text-[0.7rem] font-bold uppercase tracking-[0.12em] ${t.accent}`}>{date}</span>
         <span className={`mt-1 block font-brand font-bold leading-snug text-ink ${href ? 'group-hover:underline' : ''}`}>{titre}</span>
