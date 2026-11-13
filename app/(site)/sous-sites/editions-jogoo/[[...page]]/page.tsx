@@ -125,7 +125,7 @@ export default async function Editions({ params }: { params: Promise<{ page?: st
       {p === 'publier' && <Publier />}
       {p === 'actualites' && <Actualites />}
       {p === 'professionnels' && <Professionnels />}
-      <Contact site={S} texte="Éditions JOGOO · editions@philoafricaine.org · Projets de livres : directeureditions@philoafricaine.org" />
+      <Contact site={S} texte="Éditions JOGOO · editions@philoafricaine.org" />
       <Pied site={S} />
     </>
   );
