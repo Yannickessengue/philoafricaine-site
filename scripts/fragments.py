@@ -442,10 +442,3 @@ for _p in _glob.glob(OUT + '/*revue*.html'):
         _h = _h.replace('<dt class="font-brand text-sm font-semibold text-ink">Frais de publication</dt>', _NORMES + '<dt class="font-brand text-sm font-semibold text-ink">Frais de publication</dt>', 1)
     if _h != _o: open(_p, 'w', encoding='utf-8').write(_h)
 
-# Fonds Eboussi · Activités : photo d’en-tête plus nette (13 nov. 2026)
-_p = OUT + '/page__sous-sites__fonds-eboussi-boulaga__activites.html'
-if _os.path.exists(_p):
-    _h = open(_p, encoding='utf-8').read()
-    _h = _h.replace('<figure class="wide-ph"><div class="frame"><img alt="Fabien Eboussi Boulaga en conversation avec Abel Eyinga à Akometam" decoding="async" loading="lazy" src="/medias/site/jogoo/fonds-eboussi/archive-mosaiques-015-068.jpg" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0"/></div><figcaption>À Akometam avec Abel Eyinga, octobre 2013. © Perez</figcaption></figure>',
-                    '<figure class="wide-ph color"><div class="frame"><img alt="Fabien Eboussi Boulaga prend la parole lors d’une rencontre" decoding="async" loading="lazy" src="/medias/site/jogoo/fonds-eboussi/eboussi-ethicslab.jpg" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;object-position:50% 22%"/></div><figcaption>Fabien Eboussi Boulaga prend la parole. Source : Ethics Lab UCAC</figcaption></figure>')
-    open(_p, 'w', encoding='utf-8').write(_h)
