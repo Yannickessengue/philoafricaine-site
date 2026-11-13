@@ -431,3 +431,13 @@ for _p in _glob.glob(OUT + '/*revue*.html'):
                     'Accès &amp; licence</dt><dd class="text-sm text-ink-soft">Lecture en ligne libre et gratuite de tous les articles dès leur parution. Le téléchargement des PDF est ouvert six mois après la parution du numéro (barrière mobile). Licence Creative Commons CC BY-NC 4.0.</dd>')
     _h = _h.replace('<dd>Articles signalés en libre accès</dd>', '<dd>Lecture en ligne libre</dd>')
     if _h != _o: open(_p, 'w', encoding='utf-8').write(_h)
+
+# Revues : normes d'édition du CAMES (NORCAMES/LSH)
+_NORMES = ('<dt class="font-brand text-sm font-semibold text-ink">Normes</dt><dd class="text-sm text-ink-soft">Normes d’édition du CAMES pour les lettres et sciences humaines (NORCAMES/LSH, 2016), '
+           'pour que les articles publiés soient recevables dans les dossiers d’avancement des enseignants-chercheurs. '
+           '<a class="underline" href="/sous-sites/editions-jogoo/politique-editoriale">Modèle Word et règles</a></dd>')
+for _p in _glob.glob(OUT + '/*revue*.html'):
+    _h = open(_p, encoding='utf-8').read(); _o = _h
+    if 'NORCAMES' not in _h:
+        _h = _h.replace('<dt class="font-brand text-sm font-semibold text-ink">Frais de publication</dt>', _NORMES + '<dt class="font-brand text-sm font-semibold text-ink">Frais de publication</dt>', 1)
+    if _h != _o: open(_p, 'w', encoding='utf-8').write(_h)

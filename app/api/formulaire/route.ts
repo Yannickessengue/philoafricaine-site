@@ -131,6 +131,8 @@ export async function POST(req: Request) {
     if (v) lignes.push([c.libelle, v]);
   }
 
+  if (a.sorte !== 'adhesion') lignes.push(['Droit à l’image', txt('droit_image') === 'oui' ? 'Accordé (photos et vidéos pour la communication et les comptes rendus)' : 'Non accordé']);
+
   const email = txt('email');
   const qui = `${txt('prenom')} ${txt('nom')}`.trim();
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ?? 'inconnu';

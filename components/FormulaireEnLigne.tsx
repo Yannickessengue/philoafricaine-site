@@ -146,6 +146,19 @@ export function FormulaireEnLigne({
         <input type="checkbox" name="accord" required className="mt-1 h-4 w-4 accent-[#b3200e]" />
         <span>{accord}</span>
       </label>
+      {sorte !== 'adhesion' && (
+        <label className="flex items-start gap-3 text-sm leading-relaxed text-ink-soft sm:col-span-2">
+          <input type="checkbox" name="droit_image" value="oui" className="mt-1 h-4 w-4 accent-[#b3200e]" />
+          <span>
+            Droit à l’image (facultatif) : j’autorise les organisateurs (Groupe JOGOO et Fonds Eboussi Boulaga) à utiliser les photos et vidéos prises pendant l’activité, sur lesquelles je peux figurer, pour leur
+            communication et leurs comptes rendus. Je peux retirer mon accord à tout moment en écrivant à{' '}
+            <a className="underline" href={`mailto:${contact}`}>
+              {contact}
+            </a>
+            .
+          </span>
+        </label>
+      )}
       {etat.t === 'erreur' && (
         <p className="border-l-4 border-terra-deep bg-terra/5 px-4 py-3 text-sm text-terra-deep sm:col-span-2" role="alert">
           {etat.message}

@@ -611,6 +611,7 @@ function Politique() {
               Notre vocation est d’abord africaine et humaine. Les textes savants que nous publions suivent donc les normes d’édition du CAMES (Conseil africain et malgache pour l’enseignement supérieur) pour les lettres et sciences
               humaines, dites NORCAMES/LSH, adoptées à Bamako le 17 juillet 2016.
             </p>
+            <p>Nos revues les adoptent en priorité. De nombreux enseignants-chercheurs africains présentent leurs publications au CAMES pour leur avancement en grade : des articles conformes à ses normes facilitent la recevabilité de leurs dossiers. C’est aussi une manière de soutenir un projet africain.</p>
             <p>Les modèles Word de la maison les appliquent déjà : il suffit d’écrire dans les styles prévus.</p>
           </Texte>
           <dl className="grid gap-5 bg-white p-6 text-[0.95rem] leading-relaxed">
