@@ -65,7 +65,7 @@ export const EDITIONS: Site = {
     ['professionnels', 'Professionnels'],
   ],
   cta: ['/sous-sites/editions-jogoo/publier', 'Présenter un projet'],
-  email: EMAIL,
+  email: 'editions@philoafricaine.org',
   theme: {
     bandeau: 'bg-white text-[#141414]',
     bandeauLigne: 'border-[#ad0e0e]/25',
@@ -88,7 +88,7 @@ export const EDITIONS: Site = {
     { titre: 'La maison', liens: [['/sous-sites/editions-jogoo/la-maison', 'Projet et ligne éditoriale'], ['/sous-sites/editions-jogoo/actualites', 'Actualités']] },
     { titre: 'Les livres', liens: [['/sous-sites/editions-jogoo/catalogue', 'Collections et programme'], ['/sous-sites/revue-jogoo', 'Revue JOGOO'], ['/sous-sites/fonds-eboussi-boulaga/eboussi-studies', 'Eboussi Studies']] },
     { titre: 'Auteurs et pros', liens: [['/sous-sites/editions-jogoo/publier', 'Présenter un projet'], ['/sous-sites/editions-jogoo/professionnels', 'Librairies, bibliothèques, presse'], ['/sous-sites/editions-jogoo/professionnels#identite', 'Logos à télécharger']] },
-    { titre: 'Contact', liens: [[`mailto:${EMAIL}`, EMAIL]] },
+    { titre: 'Contact', liens: [['mailto:editions@philoafricaine.org', 'editions@philoafricaine.org'], ['mailto:directeureditions@philoafricaine.org', 'Manuscrits : directeureditions@philoafricaine.org']] },
   ],
 };
 

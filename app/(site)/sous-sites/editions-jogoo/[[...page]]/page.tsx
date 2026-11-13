@@ -8,6 +8,7 @@ import { COLLECTIONS, PROJETS, PERIODIQUES, OBJECTIFS, DOCUMENTS, LOGOS, collect
 const ancien = (n: string) => fragment(`ancien-editions-${n}`);
 
 const B = S.base;
+const MANUSCRITS = 'directeureditions@philoafricaine.org';
 const PAGES = ['', 'la-maison', 'catalogue', 'publier', 'actualites', 'professionnels'] as const;
 const TITRES: Record<string, string> = {
   '': 'Éditions JOGOO',
@@ -124,7 +125,7 @@ export default async function Editions({ params }: { params: Promise<{ page?: st
       {p === 'publier' && <Publier />}
       {p === 'actualites' && <Actualites />}
       {p === 'professionnels' && <Professionnels />}
-      <Contact site={S} texte="Éditions JOGOO · philoafricaine@gmail.com." />
+      <Contact site={S} texte="Éditions JOGOO · editions@philoafricaine.org · Projets de livres : directeureditions@philoafricaine.org" />
       <Pied site={S} />
     </>
   );
@@ -394,7 +395,7 @@ function FicheCollection({ c }: { c: Collection }) {
         <Boutons
           site={S}
           liens={[
-            [`mailto:${S.email}?subject=${encodeURIComponent(`Projet pour la collection ${c.nom} — Éditions JOGOO`)}`, 'Écrire aux Éditions'],
+            [`mailto:${MANUSCRITS}?subject=${encodeURIComponent(`Projet pour la collection ${c.nom} — Éditions JOGOO`)}`, 'Écrire aux Éditions'],
             [`${B}/publier`, 'Ce qu’il faut préciser', true],
           ]}
         />
@@ -452,7 +453,7 @@ function Publier() {
           site={S}
           liens={[
             [
-              `mailto:${S.email}?subject=${encodeURIComponent('Projet de livre — Éditions JOGOO')}&body=${encodeURIComponent('Titre provisoire :\nSujet et argument central :\nLectorat :\nPlan :\nÉtat d’avancement :\nCollection envisagée :\n\n(Joindre un chapitre ou un extrait si vous le souhaitez.)')}`,
+              `mailto:${MANUSCRITS}?subject=${encodeURIComponent('Projet de livre — Éditions JOGOO')}&body=${encodeURIComponent('Titre provisoire :\nSujet et argument central :\nLectorat :\nPlan :\nÉtat d’avancement :\nCollection envisagée :\n\n(Joindre un chapitre ou un extrait si vous le souhaitez.)')}`,
               'Écrire aux Éditions',
             ],
           ]}
