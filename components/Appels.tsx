@@ -18,6 +18,14 @@ export function CarteAppel({ a }: { a: Awaited<ReturnType<typeof getAppels>>[num
   const e = a.entry;
   return (
     <div className={`flex flex-col gap-3 border border-ink/10 p-6 shadow-[0_1px_0_rgba(0,0,0,0.04)] ${a.ouvert ? 'bg-white' : 'bg-cream/40'}`}>
+      {e.image && (
+        <figure className="-mx-6 -mt-6 mb-1">
+          <div className="cadre aspect-[16/9]">
+            <img alt={e.imageLegende ?? ''} src={e.image} loading="lazy" />
+          </div>
+          {e.imageLegende && <figcaption className="px-6 pt-2 text-xs italic text-ink/50">{e.imageLegende}</figcaption>}
+        </figure>
+      )}
       <div className="flex items-start justify-between gap-3">
         <p className="kicker">{e.type}</p>
         <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[0.7rem] font-semibold ${a.ouvert ? 'bg-terra/10 text-terra-deep' : 'bg-ink/8 text-ink/50'}`}>

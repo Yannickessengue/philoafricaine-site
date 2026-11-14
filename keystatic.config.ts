@@ -82,6 +82,16 @@ export default config({
         image: image('Image d’illustration', 'actualites', 'Affichée en tête de l’actualité, toujours au format 16:10.'),
         imageDescription: fields.text({ label: 'Description de l’image' }),
         imageCredit: fields.text({ label: 'Crédit de l’image' }),
+        imageEntiere: fields.checkbox({ label: 'Montrer l’image entière (affiche)', description: 'Sans recadrage au format large, en tête de l’article.' }),
+        espace: fields.select({
+          label: 'Espace',
+          description: 'Une actualité du Fonds figure aussi dans l’espace du Fonds Eboussi Boulaga.',
+          options: [
+            { label: 'Groupe JOGOO (général)', value: 'jogoo' },
+            { label: 'Fonds Eboussi Boulaga', value: 'fonds' },
+          ],
+          defaultValue: 'jogoo',
+        }),
         contenu: texte('Texte', 'actualites'),
       },
     }),
@@ -274,6 +284,8 @@ export default config({
       schema: {
         titre: fields.slug({ name: { label: 'Titre' } }),
         type: fields.text({ label: 'Type', description: 'Ex. : Journée d’étude, Ouvrage collectif' }),
+        image: image('Image (facultative)', 'appels', 'Affichée en tête de la carte de l’appel.'),
+        imageLegende: fields.text({ label: 'Légende de l’image' }),
         dateEvenement: fields.text({ label: 'Date de l’événement' }),
         lieu: fields.text({ label: 'Lieu' }),
         dateLimite: fields.text({ label: 'Date limite (affichée)' }),

@@ -17,7 +17,27 @@ export async function aVenirFondsHtml() {
   const appels = (await reader.collections.appels.all())
     .filter((a) => a.entry.ouvert && !(a.entry.cloture && a.entry.cloture < jour) && /eboussi|fonds/i.test(`${a.entry.titre} ${a.entry.lieu} ${a.entry.contact}`))
     .sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0));
-  if (!rdv.length && !appels.length) return '';
+  const actus = (await reader.collections.actualites.all())
+    .filter((x) => x.entry.espace === 'fonds')
+    .sort((x, y) => (y.entry.date ?? '').localeCompare(x.entry.date ?? ''))
+    .slice(0, 3);
+  const blocActus = actus.length
+    ? `<section aria-label="Actualités du Fonds Eboussi Boulaga" class="bg-white py-14"><div class="mx-auto max-w-[1100px] px-5">
+  <p class="font-brand text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#c8481e]">Comptes rendus et annonces</p>
+  <h2 class="mt-1 font-serif text-3xl text-[#1a1512] sm:text-4xl">Actualités du Fonds</h2>
+  <ul class="mt-6 grid gap-6 ${actus.length > 1 ? 'md:grid-cols-2' : ''}">${actus
+    .map(
+      ({ slug, entry: e }) => `<li class="grid gap-5 border border-[#e6d9cc] bg-[#fbf7f2] p-5 text-left sm:grid-cols-[11rem_minmax(0,1fr)]">
+    ${e.image ? `<a href="/actualites/${slug}" class="block aspect-square overflow-hidden bg-[#f1e6da]"><img src="${e.image}" alt="" loading="lazy" class="h-full w-full object-cover object-top"></a>` : ''}
+    <div class="min-w-0"><p class="text-xs uppercase tracking-wide text-[#6b5f56]">${echap(new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${e.date}T00:00:00Z`)))}</p>
+    <a href="/actualites/${slug}" class="mt-1 block font-serif text-xl leading-snug !text-[#1a1512] !no-underline hover:!text-[#c8481e]">${echap(e.titre)}</a>
+    ${e.resume ? `<p class="mt-2 text-sm leading-relaxed text-[#6b5f56]">${echap(e.resume)}</p>` : ''}
+    <a href="/actualites/${slug}" class="mt-3 inline-block text-xs font-bold uppercase tracking-[0.1em] !text-[#c8481e] underline underline-offset-2">Lire le compte rendu</a></div>
+  </li>`,
+    )
+    .join('')}</ul></div></section>`
+    : '';
+  if (!rdv.length && !appels.length) return blocActus;
 
   const cartes = rdv
     .map(({ slug, entry: e }) => {
@@ -69,5 +89,5 @@ export async function aVenirFondsHtml() {
   <a href="/recherche/appels-a-contributions" class="mt-5 inline-block text-xs font-bold uppercase tracking-[0.1em] !text-[#f3c614] underline underline-offset-2">Tous les appels</a></aside>`
       : ''
   }
-</div></section>`;
+</div></section>${blocActus}`;
 }

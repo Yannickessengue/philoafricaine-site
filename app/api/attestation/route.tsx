@@ -41,9 +41,8 @@ const s = StyleSheet.create({
   cadre2: { position: 'absolute', top: 20, left: 20, right: 20, bottom: 20, borderWidth: 0.35, borderColor: OR },
   logos: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 48 },
   sur: { fontFamily: 'Jost', fontWeight: 600, fontSize: 9, letterSpacing: 2.4, textTransform: 'uppercase', color: BRIQUE, textAlign: 'center', marginTop: 8 },
-  titre: { fontSize: 35, textAlign: 'center', marginTop: 5, lineHeight: 1.1 },
-  filet: { width: 46, height: 1.2, backgroundColor: OR, alignSelf: 'center', marginTop: 9 },
-  corps: { textAlign: 'center', marginTop: 10, lineHeight: 1.1, paddingHorizontal: 34, fontSize: 15.5, color: '#3c3531' },
+  titre: { fontSize: 30, letterSpacing: 2.5, textAlign: 'center', marginTop: 8, lineHeight: 1.1 },
+  corps: { textAlign: 'center', marginTop: 14, lineHeight: 1.1, paddingHorizontal: 34, fontSize: 15.5, color: '#3c3531' },
   nom: { fontSize: 29, fontWeight: 700, textAlign: 'center', color: BRIQUE, marginTop: 10 },
   aff: { fontStyle: 'italic', fontSize: 15, textAlign: 'center', color: GRIS, marginTop: 2 },
   liste: { marginTop: 10, paddingHorizontal: 20 },
@@ -77,8 +76,7 @@ function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civi
           <Image src={img('att-logo-jogoo.png')} style={{ height: 38 }} />
         </View>
         <Text style={s.sur}>Colloque international · Toulouse, {COLLOQUE.dates}</Text>
-        <Text style={s.titre}>Attestation de participation</Text>
-        <View style={s.filet} />
+        <Text style={s.titre}>ATTESTATION DE PARTICIPATION</Text>
         <Text style={s.corps}>
           Le comité scientifique et le comité d’organisation du colloque international{' '}
           <Text style={{ fontWeight: 700, color: ENCRE }}>
@@ -112,7 +110,7 @@ function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civi
             <View style={s.signataire}>
               {sb ? <Image src={sb} style={s.paraphe} /> : null}
               <View style={s.trait} />
-              <Text style={s.sNom}>Dr Jean Éric Bitang</Text>
+              <Text style={s.sNom}>Dr Adoulou N. Bitang</Text>
               <Text style={s.sRole}>Secrétaire exécutif du Fonds Eboussi Boulaga{'\n'}Membre du comité d’organisation</Text>
             </View>
             <View style={[s.signataire, { alignItems: 'flex-end' }]}>

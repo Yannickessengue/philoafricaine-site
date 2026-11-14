@@ -32,6 +32,12 @@ export default async function Actualite({ params }: { params: Promise<{ slug: st
       <header className="mx-auto max-w-3xl text-center">
         <p className="kicker">
           <a href="/actualites" className="hover:text-terra">Actualités</a>
+          {a.espace === 'fonds' && (
+            <>
+              {' · '}
+              <a href="/sous-sites/fonds-eboussi-boulaga/activites" className="hover:text-terra">Fonds Eboussi Boulaga</a>
+            </>
+          )}
         </p>
         <h1 className="display-title mt-4 text-3xl leading-[0.98] text-ink sm:text-5xl">{typo(a.titre)}</h1>
         <p className="mt-4 flex flex-wrap items-center justify-center gap-x-2 text-xs uppercase tracking-wide text-ink/50">
@@ -43,9 +49,13 @@ export default async function Actualite({ params }: { params: Promise<{ slug: st
       </header>
       {a.image && (
         <figure className="mx-auto mt-10 max-w-4xl">
-          <div className="cadre aspect-[16/9] border border-ink/10">
-            <img alt={a.imageDescription ?? ''} src={a.image} />
-          </div>
+          {a.imageEntiere ? (
+            <img alt={a.imageDescription ?? ''} src={a.image} className="mx-auto w-full max-w-2xl border border-ink/10" />
+          ) : (
+            <div className="cadre aspect-[16/9] border border-ink/10">
+              <img alt={a.imageDescription ?? ''} src={a.image} />
+            </div>
+          )}
           {(a.imageDescription || a.imageCredit) && (
             <figcaption className="mt-2 text-xs italic text-ink/50">
               {a.imageDescription}

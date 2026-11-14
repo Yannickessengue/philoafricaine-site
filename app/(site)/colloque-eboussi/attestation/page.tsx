@@ -60,7 +60,7 @@ export default async function PageAttestation({ searchParams }: { searchParams: 
               <a className="font-semibold text-terra-deep underline" href="mailto:fondseboussi@gmail.com">
                 fondseboussi@gmail.com
               </a>
-              . L’attestation est signée par le Pr Jean-Christophe Goddard et le Dr Jean Éric Bitang, pour le comité scientifique et le comité d’organisation.
+              . L’attestation est signée par le Pr Jean-Christophe Goddard et le Dr Adoulou N. Bitang, pour le comité scientifique et le comité d’organisation.
             </p>
           </div>
         </section>
