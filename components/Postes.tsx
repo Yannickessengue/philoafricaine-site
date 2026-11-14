@@ -7,7 +7,7 @@ export type Poste = { numero: number; intitule: string; pourvu: boolean; mission
 const EMAIL = 'philoafricaine@gmail.com';
 
 /** Fiches de poste de l'original : filtre ouverts / tous, et candidature (formulaire qui prépare l'e-mail). */
-export function Postes({ postes }: { postes: Poste[] }) {
+export function Postes({ postes, clos = false }: { postes: Poste[]; clos?: boolean }) {
   const [tous, setTous] = useState(false);
   const [cible, setCible] = useState<Poste | 'spontanee' | null>(null);
   const [f, setF] = useState({ nom: '', email: '', message: '' });
@@ -26,10 +26,10 @@ export function Postes({ postes }: { postes: Poste[] }) {
           <h2 className="display-title text-2xl text-terra sm:text-3xl">Les postes</h2>
           <div className="flex items-center gap-3 text-sm">
             <span className="text-ink/50">
-              {ouverts.length} ouvert{ouverts.length > 1 ? 's' : ''} · {postes.length} au total
+              {clos ? `${postes.length} postes · candidatures closes` : `${ouverts.length} ouvert${ouverts.length > 1 ? 's' : ''} · ${postes.length} au total`}
             </span>
             <button type="button" onClick={() => setTous((v) => !v)} className="font-semibold text-terra-deep hover:text-terra">
-              {tous ? 'Voir les postes ouverts' : 'Voir tous les postes'}
+              {tous ? (clos ? 'Voir les postes non pourvus' : 'Voir les postes ouverts') : 'Voir tous les postes'}
             </button>
           </div>
         </div>
@@ -42,7 +42,7 @@ export function Postes({ postes }: { postes: Poste[] }) {
               <div className="flex items-start justify-between gap-3">
                 <span className="font-serif text-2xl text-terra/50">{String(p.numero).padStart(2, '0')}</span>
                 <span className={`rounded-full px-2.5 py-0.5 text-[0.7rem] font-semibold ${p.pourvu ? 'bg-ink/8 text-ink/50' : 'bg-terra/10 text-terra-deep'}`}>
-                  {p.pourvu ? 'Pourvu' : 'Ouvert'}
+                  {p.pourvu ? 'Pourvu' : clos ? 'Candidatures closes' : 'Ouvert'}
                 </span>
               </div>
               <h3 className={`mt-2 font-brand text-[0.98rem] font-bold leading-snug ${p.pourvu ? 'text-ink/60' : 'text-ink'}`}>{p.intitule}</h3>
@@ -53,7 +53,7 @@ export function Postes({ postes }: { postes: Poste[] }) {
                   </li>
                 ))}
               </ul>
-              {!p.pourvu && (
+              {!p.pourvu && !clos && (
                 <button
                   type="button"
                   onClick={() => setCible(p)}
@@ -65,6 +65,12 @@ export function Postes({ postes }: { postes: Poste[] }) {
             </article>
           ))}
         </div>
+        {clos ? (
+          <div className="mt-8 rounded-xl bg-ink px-6 py-6 text-paper">
+            <p className="font-brand text-sm font-bold">Les candidatures sont closes</p>
+            <p className="mt-0.5 text-sm text-paper/60">Les dossiers reçus sont en cours d’examen ; chaque candidat·e recevra une réponse par e-mail. Un prochain appel sera annoncé sur cette page et dans la lettre d’information.</p>
+          </div>
+        ) : (
         <div className="mt-8 flex flex-col items-start gap-3 rounded-xl bg-ink px-6 py-6 text-paper sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="font-brand text-sm font-bold">Aucun poste ne correspond ?</p>
@@ -78,6 +84,7 @@ export function Postes({ postes }: { postes: Poste[] }) {
             Candidature spontanée
           </button>
         </div>
+        )}
       </section>
 
       {cible && (

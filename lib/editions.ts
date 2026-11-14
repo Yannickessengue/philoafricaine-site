@@ -7,6 +7,10 @@ export type Collection = {
   nom: string;
   soustitre: string;
   direction: string;
+  /** Direction, Codirection ou Coordination. */
+  role?: string;
+  /** Institution de rattachement de la direction. */
+  affiliation?: string;
   couleur: string;
   /** Phrase courte pour les listes. */
   texte: string;
@@ -22,64 +26,53 @@ export const COLLECTIONS: Collection[] = [
     nom: 'Sankofa',
     soustitre: 'Classiques et patrimoines de la philosophie africaine',
     direction: 'Adoulou N. Bitang',
+    affiliation: 'École normale supérieure (ENS), Université de Bertoua',
     couleur: '#ad0e0e',
     texte: 'Retour aux textes fondateurs et aux patrimoines philosophiques africains.',
-    presentation: [
-      'Le mot « Sankofa » vient de la culture akan d’Afrique de l’Ouest. Parmi les symboles adinkra, il signifie « retour aux sources » : SAN (retourne), KO (va), FA (ramène). On le représente par un oiseau qui avance en regardant vers l’arrière, un œuf dans le bec.',
-      'La collection accueille les grandes publications classiques de la philosophie africaine, en lien avec les textes fondateurs de la pensée africaine. Elle peut aussi intégrer des traductions et des rééditions d’œuvres anciennes qui ont marqué la philosophie africaine.',
-    ],
+    presentation: ['Sankofa rend accessibles les textes qui ont marqué l’histoire de la philosophie africaine. La collection accueille des rééditions annotées, des traductions, des anthologies et des éditions critiques. Elle invite à relire les œuvres dans les langues, les débats et les circonstances qui leur ont donné forme, et à redécouvrir des textes devenus difficiles d’accès.', 'Le mot « Sankofa » vient de la culture akan d’Afrique de l’Ouest. Parmi les symboles adinkra, il signifie « retour aux sources » : SAN (retourne), KO (va), FA (ramène). On le représente par un oiseau qui avance en regardant vers l’arrière, un œuf dans le bec.'],
     domaines: ['Textes fondateurs', 'Rééditions', 'Traductions', 'Éditions critiques'],
   },
   {
     slug: 'muntu',
     nom: 'Muntu',
     soustitre: 'Anthropologie et philosophies de la personne',
-    direction: 'À désigner',
+    direction: 'Kinhoun Épiphane',
+    affiliation: 'UCAC-ICAM, Douala',
     couleur: '#cc7a05',
     texte: 'La personne, ses relations et les conceptions de l’humain.',
-    presentation: [
-      'Muntu désigne l’être humain dans les langues bantu ; Bantu en est le pluriel. Chez Fabien Eboussi Boulaga, Muntu nomme l’humain africain. Pour Alexis Kagame, le concept renvoie à l’être d’intelligence, l’être qui agit par intelligence : il exprime l’ordre des humains, comme la « substance » chez Aristote.',
-      'La collection se consacre à la conception de l’être humain dans les sociétés africaines : l’identité, la communauté (Ubuntu) et les valeurs.',
-    ],
+    presentation: ['Que signifie être une personne, et comment le devient-on ? Muntu explore les conceptions de l’humain élaborées dans les langues, les pratiques et les traditions intellectuelles africaines. La collection accueille des travaux philosophiques et anthropologiques sur le corps, la parenté, la communauté, la singularité et les formes de reconnaissance qui façonnent l’existence.', 'Muntu désigne l’être humain dans les langues bantu ; Bantu en est le pluriel. Chez Fabien Eboussi Boulaga, Muntu nomme l’humain africain. Pour Alexis Kagame, le concept renvoie à l’être d’intelligence, l’être qui agit par intelligence : il exprime l’ordre des humains, comme la « substance » chez Aristote.'],
     domaines: ['Identité', 'Communauté et Ubuntu', 'Valeurs', 'Anthropologie philosophique'],
   },
   {
     slug: 'savoirs-endogenes',
     nom: 'Savoirs endogènes',
     soustitre: 'Épistémologies et traditions de savoir africaines',
-    direction: 'À désigner',
+    direction: 'Pr Bayibayi Molongwa',
+    affiliation: 'Université de Malabo',
     couleur: '#5b7f2a',
     texte: 'Les conditions de formation, de transmission et de transformation des savoirs.',
-    presentation: [
-      'La collection aborde les savoirs traditionnels africains dans leur histoire. Elle réunit des études approfondies sur la manière dont le savoir se constitue et se transmet, d’où l’importance qu’elle accorde aux méthodologies de recherche.',
-      'Parce que le savoir est de nature initiatique dans l’Afrique traditionnelle et que les rationalités y sont plurielles, la collection aborde aussi l’épistémologie africaine traditionnelle dans son lien à la religion africaine traditionnelle et à ses interactions avec les autres religions.',
-    ],
+    presentation: ['Cette collection étudie comment les savoirs se forment, se transmettent et se transforment au sein des sociétés africaines. Elle accueille des enquêtes sur l’oralité, les arts, les techniques, les pratiques de soin ou les connaissances du milieu. Elle donne une place aux langues et aux gestes qui portent ces savoirs, ainsi qu’aux débats qui accompagnent leur transmission.'],
     domaines: ['Épistémologie', 'Transmission', 'Méthodologies de recherche', 'Religions africaines'],
   },
   {
     slug: 'transversalites',
     nom: 'Transversalités',
     soustitre: 'Penser les grands défis contemporains',
-    direction: 'À désigner',
+    direction: 'Théophane Mbogue (Theombogü)',
     couleur: '#1f5f8b',
     texte: 'Des essais qui mettent plusieurs disciplines au travail sur une question contemporaine.',
-    presentation: [
-      'La collection part des publications philosophiques contemporaines liées aux défis des sociétés africaines d’aujourd’hui : culture, éducation, développement, langage, politique, justice sociale, développement durable, droits humains.',
-      'Les manuels pédagogiques et les pratiques philosophiques avec les enfants y trouvent un écho particulier.',
-    ],
+    presentation: ['Transversalités accueille des essais et des recherches qui font travailler plusieurs disciplines sur une même question contemporaine. La philosophie, la littérature, les arts et les sciences humaines y éclairent des problèmes tels que les migrations, les inégalités, les transformations du travail ou les usages du numérique. La collection privilégie les ouvrages qui montrent ce que le croisement des disciplines change dans la manière de poser le problème.'],
     domaines: ['Éducation', 'Politique et justice sociale', 'Développement durable', 'Droits humains', 'Manuels', 'Philosophie avec les enfants'],
   },
   {
     slug: 'tropiques',
     nom: 'T(r)opiques',
     soustitre: 'Lieux, trajectoires et biographies intellectuelles',
-    direction: 'À désigner',
+    direction: 'Pr Kalēnge Yamukēna Yantūmbi',
+    affiliation: 'Institut supérieur d’études sociales de Lubumbashi (ISES) et Université libre panafricaine (ULP)',
     couleur: '#8a3b8f',
     texte: 'Lieux de pensée, parcours d’auteurs et biographies intellectuelles.',
-    presentation: [
-      'Topiques et tropiques : la collection aborde les savoirs africains situés. Elle s’intéresse aux biographies et aux trajectoires de vie, ainsi qu’aux événements scientifiques liés à des personnalités inspirantes d’Afrique et de la diaspora.',
-      'Comme « dialogue des lieux », elle ouvre aussi des espaces de dialogue avec les autres traditions philosophiques et culturelles, avec une attention particulière aux pensées du Sud global.',
-    ],
+    presentation: ['T(r)opiques explore les lieux où la pensée prend forme et les trajectoires par lesquelles elle circule. La collection accueille des biographies intellectuelles, des correspondances, des travaux d’archives et des enquêtes sur les réseaux de pensée. Elle s’intéresse à la manière dont un déplacement, une rencontre, une langue ou un lieu d’enseignement infléchissent le parcours d’une œuvre.'],
     domaines: ['Biographies intellectuelles', 'Trajectoires', 'Sud global', 'Dialogue des traditions'],
   },
   {
@@ -89,20 +82,18 @@ export const COLLECTIONS: Collection[] = [
     direction: 'Pr Ulrich Metende',
     couleur: '#2e7d6b',
     texte: 'Pluralité des rationalités et conditions d’une justice épistémique.',
-    presentation: [
-      'L’écologie des savoirs est un courant de la recherche philosophique qui rappelle l’importance de décentrer les approches et les pratiques intellectuelles. Elle défend une forme de justice épistémique : pluralisme, décolonisation des savoirs, interculturalité, vision inclusive de la connaissance.',
-      'La collection accueille les questions contemporaines qui s’y rattachent : le genre, l’afrofuturisme, les imaginaires.',
-    ],
+    presentation: ['Écologie des savoirs examine les conditions dans lesquelles des traditions de connaissance différentes se rencontrent, se traduisent et entrent en conflit. La collection accueille des travaux sur la pluralité des rationalités, les institutions qui confèrent une autorité aux savoirs et les pratiques qui en écartent certains. Elle interroge les conditions d’une justice épistémique dans la recherche, l’enseignement et la vie publique.'],
     domaines: ['Décolonisation des savoirs', 'Interculturalité', 'Genre', 'Afrofuturisme', 'Imaginaires'],
   },
   {
     slug: 'hermeneutique',
     nom: 'Herméneutique',
     soustitre: 'Comprendre, interpréter, transmettre',
-    direction: 'Pr Benoît Okolo Okonda & Pr Cléophas Jacob Defo',
+    direction: 'Pr Benoît Okolo Okonda et Pr Cléophas Jacob Defo',
+    role: 'Codirection',
     couleur: '#6b4a2b',
     texte: 'Pratiques de l’interprétation, de la traduction et de la transmission.',
-    presentation: ['Comprendre, interpréter, transmettre : la collection réunit les travaux consacrés aux pratiques de l’interprétation, de la traduction et de la transmission des textes et des traditions.'],
+    presentation: ['Herméneutique est consacrée aux pratiques de l’interprétation, de la traduction et de la transmission. Elle accueille des études sur les textes, les récits oraux, les symboles et les œuvres qui donnent sens à l’expérience. La collection s’intéresse à ce qu’une œuvre devient lorsqu’elle change de langue, de public ou de contexte historique.'],
     domaines: ['Interprétation', 'Traduction', 'Transmission'],
   },
   {
@@ -112,7 +103,7 @@ export const COLLECTIONS: Collection[] = [
     direction: 'Pr Basile Ngono',
     couleur: '#b5475b',
     texte: 'Questions du soin, du vivant et de la responsabilité.',
-    presentation: ['Penser le vivant, soigner l’humain, habiter le monde : la collection ouvre les questions du soin, du vivant et de la responsabilité depuis les ressources de la pensée africaine.'],
+    presentation: ['Cette collection aborde les questions morales que soulèvent le soin, la maladie, la vulnérabilité et les transformations du vivant. Elle accueille des travaux sur la relation de soin, la santé publique, la recherche biomédicale et l’accès aux traitements. Elle met les débats bioéthiques en dialogue avec les expériences de terrain, les pratiques de responsabilité et les traditions de pensée africaines.'],
     domaines: ['Éthique', 'Bioéthique', 'Soin', 'Vivant'],
   },
   {
@@ -122,20 +113,19 @@ export const COLLECTIONS: Collection[] = [
     direction: 'Yannick Essengue',
     couleur: '#3c3c8f',
     texte: 'Essais, fragments, récits et formes qui traversent philosophie et littérature.',
-    presentation: ['La collection accueille les écritures qui traversent les frontières entre philosophie, littérature et création.'],
+    presentation: ['Transtopicités accueille des écritures qui traversent les frontières entre philosophie, littérature et création. Essais, poèmes, nouvelles, fragments, aphorismes, carnets, correspondances et récits y explorent ce que la forme d’un texte permet de penser. *Triturations*, de Yannick Essengue, figure au programme inaugural de la collection.'],
     domaines: ['Poésie', 'Essai', 'Nouvelle', 'Pamphlet', 'Aphorisme', 'Billet', 'Fragment', 'Carnet', 'Correspondance', 'Méditation', 'Récit'],
   },
   {
     slug: 'revues',
     nom: 'Revues',
     soustitre: 'Pôle des périodiques scientifiques',
-    direction: 'Coordination à préciser',
+    direction: 'Dr Gilbert Babena',
+    role: 'Coordination',
+    affiliation: 'Université de Maroua',
     couleur: '#141414',
     texte: 'Un espace de circulation pour les périodiques scientifiques.',
-    presentation: [
-      'Ce pôle favorise la création de revues spécialisées dans la recherche en philosophie africaine. Il peut s’ouvrir à d’autres domaines qui mettent en valeur les savoirs et la pensée africaine dans leur ensemble.',
-      'Il accueille la Revue JOGOO et Eboussi Studies ; d’autres revues pourront progressivement être accueillies ou développées.',
-    ],
+    presentation: ['Le pôle Revues réunit la Revue JOGOO et Eboussi Studies. Il donne aux travaux de recherche et aux débats en philosophie africaine un espace de publication périodique. La Revue JOGOO couvre la philosophie africaine et les questions de culture. Eboussi Studies, adossée au Fonds Eboussi Boulaga, est consacrée à l’étude de l’œuvre du philosophe et aux recherches qu’elle suscite. Le pôle pourra accueillir d’autres périodiques scientifiques.'],
   },
 ];
 

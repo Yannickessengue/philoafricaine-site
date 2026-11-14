@@ -1,6 +1,7 @@
 import { getEditos, getAgenda, getRevue, reader, dateFr, sousEmbargo } from '@/lib/content';
 import { getAppels } from '@/components/Appels';
 import { toutesLesNotes } from '@/lib/notes';
+import { CANDIDATURES_CLOSES } from '@/lib/postes';
 
 /* Menu latéral des Actualités : rappelle les autres rubriques du site (rendez-vous, édito,
    appels, Revue, lectures, lettre d'information, réseaux). Il reste visible au défilement. */
@@ -62,7 +63,7 @@ export async function Lateral({ sansAgenda = false }: { sansAgenda?: boolean }) 
   const mois = new Date().toISOString().slice(0, 7);
   const rdv = agenda.filter((a) => a.entry.date!.slice(0, 7) >= mois).slice(0, 3);
   const appelsOuverts = appels.filter((a) => a.ouvert).length;
-  const postesOuverts = postes.filter((p) => !p.entry.pourvu).length;
+  const postesOuverts = CANDIDATURES_CLOSES ? 0 : postes.filter((p) => !p.entry.pourvu).length;
   const presentation = revue[0];
   const embargo = presentation ? sousEmbargo(presentation.entry.datePublication!, presentation.entry.embargoMois) : false;
   const whatsapp = (reglages?.whatsapp ?? '+242 06 445 99 09').replace(/[^\d]/g, '');
@@ -111,6 +112,7 @@ export async function Lateral({ sansAgenda = false }: { sansAgenda?: boolean }) 
           <span className="display-title w-10 shrink-0 text-3xl leading-none text-terra">{postesOuverts}</span>
           <span className="text-sm leading-snug text-ink group-hover:text-terra">
             poste{postesOuverts > 1 ? 's' : ''} de direction de programme ouvert{postesOuverts > 1 ? 's' : ''}
+            {CANDIDATURES_CLOSES && <span className="block text-xs text-ink/45">Candidatures closes</span>}
           </span>
         </a>
         <a href="/recherche/appels-a-contributions" className="group mt-2 flex items-center gap-3 border-t border-ink/10 pt-3">

@@ -1,4 +1,5 @@
 import Markdoc from '@markdoc/markdoc';
+import { CANDIDATURES_CLOSES } from '@/lib/postes';
 import { reader } from '@/lib/content';
 import { Html } from '@/components/Html';
 import { getAppels } from '@/components/Appels';
@@ -24,13 +25,15 @@ ${e.dateLimite ? `<p class="text-sm font-semibold ${a.ouvert ? 'text-terra-deep'
 
 export default async function Recherche() {
   const [appels, postes] = await Promise.all([getAppels(), reader.collections.postes.all()]);
-  const ouverts = postes.filter((p) => !p.entry.pourvu).length;
+  const ouverts = CANDIDATURES_CLOSES ? 0 : postes.filter((p) => !p.entry.pourvu).length;
   const h = fragment('page__recherche');
   const a = h.indexOf('<div class=""><p class="kicker mb-2">En ce moment');
   const b = h.indexOf('<hr class="rule-dotted my-14"/>', a);
   const bloc = `<div class=""><p class="kicker mb-2">${appels.some((x) => x.ouvert) ? 'En ce moment' : 'Derniers appels'}</p><h2 class="display-title text-3xl text-terra sm:text-4xl">Appels à contributions</h2></div><div class="mt-8 grid gap-4 sm:grid-cols-2">${appels.map(carte).join('')}</div>`;
   const html = (h.slice(0, a) + bloc + h.slice(b))
     .replace(/(<dt class="display-title text-3xl text-gold">)\d+(<\/dt><dd class="mt-1 text-sm leading-snug text-paper\/70">Postes actuellement ouverts)/, `$1${ouverts}$2`)
-    .replace(/\d+ postes actuellement ouverts/g, `${ouverts} poste${ouverts > 1 ? 's' : ''} actuellement ouvert${ouverts > 1 ? 's' : ''}`);
+    .replace(/\d+ postes actuellement ouverts/g, CANDIDATURES_CLOSES ? 'candidatures closes' : `${ouverts} poste${ouverts > 1 ? 's' : ''} actuellement ouvert${ouverts > 1 ? 's' : ''}`)
+    .replace('Le Groupe JOGOO recrute des directrices', CANDIDATURES_CLOSES ? 'Le Groupe JOGOO a ouvert un appel pour des directrices' : 'Le Groupe JOGOO recrute des directrices')
+    .replace(/>Postes actuellement ouverts</, CANDIDATURES_CLOSES ? '>Postes ouverts · candidatures closes<' : '>Postes actuellement ouverts<');
   return <Html html={html} />;
 }

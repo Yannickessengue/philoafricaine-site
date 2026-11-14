@@ -310,7 +310,7 @@ function Catalogue() {
                     <span className="mt-0.5 block font-serif italic text-ink/70">{c.soustitre}</span>
                     <span className="mt-2 block text-[0.95rem] leading-relaxed text-ink-soft">{c.texte}</span>
                     <span className="mt-auto flex flex-wrap justify-between gap-x-4 gap-y-1 pt-3 text-sm">
-                      <span className={c.direction === 'À désigner' || c.direction.startsWith('Coordination') ? 'text-ink/45' : 'text-ink/80'}>Direction : {c.direction}</span>
+                      <span className={c.direction === 'À désigner' || c.direction.startsWith('Coordination') ? 'text-ink/45' : 'text-ink/80'}>{c.role ?? 'Direction'} : {c.direction}</span>
                       {n > 0 && <span className="text-ink/55">{n === 1 ? '1 titre' : `${n} titres`}</span>}
                     </span>
                   </span>
@@ -348,7 +348,8 @@ function FicheCollection({ c }: { c: Collection }) {
           <h1 className="mt-2 max-w-4xl font-serif text-[2.4rem] font-bold leading-[1.04] sm:text-6xl">{c.nom}</h1>
           <p className="mt-4 max-w-2xl font-serif text-xl italic leading-relaxed text-white/90">{c.soustitre}</p>
           <p className="mt-6 text-[0.95rem] text-white/85">
-            Direction : <span className="font-semibold text-white">{c.direction}</span>
+            {c.role ?? 'Direction'} : <span className="font-semibold text-white">{c.direction}</span>
+            {c.affiliation ? <span className="text-white/70"> · {c.affiliation}</span> : null}
           </p>
         </div>
       </section>
@@ -356,7 +357,7 @@ function FicheCollection({ c }: { c: Collection }) {
         <div className="grid gap-10 lg:grid-cols-[1.3fr_0.7fr]">
           <Texte>
             {c.presentation.map((x) => (
-              <p key={x.slice(0, 24)}>{x}</p>
+              <p key={x.slice(0, 24)}>{x.split('*').map((t, k) => (k % 2 ? <em key={k}>{t}</em> : t))}</p>
             ))}
           </Texte>
           {c.domaines && (

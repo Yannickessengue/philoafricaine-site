@@ -144,7 +144,7 @@ export default function APropos() {
           <p className="font-serif text-xl italic leading-relaxed">
             “Philosophy only begins with the decision to subject the philosophical and cultural heritage to an uncompromising critique.”
           </p>
-          <footer className="mt-4 text-sm text-gold">— Marcien Towa, Essai sur la problématique philosophique dans l’Afrique actuelle, 1971 (our translation)</footer>
+          <footer className="mt-4 text-sm text-gold">— Marcien Towa, <em>Essai sur la problématique philosophique dans l’Afrique actuelle</em>, 1971 (our translation)</footer>
         </blockquote>
       </div>
     </>

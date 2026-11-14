@@ -1,4 +1,5 @@
 import { getEditos, getActualites, getAgenda, getRevue, reader, dateFr, extrait, sansEmail } from '@/lib/content';
+import { CANDIDATURES_CLOSES } from '@/lib/postes';
 import { getMinutes, integrationVideo, MINUTE } from '@/lib/minutes';
 import { Fil } from '@/components/Fil';
 import { Compteurs } from '@/components/Compteurs';
@@ -444,7 +445,7 @@ export default async function Accueil() {
               {!appelsOuverts.length && <li className="py-4 text-sm text-paper/60">Aucun appel ouvert pour le moment.</li>}
             </ol>
           </div>
-          <Html html={fragment('home-07-droite').replace(/(<span class="display-title text-6xl leading-none text-gold">)\d+/, `$1${ouverts}`)} />
+          <Html html={fragment('home-07-droite').replace(/(<span class="display-title text-6xl leading-none text-gold">)\d+/, `$1${ouverts}`).replace('de programme ouverts', CANDIDATURES_CLOSES ? 'de programme · candidatures closes' : 'de programme ouverts')} />
         </div>
       </section>
 

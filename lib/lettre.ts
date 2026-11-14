@@ -1,4 +1,5 @@
 import { reader, getActualites, getAgenda, getEditos, sansEmail } from '@/lib/content';
+import { CANDIDATURES_CLOSES } from '@/lib/postes';
 import { getPodcasts } from '@/lib/podcasts';
 import { getMinutes, MINUTE } from '@/lib/minutes';
 import { SITE } from '@/lib/site';
@@ -55,7 +56,7 @@ export async function composerLettre(maintenant = new Date()) {
     .sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0))
     .map((a) => ({ titre: a.entry.titre, type: a.entry.type, limite: a.entry.dateLimite, url: `${SITE}/recherche/appels-a-contributions` }));
 
-  const postesOuverts = postes.filter((p) => !p.entry.pourvu).length;
+  const postesOuverts = CANDIDATURES_CLOSES ? 0 : postes.filter((p) => !p.entry.pourvu).length;
 
   const rendezVous = agenda
     .filter((a) => (a.entry.date ?? '') >= aujourdhui)

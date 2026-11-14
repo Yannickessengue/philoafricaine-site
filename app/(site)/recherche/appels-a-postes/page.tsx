@@ -2,6 +2,7 @@ import { reader } from '@/lib/content';
 import { corpsBrut } from '@/lib/raw';
 import { EnTete } from '@/components/ui';
 import { Postes } from '@/components/Postes';
+import { CANDIDATURES_CLOSES } from '@/lib/postes';
 
 export const metadata = { title: 'Directeur / directrice de programmes de recherche', description: 'Appels à postes du Groupe JOGOO : directions de programmes de recherche sur dix axes.' };
 
@@ -23,7 +24,7 @@ export default async function AppelsPostes() {
       pourvu: Boolean(p.entry.pourvu),
       missions: corpsBrut('postes', p.slug).split('\n').map((l) => l.replace(/^\s*[-*•]\s*/, '').trim()).filter(Boolean),
     }));
-  const ouverts = postes.filter((p) => !p.pourvu).length;
+  const ouverts = CANDIDATURES_CLOSES ? 0 : postes.filter((p) => !p.pourvu).length;
   return (
     <>
       <EnTete
@@ -35,9 +36,11 @@ export default async function AppelsPostes() {
       <div className="mx-auto max-w-4xl px-5 py-14 sm:py-16">
         <div className="grid gap-6 rounded-xl border border-ink/12 bg-white p-6 sm:grid-cols-[1fr_auto] sm:items-center">
           <div>
-            <p className="kicker">Candidature en ligne</p>
+            <p className="kicker">{CANDIDATURES_CLOSES ? 'Candidatures closes' : 'Candidature en ligne'}</p>
             <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-              Programmes lancés en octobre 2025. Présentez-vous en quelques lignes, puis joignez votre CV, votre lettre de motivation et, si vous le souhaitez, un portfolio : la rédaction accuse réception par e-mail.
+              {CANDIDATURES_CLOSES
+                ? 'Programmes lancés en octobre 2025. L’appel à candidatures est clos : les dossiers reçus sont en cours d’examen et chaque candidat·e recevra une réponse par e-mail. Les fiches de poste restent consultables.'
+                : 'Programmes lancés en octobre 2025. Présentez-vous en quelques lignes, puis joignez votre CV, votre lettre de motivation et, si vous le souhaitez, un portfolio : la rédaction accuse réception par e-mail.'}
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2 rounded-lg bg-cream/60 px-4 py-3 text-center">
@@ -59,7 +62,7 @@ export default async function AppelsPostes() {
             ))}
           </ul>
         </section>
-        <Postes postes={postes} />
+        <Postes postes={postes} clos={CANDIDATURES_CLOSES} />
       </div>
     </>
   );
