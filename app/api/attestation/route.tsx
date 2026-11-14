@@ -9,14 +9,16 @@ import { SITE } from '@/lib/site';
  * Attestation de participation au colloque Eboussi Boulaga (Toulouse, octobre 2026).
  * POST { nom, civilite } : vérifie le nom dans le registre des intervenant·e·s, puis renvoie le PDF.
  * GET ?ref=CEB26-012 : vérification publique d’une attestation (nom et interventions, en JSON).
- * Signatures manuscrites (facultatives) : variables d’environnement ATTESTATION_SIGNATURE_GODDARD et
- * ATTESTATION_SIGNATURE_BITANG (image PNG ou JPEG en « data URL »), jamais dans le dépôt.
+ * Signatures manuscrites : lib/pdf/att-signature-goddard.png et att-signature-bitang.png, ou variables
+ * d’environnement ATTESTATION_SIGNATURE_GODDARD / ATTESTATION_SIGNATURE_BITANG (image en « data URL »).
  */
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const P = (f: string) => path.join(process.cwd(), 'lib/pdf', f);
 const img = (f: string) => `data:image/png;base64,${fs.readFileSync(P(f)).toString('base64')}`;
+/** Signature déposée dans lib/pdf (att-signature-<nom>.png), si elle existe. */
+const signature = (n: string) => (fs.existsSync(P(`att-signature-${n}.png`)) ? img(`att-signature-${n}.png`) : undefined);
 let pret = false;
 function polices() {
   if (pret) return;
@@ -37,24 +39,24 @@ const s = StyleSheet.create({
   page: { paddingVertical: 34, paddingHorizontal: 54, fontFamily: 'Garamond', fontSize: 11.5, color: ENCRE, backgroundColor: '#ffffff' },
   cadre: { position: 'absolute', top: 16, left: 16, right: 16, bottom: 16, borderWidth: 0.7, borderColor: BRIQUE },
   cadre2: { position: 'absolute', top: 20, left: 20, right: 20, bottom: 20, borderWidth: 0.35, borderColor: OR },
-  logos: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 52 },
-  sur: { fontFamily: 'Jost', fontWeight: 600, fontSize: 7.5, letterSpacing: 2.4, textTransform: 'uppercase', color: BRIQUE, textAlign: 'center', marginTop: 12 },
-  titre: { fontSize: 31, textAlign: 'center', marginTop: 5, lineHeight: 1.1 },
+  logos: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 48 },
+  sur: { fontFamily: 'Jost', fontWeight: 600, fontSize: 9, letterSpacing: 2.4, textTransform: 'uppercase', color: BRIQUE, textAlign: 'center', marginTop: 8 },
+  titre: { fontSize: 35, textAlign: 'center', marginTop: 5, lineHeight: 1.1 },
   filet: { width: 46, height: 1.2, backgroundColor: OR, alignSelf: 'center', marginTop: 9 },
-  corps: { textAlign: 'center', marginTop: 14, lineHeight: 1.1, paddingHorizontal: 70, fontSize: 12.5, color: '#3c3531' },
-  nom: { fontSize: 25, fontWeight: 700, textAlign: 'center', color: BRIQUE, marginTop: 14 },
-  aff: { fontStyle: 'italic', fontSize: 12, textAlign: 'center', color: GRIS, marginTop: 2 },
-  liste: { marginTop: 12, paddingHorizontal: 40 },
+  corps: { textAlign: 'center', marginTop: 10, lineHeight: 1.1, paddingHorizontal: 34, fontSize: 15.5, color: '#3c3531' },
+  nom: { fontSize: 29, fontWeight: 700, textAlign: 'center', color: BRIQUE, marginTop: 10 },
+  aff: { fontStyle: 'italic', fontSize: 15, textAlign: 'center', color: GRIS, marginTop: 2 },
+  liste: { marginTop: 10, paddingHorizontal: 20 },
   ligne: { textAlign: 'center', lineHeight: 1.05, marginTop: 5 },
-  nature: { fontFamily: 'Jost', fontWeight: 600, fontSize: 7.3, letterSpacing: 1.3, textTransform: 'uppercase', color: GRIS },
+  nature: { fontFamily: 'Jost', fontWeight: 600, fontSize: 9.2, letterSpacing: 1.3, textTransform: 'uppercase', color: GRIS },
   bas: { position: 'absolute', left: 54, right: 54, bottom: 34 },
   signatures: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
   signataire: { width: 250 },
-  paraphe: { height: 40, objectFit: 'contain', marginBottom: 2 },
+  paraphe: { height: 34, width: 130, objectFit: 'contain', marginBottom: 2 },
   trait: { height: 0.5, backgroundColor: '#b9aea6', marginBottom: 5 },
-  sNom: { fontWeight: 700, fontSize: 11.5 },
-  sRole: { fontSize: 9.5, color: GRIS, lineHeight: 1.3, marginTop: 1 },
-  pied: { marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', fontFamily: 'Jost', fontWeight: 500, fontSize: 6.8, color: '#8d827b' },
+  sNom: { fontWeight: 700, fontSize: 13.5 },
+  sRole: { fontSize: 11, color: GRIS, lineHeight: 1.3, marginTop: 1 },
+  pied: { marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', fontFamily: 'Jost', fontWeight: 500, fontSize: 8, color: '#8d827b' },
 });
 
 const CIVILITES = ['', 'Pr', 'Dr', 'M.', 'Mme'];
@@ -62,8 +64,8 @@ const CIVILITES = ['', 'Pr', 'Dr', 'M.', 'Mme'];
 function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civilite: string }) {
   const date = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }).format(new Date());
   const serre = p.interventions.length > 2 || p.interventions.some((i) => (i.titre ?? '').length > 150);
-  const sg = process.env.ATTESTATION_SIGNATURE_GODDARD;
-  const sb = process.env.ATTESTATION_SIGNATURE_BITANG;
+  const sg = process.env.ATTESTATION_SIGNATURE_GODDARD || signature('goddard');
+  const sb = process.env.ATTESTATION_SIGNATURE_BITANG || signature('bitang');
   return (
     <Document title={`Attestation de participation · ${p.nom}`} author="Fonds Eboussi Boulaga · Groupe JOGOO" subject={`Colloque international « ${COLLOQUE.titre} ${COLLOQUE.soustitre} »`}>
       <Page size="A4" orientation="landscape" style={s.page}>
@@ -71,7 +73,7 @@ function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civi
         <View style={s.cadre2} fixed />
         <View style={s.logos}>
           <Image src={img('att-logo-ut2j.png')} style={{ height: 32 }} />
-          <Image src={img('att-logo-fonds.png')} style={{ height: 52 }} />
+          <Image src={img('att-logo-fonds.png')} style={{ height: 48 }} />
           <Image src={img('att-logo-jogoo.png')} style={{ height: 38 }} />
         </View>
         <Text style={s.sur}>Colloque international · Toulouse, {COLLOQUE.dates}</Text>
@@ -92,7 +94,7 @@ function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civi
         {p.affiliation ? <Text style={s.aff}>{p.affiliation}</Text> : null}
         <View style={s.liste}>
           {p.interventions.map((i, k) => (
-            <Text key={k} style={[s.ligne, { fontSize: serre ? 10.3 : 11.5 }]}>
+            <Text key={k} style={[s.ligne, { fontSize: serre ? 13 : 14.5 }]}>
               <Text style={s.nature}>{i.nature}</Text>
               {i.titre ? (
                 <Text>
@@ -105,7 +107,7 @@ function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civi
           ))}
         </View>
         <View style={s.bas}>
-          <Text style={{ textAlign: 'center', fontSize: 10.5, color: GRIS, marginBottom: sg || sb ? 4 : 30 }}>Fait à Toulouse, le {date}, pour servir et valoir ce que de droit.</Text>
+          <Text style={{ textAlign: 'center', fontSize: 12, color: GRIS, marginBottom: sg || sb ? 2 : 26 }}>Fait à Toulouse, le {date}, pour servir et valoir ce que de droit.</Text>
           <View style={s.signatures}>
             <View style={s.signataire}>
               {sb ? <Image src={sb} style={s.paraphe} /> : null}
@@ -114,7 +116,7 @@ function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civi
               <Text style={s.sRole}>Secrétaire exécutif du Fonds Eboussi Boulaga{'\n'}Membre du comité d’organisation</Text>
             </View>
             <View style={[s.signataire, { alignItems: 'flex-end' }]}>
-              {sg ? <Image src={sg} style={s.paraphe} /> : null}
+              {sg ? <Image src={sg} style={[s.paraphe, { objectPosition: 'right' }]} /> : null}
               <View style={[s.trait, { width: 250 }]} />
               <Text style={s.sNom}>Pr Jean-Christophe Goddard</Text>
               <Text style={[s.sRole, { textAlign: 'right' }]}>Université Toulouse – Jean Jaurès{'\n'}Pour le comité scientifique</Text>
