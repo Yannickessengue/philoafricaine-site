@@ -1,5 +1,7 @@
 import { reader } from '@/lib/content';
 import { Prose } from '@/components/Prose';
+import { Partage } from '@/components/Partage';
+import { SITE } from '@/lib/site';
 
 export async function getAppels() {
   const items = (await reader.collections.appels.all()).sort((a, b) => (a.entry.ordre ?? 0) - (b.entry.ordre ?? 0));
@@ -63,6 +65,15 @@ export function CarteAppel({ a }: { a: Awaited<ReturnType<typeof getAppels>>[num
             {e.contact}
           </a>
         )}
+      </div>
+      <div className="mt-3 border-t border-ink/10 pt-4">
+        <p className="mb-2 font-brand text-[0.65rem] font-bold uppercase tracking-[0.14em] text-ink/45">Partager cet appel</p>
+        <Partage
+          url={`${SITE}/recherche/appels-a-contributions/${a.slug}`}
+          titre={e.titre}
+          accroche={[e.type, e.dateEvenement, e.lieu, e.dateLimite].filter(Boolean).join(' · ') || undefined}
+          commentaires={false}
+        />
       </div>
     </div>
   );
