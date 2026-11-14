@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     '/og': ['./lib/og/**/*'],
     '/api/jogoo-ai': ['./bibliotheque-chercheurs/**/*'],
     '/edito/[slug]/pdf': ['./lib/pdf/**/*'],
+    '/api/attestation': ['./lib/pdf/**/*'],
   },
   // Polices immuables : mises en cache un an par le navigateur
   async headers() {
