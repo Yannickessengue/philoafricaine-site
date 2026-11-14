@@ -5,10 +5,23 @@ import path from 'node:path';
 const DIR = path.join(process.cwd(), 'design', 'fragments');
 const cache = new Map<string, string>();
 
+/** Espaces fines insécables avant ; : ! ? » et après « dans le texte des fragments (hors balises, scripts et styles) :
+    la ponctuation ne passe plus seule à la ligne. */
+function insecables(html: string): string {
+  return html
+    .split(/(<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>)/i)
+    .map((bloc, i) =>
+      i % 2
+        ? bloc
+        : bloc.replace(/>([^<]+)</g, (_, t: string) => `>${t.replace(/[ \u00a0]+([;:!?»])/g, '\u202f$1').replace(/«[ \u00a0]+/g, '«\u202f')}<`),
+    )
+    .join('');
+}
+
 export function fragment(nom: string): string {
   if (!cache.has(nom)) {
     const f = path.join(DIR, `${nom}.html`);
-    cache.set(nom, fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '');
+    cache.set(nom, fs.existsSync(f) ? insecables(fs.readFileSync(f, 'utf8')) : '');
   }
   return cache.get(nom)!;
 }
