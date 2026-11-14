@@ -1,8 +1,12 @@
 import { typo } from './typo';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '@/keystatic.config';
+import { lecteurHybride } from './content-neon';
 
-export const reader = createReader(process.cwd(), keystaticConfig);
+/** Fichiers du dossier content/ (source d'origine, et repli tant qu'une rubrique n'est pas migrée). */
+export const fichiers = createReader(process.cwd(), keystaticConfig);
+/** Lecteur utilisé par tout le site : Neon pour les rubriques migrées, fichiers sinon. */
+export const reader = lecteurHybride(fichiers);
 
 const byDateDesc = <T extends { entry: { date?: string | null } }>(a: T, b: T) =>
   (b.entry.date ?? '').localeCompare(a.entry.date ?? '');
