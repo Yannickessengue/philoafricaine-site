@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { typo } from '@/lib/typo';
+import { COULEURS, FONDS, POLICES, TAILLES } from '@/lib/composants-texte';
 
 /* Rendu sur le site des éléments insérés dans l'éditeur : image avec légende, encadré, citation. */
 
@@ -56,4 +57,24 @@ export function Citation({ texte, auteur }: { texte?: string; auteur?: string })
   );
 }
 
-export const composantsRendu = { Illustration, Encadre, Citation };
+/* Mise en forme des caractères et des paragraphes choisie dans l'éditeur. */
+type Enf = { children?: ReactNode };
+export const Couleur = ({ teinte = 'terra', children }: Enf & { teinte?: string }) => <span style={{ color: (COULEURS[teinte] ?? COULEURS.terra)[1] }}>{children}</span>;
+export const Surlignage = ({ fond = 'or', children }: Enf & { fond?: string }) => (
+  <mark style={{ backgroundColor: (FONDS[fond] ?? FONDS.or)[1], color: 'inherit', padding: '0 .15em' }}>{children}</mark>
+);
+export const Police = ({ famille = 'serif', children }: Enf & { famille?: string }) => <span style={{ fontFamily: (POLICES[famille] ?? POLICES.serif)[1] }}>{children}</span>;
+export const Taille = ({ taille = 'grand', children }: Enf & { taille?: string }) => <span style={{ fontSize: (TAILLES[taille] ?? TAILLES.grand)[1] }}>{children}</span>;
+const ALIGN: Record<string, string> = { justifie: '', gauche: '[&_p]:!text-left', centre: '[&_p]:!text-center', droite: '[&_p]:!text-right' };
+export function Paragraphe({ alignement = 'justifie', teinte = 'defaut', famille = 'defaut', taille = 'defaut', children }: Enf & { alignement?: string; teinte?: string; famille?: string; taille?: string }) {
+  return (
+    <div
+      className={`[&>p]:mb-[1.15em] ${ALIGN[alignement] ?? ''}`}
+      style={{ color: COULEURS[teinte]?.[1], fontFamily: POLICES[famille]?.[1], fontSize: TAILLES[taille]?.[1] }}
+    >
+      {children}
+    </div>
+  );
+}
+
+export const composantsRendu = { Illustration, Encadre, Citation, Couleur, Surlignage, Police, Taille, Paragraphe };

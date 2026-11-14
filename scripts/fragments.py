@@ -450,3 +450,12 @@ if _os.path.exists(_p):
     _h = _h.replace('src="/medias/site/jogoo/fonds-eboussi/archive-mosaiques-015-068.jpg" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0"',
                     'src="/medias/site/jogoo/fonds-eboussi/eboussi-akometam-eyinga-2013.jpg" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;object-position:50% 12%"')
     open(_p, 'w', encoding='utf-8').write(_h)
+
+
+# Accueil · carte « Devenir membre » : le coq en filigrane regarde vers le texte — 14 nov. 2026
+_p = OUT + '/home-09.html'
+if _os.path.exists(_p):
+    _h = open(_p, encoding='utf-8').read()
+    _h = _h.replace('object-contain opacity-15 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"',
+                    'object-contain opacity-15 mix-blend-multiply [transform:scaleX(-1)]"')
+    open(_p, 'w', encoding='utf-8').write(_h)

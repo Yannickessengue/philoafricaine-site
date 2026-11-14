@@ -81,7 +81,7 @@ export default async function Accueil() {
             : [{ etiquette: 'Nouveau', texte: 'Les 5 minutes du chant du coq : un concept, un philosophe, cinq minutes', href: MINUTE.base }]),
           ...actus.slice(0, 3).map((a) => ({ etiquette: 'Actualité', texte: a.entry.titre, href: `/actualites/${a.slug}` })),
           { etiquette: 'Revue', texte: 'Revue JOGOO n° 1 : « L’être africain »', href: '/sous-sites/revue-jogoo' },
-          ...appelsOuverts.slice(0, 2).map((a) => ({ etiquette: 'Appel', texte: a.entry.titre, href: a.entry.formulaire && a.entry.formulaire !== 'aucun' ? `/candidature/${a.slug}` : '/recherche/appels-a-contributions' })),
+          ...appelsOuverts.slice(0, 2).map((a) => ({ etiquette: 'Appel', texte: a.entry.titre, href: `/recherche/appels-a-contributions/${a.slug}` })),
           ...prochains.slice(0, 2).map((a) => ({ etiquette: 'Agenda', texte: `${a.entry.intitule}${a.entry.dateAffichee ? ` · ${a.entry.dateAffichee}` : ''}`, href: a.entry.inscription ? `/inscription/${a.slug}` : '/actualites#agenda' })),
           ...(podcasts[0] ? [{ etiquette: 'Podcast', texte: 'Écouter Marcien Towa', href: '/podcasts' }] : []),
         ]}
@@ -134,6 +134,44 @@ export default async function Accueil() {
               <img src={aLaUne.entry.afficheApercu || aLaUne.entry.affiche} alt={`Affiche : ${aLaUne.entry.intitule}`} decoding="async" className="max-h-[30rem] w-auto max-w-full shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] ring-1 ring-white/10 transition-transform duration-500 hover:scale-[1.02]" />
             </a>
           )}
+          </div>
+        </section>
+      )}
+      {/* Appels à contributions en cours, bien en vue */}
+      {appelsOuverts.length > 0 && (
+        <section className="border-b border-ink/10 bg-paper" aria-label="Appels à contributions en cours">
+          <div className="mx-auto max-w-6xl px-5 py-12">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="kicker">En ce moment</p>
+                <h2 className="display-title mt-1 text-3xl text-terra sm:text-4xl">Appels à contributions</h2>
+              </div>
+              <a className="font-brand text-xs font-bold uppercase tracking-[0.1em] text-terra-deep underline underline-offset-4 hover:text-terra" href="/recherche/appels-a-contributions">
+                Tous les appels
+              </a>
+            </div>
+            <ul className="mt-7 grid gap-6 md:grid-cols-3">
+              {appelsOuverts.slice(0, 3).map((a) => (
+                <li key={a.slug}>
+                  <a className="group flex h-full flex-col bg-white shadow-[0_14px_34px_-24px_rgba(26,26,26,0.35)]" href={`/recherche/appels-a-contributions/${a.slug}`}>
+                    {a.entry.image ? (
+                      <span className="cadre block aspect-[16/9]">
+                        <img alt="" src={a.entry.image} loading="lazy" className="transition-transform duration-500 group-hover:scale-[1.04]" />
+                      </span>
+                    ) : (
+                      <span className="flex aspect-[16/9] items-end bg-ink p-5">
+                        <span className="font-brand text-[0.7rem] font-bold uppercase tracking-[0.14em] text-gold">{a.entry.type}</span>
+                      </span>
+                    )}
+                    <span className="flex flex-1 flex-col p-5">
+                      {a.entry.image && <span className="font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] text-terra-deep">{a.entry.type}</span>}
+                      <span className="mt-1 font-brand text-[1.02rem] font-bold leading-snug text-ink group-hover:text-terra">{a.entry.titre}</span>
+                      {a.entry.dateLimite && <span className="mt-auto pt-4 text-left text-sm font-semibold text-terra-deep">{a.entry.dateLimite}</span>}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       )}
@@ -431,7 +469,7 @@ export default async function Accueil() {
                 const enLigne = a.entry.formulaire && a.entry.formulaire !== 'aucun';
                 return (
                   <li key={a.slug}>
-                    <a className="group block py-4" href={enLigne ? `/candidature/${a.slug}` : '/recherche/appels-a-contributions'}>
+                    <a className="group block py-4" href={`/recherche/appels-a-contributions/${a.slug}`}>
                       <span className="font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] text-gold">{a.entry.type}</span>
                       <span className="mt-1 block text-[0.95rem] leading-snug text-paper/90 group-hover:text-white">{a.entry.titre}</span>
                       <span className="mt-1 flex flex-wrap gap-x-3 text-xs text-paper/50">

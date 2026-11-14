@@ -32,7 +32,9 @@ export function CarteAppel({ a }: { a: Awaited<ReturnType<typeof getAppels>>[num
           {a.ouvert ? 'Ouvert' : 'Clos'}
         </span>
       </div>
-      <h3 className="font-brand text-base font-bold text-ink">{e.titre}</h3>
+      <h3 className="font-brand text-base font-bold text-ink">
+        <a className="hover:text-terra" href={`/recherche/appels-a-contributions/${a.slug}`}>{e.titre}</a>
+      </h3>
       {(e.dateEvenement || e.lieu) && (
         <p className="text-sm text-ink-soft">
           {e.dateEvenement}
@@ -43,6 +45,9 @@ export function CarteAppel({ a }: { a: Awaited<ReturnType<typeof getAppels>>[num
       <Prose node={a.corps} className="!max-w-none text-sm leading-relaxed [&>p]:!text-left" />
       {e.dateLimite && <p className={`text-sm font-semibold ${a.ouvert ? 'text-terra-deep' : 'text-ink/45 line-through decoration-1'}`}>{e.dateLimite}</p>}
       <div className="mt-auto flex flex-wrap items-center gap-3 pt-2">
+        <a className="border border-ink/20 px-4 py-2 font-brand text-xs font-bold uppercase tracking-[0.08em] text-ink hover:border-terra hover:text-terra" href={`/recherche/appels-a-contributions/${a.slug}`}>
+          Lire et partager
+        </a>
         {a.ouvert && e.formulaire && e.formulaire !== 'aucun' && (
           <a className="bg-terra px-4 py-2 font-brand text-xs font-bold uppercase tracking-[0.08em] text-white hover:bg-ink" href={`/candidature/${a.slug}`}>
             Candidater en ligne
