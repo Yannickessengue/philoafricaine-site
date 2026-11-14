@@ -49,7 +49,7 @@ const RUBRIQUES: [string, string][] = [
 ];
 
 /** Couverture du numéro en cours (image tirée du PDF), cliquable vers la lecture en ligne. */
-function Couverture({ petite = false, image = '/medias/site/jogoo/pam/couverture-001.jpg', href = `${B}/lire/001` }: { petite?: boolean; image?: string; href?: string }) {
+function Couverture({ petite = false, image = '/medias/site/jogoo/pam/couverture-001-v2.jpg', href = `${B}/lire/001` }: { petite?: boolean; image?: string; href?: string }) {
   return (
     <a
       href={href}

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { NextResponse } from 'next/server';
 import { Document, Font, Image, Page, StyleSheet, Text, View, renderToBuffer } from '@react-pdf/renderer';
-import { COLLOQUE, chercher, parReference, reference, type Participant } from '@/lib/attestations-colloque';
+import { EVENEMENTS, chercher, parReference, reference, type Evenement, type Participant } from '@/lib/attestations-colloque';
 import { SITE } from '@/lib/site';
 
 /**
@@ -51,7 +51,7 @@ const s = StyleSheet.create({
   bas: { position: 'absolute', left: 54, right: 54, bottom: 34 },
   signatures: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
   signataire: { width: 250 },
-  paraphe: { height: 34, width: 130, objectFit: 'contain', marginBottom: 2 },
+  paraphe: { height: 46, width: 170, objectFit: 'contain', marginBottom: 2 },
   trait: { height: 0.5, backgroundColor: '#b9aea6', marginBottom: 5 },
   sNom: { fontWeight: 700, fontSize: 13.5 },
   sRole: { fontSize: 11, color: GRIS, lineHeight: 1.3, marginTop: 1 },
@@ -60,30 +60,27 @@ const s = StyleSheet.create({
 
 const CIVILITES = ['', 'Pr', 'Dr', 'M.', 'Mme'];
 
-function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civilite: string }) {
+function Attestation({ p, refe, civilite, ev }: { p: Participant; refe: string; civilite: string; ev: Evenement }) {
   const date = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }).format(new Date());
   const serre = p.interventions.length > 2 || p.interventions.some((i) => (i.titre ?? '').length > 150);
-  const sg = process.env.ATTESTATION_SIGNATURE_GODDARD || signature('goddard');
-  const sb = process.env.ATTESTATION_SIGNATURE_BITANG || signature('bitang');
+  const [gauche, droite] = ev.signataires;
+  const sb = process.env[`ATTESTATION_SIGNATURE_${gauche.signature.toUpperCase()}`] || signature(gauche.signature);
+  const sg = process.env[`ATTESTATION_SIGNATURE_${droite.signature.toUpperCase()}`] || signature(droite.signature);
   return (
-    <Document title={`Attestation de participation · ${p.nom}`} author="Fonds Eboussi Boulaga · Groupe JOGOO" subject={`Colloque international « ${COLLOQUE.titre} ${COLLOQUE.soustitre} »`}>
+    <Document title={`Attestation de participation · ${p.nom}`} author="Groupe JOGOO" subject={ev.titre}>
       <Page size="A4" orientation="landscape" style={s.page}>
         <View style={s.cadre} fixed />
         <View style={s.cadre2} fixed />
         <View style={s.logos}>
-          <Image src={img('att-logo-ut2j.png')} style={{ height: 32 }} />
-          <Image src={img('att-logo-fonds.png')} style={{ height: 48 }} />
-          <Image src={img('att-logo-jogoo.png')} style={{ height: 38 }} />
+          {ev.logos.map((l) => (
+            <Image key={l.fichier} src={img(l.fichier)} style={{ height: l.hauteur }} />
+          ))}
         </View>
-        <Text style={s.sur}>Colloque international · Toulouse, {COLLOQUE.dates}</Text>
+        <Text style={s.sur}>{ev.surtitre}</Text>
         <Text style={s.titre}>ATTESTATION DE PARTICIPATION</Text>
         <Text style={s.corps}>
-          Le comité scientifique et le comité d’organisation du colloque international{' '}
-          <Text style={{ fontWeight: 700, color: ENCRE }}>
-            « {COLLOQUE.titre.replace(' ?', ' ?')} {COLLOQUE.soustitre} »
-          </Text>
-          , organisé par l’Université Toulouse – Jean Jaurès (ERRAPHIS, LLA-Créatis), le Fonds Eboussi Boulaga et le Groupe JOGOO, et tenu en ligne les {COLLOQUE.dates}, attestent
-          la participation de
+          {ev.avant}{' '}
+          <Text style={{ fontWeight: 700, color: ENCRE }}>« {ev.titre.replace(/ \?/g, ' ?').replace(/ :/g, ' :')} »</Text>, {ev.apres}
         </Text>
         <Text style={s.nom}>
           {civilite ? `${civilite} ` : ''}
@@ -105,25 +102,25 @@ function Attestation({ p, refe, civilite }: { p: Participant; refe: string; civi
           ))}
         </View>
         <View style={s.bas}>
-          <Text style={{ textAlign: 'center', fontSize: 12, color: GRIS, marginBottom: sg || sb ? 2 : 26 }}>Fait à Toulouse, le {date}, pour servir et valoir ce que de droit.</Text>
+          <Text style={{ textAlign: 'center', fontSize: 12, color: GRIS, marginBottom: sg || sb ? 2 : 26 }}>Fait à {ev.lieu}, le {date}, pour servir et valoir ce que de droit.</Text>
           <View style={s.signatures}>
             <View style={s.signataire}>
               {sb ? <Image src={sb} style={s.paraphe} /> : null}
               <View style={s.trait} />
-              <Text style={s.sNom}>Dr Adoulou N. Bitang</Text>
-              <Text style={s.sRole}>Secrétaire exécutif du Fonds Eboussi Boulaga{'\n'}Membre du comité d’organisation</Text>
+              <Text style={s.sNom}>{gauche.nom}</Text>
+              <Text style={s.sRole}>{gauche.role}</Text>
             </View>
             <View style={[s.signataire, { alignItems: 'flex-end' }]}>
               {sg ? <Image src={sg} style={[s.paraphe, { objectPosition: 'right' }]} /> : null}
               <View style={[s.trait, { width: 250 }]} />
-              <Text style={s.sNom}>Pr Jean-Christophe Goddard</Text>
-              <Text style={[s.sRole, { textAlign: 'right' }]}>Université Toulouse – Jean Jaurès{'\n'}Pour le comité scientifique</Text>
+              <Text style={s.sNom}>{droite.nom}</Text>
+              <Text style={[s.sRole, { textAlign: 'right' }]}>{droite.role}</Text>
             </View>
           </View>
           <View style={s.pied}>
             <Text>Attestation n° {refe}</Text>
             <Text>
-              Vérification : {SITE.replace(/^https?:\/\//, '')}/colloque-eboussi/attestation?ref={refe}
+              Vérification : {SITE.replace(/^https?:\/\//, '')}{ev.page}?ref={refe}
             </Text>
           </View>
         </View>
@@ -141,7 +138,7 @@ const fichier = (n: string) =>
     .replace(/^-|-$/g, '');
 
 export async function POST(req: Request) {
-  let d: { nom?: string; civilite?: string };
+  let d: { nom?: string; civilite?: string; evenement?: string };
   try {
     d = await req.json();
   } catch {
@@ -150,20 +147,22 @@ export async function POST(req: Request) {
   const nom = String(d.nom ?? '').trim().slice(0, 160);
   const civilite = CIVILITES.includes(String(d.civilite ?? '')) ? String(d.civilite ?? '') : '';
   if (nom.length < 4) return NextResponse.json({ erreur: 'Indiquez votre prénom et votre nom.' }, { status: 400 });
-  const r = chercher(nom);
+  const ev = EVENEMENTS[String(d.evenement ?? 'colloque-eboussi')];
+  if (!ev) return NextResponse.json({ erreur: 'Événement inconnu.' }, { status: 400 });
+  const r = chercher(nom, ev.participants);
   if (r === 'aucun')
     return NextResponse.json(
-      { erreur: 'Ce nom ne figure pas au programme du colloque. Vérifiez l’orthographe (prénom et nom, tels qu’au programme) ou écrivez au Fonds Eboussi Boulaga.' },
+      { erreur: `Ce nom ne figure pas au programme. Vérifiez l’orthographe (prénom et nom, tels qu’au programme) ou écrivez à ${ev.contact}.` },
       { status: 404 },
     );
   if (r === 'plusieurs') return NextResponse.json({ erreur: 'Plusieurs personnes correspondent : saisissez votre nom complet, tel qu’il figure au programme.' }, { status: 409 });
   polices();
-  const refe = reference(r.index);
-  const pdf = await renderToBuffer(<Attestation p={r.p} refe={refe} civilite={civilite} />);
+  const refe = reference(r.index, ev.prefixe);
+  const pdf = await renderToBuffer(<Attestation p={r.p} refe={refe} civilite={civilite} ev={ev} />);
   return new Response(new Uint8Array(pdf), {
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="attestation-colloque-eboussi-${fichier(r.p.nom)}.pdf"`,
+      'Content-Disposition': `attachment; filename="attestation-${ev.cle}-${fichier(r.p.nom)}.pdf"`,
       'Cache-Control': 'no-store',
       'X-Attestation': refe,
     },
@@ -174,5 +173,5 @@ export async function GET(req: Request) {
   const ref = new URL(req.url).searchParams.get('ref') ?? '';
   const r = parReference(ref);
   if (!r) return NextResponse.json({ valide: false }, { status: 404 });
-  return NextResponse.json({ valide: true, reference: reference(r.index), nom: r.p.nom, affiliation: r.p.affiliation ?? null, interventions: r.p.interventions });
+  return NextResponse.json({ valide: true, reference: reference(r.index, r.ev.prefixe), evenement: r.ev.titre, nom: r.p.nom, affiliation: r.p.affiliation ?? null, interventions: r.p.interventions });
 }

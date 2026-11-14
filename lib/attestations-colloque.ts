@@ -239,14 +239,92 @@ const mots = (s: string) =>
     .split(/[^a-z]+/)
     .filter((m) => m.length > 1);
 
-export const reference = (i: number) => `${COLLOQUE.prefixe}-${String(i + 1).padStart(3, '0')}`;
+/* ——— Journée d’étude « Palabre autour de Jean Godefroy Bidima » (Collège international de philosophie, 21 octobre 2026) ———
+   Registre provisoire, établi d’après les intervenant·e·s annoncé·e·s : à compléter avec le programme définitif
+   (titres des communications, autres intervenant·e·s). Ajouter les nouvelles entrées à la fin. */
+export const PARTICIPANTS_BIDIMA: Participant[] = [
+  { nom: 'Sylvère Mbondobari', interventions: [{ nature: 'Conférence inaugurale' }] },
+  { nom: 'Brigitte Nga Ondigui', alias: ['Brigitte Ondigui'], interventions: [{ nature: 'Performance' }] },
+  { nom: 'David-Le-Duc Tiaha', alias: ['David Le Duc Tiaha', 'David Leduc Tiaha', 'David Tiaha'], interventions: [{ nature: 'Communication' }, { nature: 'Comité d’organisation' }] },
+  { nom: 'Charles Romain Mbele', interventions: [{ nature: 'Communication' }] },
+  { nom: 'Joseph Tonda', interventions: [{ nature: 'Communication' }] },
+  { nom: 'Ulrich Metende', interventions: [{ nature: 'Communication' }] },
+  { nom: 'Amélie Aristelle Ekassi', alias: ['Amélie Ekassi'], interventions: [{ nature: 'Communication' }] },
+  { nom: 'Pierre Tchimabi', interventions: [{ nature: 'Communication' }] },
+  { nom: 'Yannick Essengue', interventions: [{ nature: 'Communication' }, { nature: 'Comité d’organisation' }] },
+];
+
+export type Signataire = { nom: string; role: string; signature: string };
+export type Evenement = {
+  cle: string;
+  prefixe: string;
+  /** Adresse de la page de demande (et de vérification). */
+  page: string;
+  surtitre: string;
+  /** Phrase d’attestation : avant le titre, titre en gras, après le titre. */
+  avant: string;
+  titre: string;
+  apres: string;
+  lieu: string;
+  logos: { fichier: string; hauteur: number }[];
+  signataires: [Signataire, Signataire];
+  participants: Participant[];
+  contact: string;
+};
+
+export const EVENEMENTS: Record<string, Evenement> = {
+  'colloque-eboussi': {
+    cle: 'colloque-eboussi',
+    prefixe: COLLOQUE.prefixe,
+    page: '/colloque-eboussi/attestation',
+    surtitre: `Colloque international · Toulouse, ${COLLOQUE.dates}`,
+    avant: 'Le comité scientifique et le comité d’organisation du colloque international',
+    titre: `${COLLOQUE.titre} ${COLLOQUE.soustitre}`,
+    apres: `organisé par l’Université Toulouse – Jean Jaurès (ERRAPHIS, LLA-Créatis), le Fonds Eboussi Boulaga et le Groupe JOGOO, et tenu en ligne les ${COLLOQUE.dates}, attestent la participation de`,
+    lieu: 'Toulouse',
+    logos: [
+      { fichier: 'att-logo-ut2j.png', hauteur: 32 },
+      { fichier: 'att-logo-fonds.png', hauteur: 48 },
+      { fichier: 'att-logo-jogoo.png', hauteur: 38 },
+    ],
+    signataires: [
+      { nom: 'Dr Adoulou N. Bitang', role: 'Secrétaire exécutif du Fonds Eboussi Boulaga\nMembre du comité d’organisation', signature: 'bitang' },
+      { nom: 'Pr Jean-Christophe Goddard', role: 'Université Toulouse – Jean Jaurès\nPour le comité scientifique', signature: 'goddard' },
+    ],
+    participants: PARTICIPANTS,
+    contact: 'fondseboussi@gmail.com',
+  },
+  'palabre-bidima': {
+    cle: 'palabre-bidima',
+    prefixe: 'PJB26',
+    page: '/palabre-bidima/attestation',
+    surtitre: 'Journée d’étude · Collège international de philosophie, 21 octobre 2026',
+    avant: 'Le comité scientifique et le comité d’organisation de la journée d’étude',
+    titre: 'Palabre autour de Jean Godefroy Bidima. Leçons de biopolitique : la démocratie en sursis ?',
+    apres:
+      'organisée par le Collège international de philosophie, le Groupe JOGOO et le Conseil Inter-Africain de Philosophie (CIAP), et tenue le 21 octobre 2026 au Campus Condorcet (Aubervilliers) et en ligne, attestent la participation de',
+    lieu: 'Paris',
+    logos: [
+      { fichier: 'att-logo-ciph.png', hauteur: 46 },
+      { fichier: 'att-logo-jogoo.png', hauteur: 40 },
+    ],
+    signataires: [
+      { nom: 'Yannick Essengue', role: 'Groupe JOGOO\nPour le comité d’organisation', signature: 'essengue' },
+      { nom: 'Pr David-Le-Duc Tiaha', role: 'Pour le comité scientifique', signature: 'tiaha' },
+    ],
+    participants: PARTICIPANTS_BIDIMA,
+    contact: 'philoafricaine@gmail.com',
+  },
+};
+
+export const reference = (i: number, prefixe: string = COLLOQUE.prefixe) => `${prefixe}-${String(i + 1).padStart(3, '0')}`;
 
 /** Retrouve une personne d’après le nom saisi (ordre des mots, accents et casse indifférents). */
-export function chercher(saisie: string): { index: number; p: Participant } | 'aucun' | 'plusieurs' {
+export function chercher(saisie: string, liste: Participant[] = PARTICIPANTS): { index: number; p: Participant } | 'aucun' | 'plusieurs' {
   const s = new Set(mots(saisie));
   if (s.size < 2) return 'aucun';
   const trouves: number[] = [];
-  PARTICIPANTS.forEach((p, i) => {
+  liste.forEach((p, i) => {
     const ok = [p.nom, ...(p.alias ?? [])].some((g) => {
       const m = new Set(mots(g));
       const communs = [...s].filter((x) => m.has(x)).length;
@@ -257,11 +335,14 @@ export function chercher(saisie: string): { index: number; p: Participant } | 'a
   });
   if (!trouves.length) return 'aucun';
   if (trouves.length > 1) return 'plusieurs';
-  return { index: trouves[0], p: PARTICIPANTS[trouves[0]] };
+  return { index: trouves[0], p: liste[trouves[0]] };
 }
 
-export function parReference(ref: string): { index: number; p: Participant } | null {
-  const m = new RegExp(`^${COLLOQUE.prefixe}-(\\d{3})$`, 'i').exec(ref.trim());
-  const i = m ? Number(m[1]) - 1 : -1;
-  return PARTICIPANTS[i] ? { index: i, p: PARTICIPANTS[i] } : null;
+/** Vérification d’un numéro d’attestation, tous événements confondus. */
+export function parReference(ref: string): { index: number; p: Participant; ev: Evenement } | null {
+  const m = /^([A-Z0-9]+)-(\d{3})$/i.exec(ref.trim());
+  if (!m) return null;
+  const ev = Object.values(EVENEMENTS).find((e) => e.prefixe.toLowerCase() === m[1].toLowerCase());
+  const i = Number(m[2]) - 1;
+  return ev && ev.participants[i] ? { index: i, p: ev.participants[i], ev } : null;
 }

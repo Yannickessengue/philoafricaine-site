@@ -11,7 +11,7 @@ const CIVILITES = [
 ];
 
 /** Formulaire : le nom est vérifié dans le registre des intervenant·e·s, puis le PDF est téléchargé. */
-export function DemandeAttestation() {
+export function DemandeAttestation({ evenement = 'colloque-eboussi' }: { evenement?: string }) {
   const [prenom, setPrenom] = useState('');
   const [nom, setNom] = useState('');
   const [civilite, setCivilite] = useState('');
@@ -24,14 +24,14 @@ export function DemandeAttestation() {
     setErreur('');
     setEtat('envoi');
     try {
-      const r = await fetch('/api/attestation', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ nom: `${prenom} ${nom}`, civilite }) });
+      const r = await fetch('/api/attestation', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ nom: `${prenom} ${nom}`, civilite, evenement }) });
       if (!r.ok) {
         const j = await r.json().catch(() => ({}));
         throw new Error(j.erreur || 'La génération a échoué. Réessayez dans un instant.');
       }
       const blob = await r.blob();
       const url = URL.createObjectURL(blob);
-      const nomFichier = /filename="([^"]+)"/.exec(r.headers.get('content-disposition') ?? '')?.[1] ?? 'attestation-colloque-eboussi.pdf';
+      const nomFichier = /filename="([^"]+)"/.exec(r.headers.get('content-disposition') ?? '')?.[1] ?? 'attestation.pdf';
       setFichier({ url, nom: nomFichier, ref: r.headers.get('x-attestation') ?? '' });
       setEtat('ok');
       const a = document.createElement('a');
@@ -69,7 +69,7 @@ export function DemandeAttestation() {
           <input required value={nom} onChange={(e) => setNom(e.target.value)} autoComplete="family-name" className={champ} />
         </label>
       </div>
-      <p className="mt-3 text-sm leading-relaxed text-ink/60">Saisissez votre prénom et votre nom tels qu’ils figurent au programme du colloque. Les accents et les majuscules sont indifférents.</p>
+      <p className="mt-3 text-sm leading-relaxed text-ink/60">Saisissez votre prénom et votre nom tels qu’ils figurent au programme. Les accents et les majuscules sont indifférents.</p>
       {erreur && (
         <p role="alert" className="mt-4 rounded-md bg-terra/10 px-4 py-3 text-sm leading-relaxed text-terra-deep">
           {erreur}
