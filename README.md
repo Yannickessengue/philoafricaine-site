@@ -48,7 +48,7 @@ Chaque article a une date de publication et une durée d’embargo (6 mois par d
 ## Fonctions qui demandent un réglage dans Vercel
 
 - **Commentaires des éditos** : ajouter `GITHUB_TOKEN`, un jeton GitHub « fine-grained » limité à ce dépôt avec l’autorisation *Contents : Read and write*. Les commentaires sont enregistrés dans `donnees/commentaires/` (sans redéploiement, grâce à `vercel.json`) et se modèrent dans l’Espace rédaction, rubrique « Commentaires (modération) » (case « Masquer »).
-- **Lettre d’information** : ajouter `BREVO_API_KEY` et `BREVO_LIST_ID` (compte Brevo gratuit). Sans ces variables, le formulaire ouvre un e-mail d’inscription adressé à la rédaction.
+- **Lettre d’information** : ajouter `BREVO_API_KEY` et `BREVO_LIST_ID` (compte Brevo gratuit). `BREVO_LIST_ACTIVITES_ID` : liste « annonces des activités », où sont ajoutés les inscrits aux événements (sauf refus). Sans ces variables, le formulaire ouvre un e-mail d’inscription adressé à la rédaction.
 - **JOGOO AI** (`/sous-sites/jogoo-ai`) : ajouter `ANTHROPIC_API_KEY` (clé de l’API Claude, compte Anthropic avec plafond de dépenses). Facultatif : `JOGOO_AI_MODELE` (par défaut `claude-sonnet-5-5`). Sans clé, l’assistant fonctionne en mode « bibliothèque » : il affiche les documents du corpus les plus pertinents, sans rédiger de réponse. Le corpus = les textes publiés sur le site (éditos, actualités, notes de lecture, fiches auteurs, flashs, Revue JOGOO — résumés seuls pendant l’embargo —, pages du Fonds Eboussi Boulaga) ; la clé reste côté serveur, avec une limite de 12 questions par visiteur toutes les 10 minutes.
 - **Candidatures aux postes** : le formulaire prépare un e-mail à philoafricaine@gmail.com, auquel le candidat joint ses pièces.
 

@@ -133,6 +133,13 @@ export async function POST(req: Request) {
 
   if (a.sorte !== 'adhesion') lignes.push(['Droit à l’image', txt('droit_image') === 'oui' ? 'Accordé (photos et vidéos pour la communication et les comptes rendus)' : 'Non accordé']);
 
+  const diffusion = a.sorte !== 'adhesion' && txt('sans_diffusion') !== 'oui';
+  const lettre = a.sorte !== 'adhesion' && txt('lettre') === 'oui';
+  if (a.sorte !== 'adhesion') {
+    lignes.push(['Liste de diffusion (annonces des activités)', diffusion ? 'Inscrit·e' : 'Ne souhaite pas la recevoir']);
+    lignes.push(['Lettre d’information hebdomadaire', lettre ? 'Abonné·e' : 'Non']);
+  }
+
   const email = txt('email');
   const qui = `${txt('prenom')} ${txt('nom')}`.trim();
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ?? 'inconnu';
@@ -194,6 +201,7 @@ ${zoom.id ? `<p style="margin:0;font:14px/1.6 Arial,sans-serif;color:#5b5048">ID
         }</p>
 ${blocZoom}
 ${pdf ? `<p style="margin:22px 0"><a href="${pdf}" style="display:inline-block;background:#c8481e;color:#fff;text-decoration:none;font:700 13px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:13px 20px">Télécharger le document (PDF)</a></p>` : ''}
+${diffusion || lettre ? `<p style="font:14px/1.6 Georgia,serif;color:#5b5048;margin:18px 0">${diffusion ? 'Votre adresse a été ajoutée à notre liste de diffusion : vous recevrez les annonces de nos prochaines activités. ' : ''}${lettre ? 'Vous êtes aussi abonné·e à la lettre d’information hebdomadaire du Groupe JOGOO. ' : ''}Pour vous désinscrire à tout moment, utilisez le lien présent dans chaque message ou répondez simplement à celui-ci.</p>` : ''}
 <p style="font:13px/1.5 Arial,sans-serif;color:#8b7f74;margin:22px 0 8px">Copie de votre envoi :</p>${tableau(lignes)}
 <p style="font:14px/1.6 Georgia,serif;color:#5b5048;margin-top:20px">Page de l’activité : <a href="${page}" style="color:#c8481e">${page.replace(/^https?:\/\//, '')}</a><br>Pour toute question : ${(a.sorte === 'adhesion' ? DESTINATAIRES.slice(0, 1) : DESTINATAIRES).join(' · ')}</p>`,
       ),
@@ -201,6 +209,15 @@ ${pdf ? `<p style="margin:22px 0"><a href="${pdf}" style="display:inline-block;b
   } catch (e) {
     console.error('formulaire', e);
     return NextResponse.json({ erreur: 'Le service d’envoi n’a pas répondu.' }, { status: 502 });
+  }
+  // 3. Listes Brevo : annonces des activités (sauf refus) et lettre hebdomadaire (si demandée). Un échec ne bloque pas l’inscription.
+  const listes = [diffusion ? Number(process.env.BREVO_LIST_ACTIVITES_ID) : 0, lettre ? Number(process.env.BREVO_LIST_ID) : 0].filter(Boolean);
+  if (listes.length && process.env.BREVO_API_KEY) {
+    await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ email: email.toLowerCase(), attributes: { PRENOM: txt('prenom'), NOM: txt('nom') }, listIds: listes, updateEnabled: true }),
+    }).catch((e) => console.error('brevo contacts', e));
   }
   derniers.set(ip + slug, t);
   return NextResponse.json({ ok: true });

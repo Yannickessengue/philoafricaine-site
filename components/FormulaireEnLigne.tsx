@@ -159,6 +159,26 @@ export function FormulaireEnLigne({
           </span>
         </label>
       )}
+      {sorte !== 'adhesion' && (
+        <>
+          <label className="flex items-start gap-3 text-sm leading-relaxed text-ink-soft sm:col-span-2">
+            <input type="checkbox" name="lettre" value="oui" className="mt-1 h-4 w-4 accent-[#b3200e]" />
+            <span>Je souhaite aussi recevoir la lettre d’information hebdomadaire du Groupe JOGOO (facultatif).</span>
+          </label>
+          <p className="text-sm leading-relaxed text-ink-soft sm:col-span-2">
+            En vous inscrivant, votre adresse e-mail est ajoutée à notre liste de diffusion : vous recevrez les annonces de nos prochaines activités. Vous pouvez vous désinscrire à tout moment, par le lien présent dans chaque
+            message ou en écrivant à{' '}
+            <a className="underline" href={`mailto:${contact}`}>
+              {contact}
+            </a>
+            .
+          </p>
+          <label className="flex items-start gap-3 text-sm leading-relaxed text-ink-soft sm:col-span-2">
+            <input type="checkbox" name="sans_diffusion" value="oui" className="mt-1 h-4 w-4 accent-[#b3200e]" />
+            <span>Je ne souhaite pas recevoir les annonces des prochaines activités.</span>
+          </label>
+        </>
+      )}
       {etat.t === 'erreur' && (
         <p className="border-l-4 border-terra-deep bg-terra/5 px-4 py-3 text-sm text-terra-deep sm:col-span-2" role="alert">
           {etat.message}
