@@ -459,3 +459,24 @@ if _os.path.exists(_p):
     _h = _h.replace('object-contain opacity-15 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"',
                     'object-contain opacity-15 mix-blend-multiply [transform:scaleX(-1)]"')
     open(_p, 'w', encoding='utf-8').write(_h)
+
+
+# Colloque Eboussi (passé) : le bouton Zoom laisse place à la demande d'attestation — 14 nov. 2026
+_p = OUT + '/page__colloque-eboussi.html'
+if _os.path.exists(_p):
+    _h = open(_p, encoding='utf-8').read()
+    _m = _re.search(r'<a class="[^"]*" href="https://us06web\.zoom\.us/[^"]*"[^>]*>Rejoindre la salle plénière \(Zoom\)</a>', _h)
+    if _m:
+        _h = _h[:_m.start()] + _h[_m.end():]
+        _i = _h.index('<a class="inline-flex items-center gap-2 bg-terra px-5 py-3')
+        _h = _h[:_i] + '<a class="inline-flex items-center gap-2 bg-gold px-5 py-3 text-xs font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-paper" href="/colloque-eboussi/attestation">Obtenir mon attestation de participation</a>' + _h[_i:]
+        open(_p, 'w', encoding='utf-8').write(_h)
+
+# Plus aucun lien ni identifiant Zoom dans les fragments (colloque passé) — 14 nov. 2026
+for _n in ('page__colloque-eboussi.html', 'home-02.html'):
+    _p = OUT + '/' + _n
+    if not _os.path.exists(_p): continue
+    _h = open(_p, encoding='utf-8').read()
+    _h = _re.sub(r'Les panels en ligne sont diffusés par Zoom \(modérateur sur place\) — <a [^>]*zoom\.us[^>]*>rejoindre la réunion</a> · ID [\d ]+ · code \d+', 'Le colloque s’est tenu en ligne ; les intervenantes et intervenants peuvent <a class="font-semibold text-terra-deep hover:text-terra" href="/colloque-eboussi/attestation">obtenir leur attestation de participation</a>', _h)
+    _h = _re.sub(r'<a class="[^"]*" href="https://us06web\.zoom\.us/[^"]*"[^>]*>Rejoindre sur Zoom</a>', '', _h)
+    open(_p, 'w', encoding='utf-8').write(_h)
