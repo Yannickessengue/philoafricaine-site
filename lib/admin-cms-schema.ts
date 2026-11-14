@@ -195,6 +195,20 @@ const LISTE: EntitySchema[] = [
     "type": "text"
    },
    {
+    "name": "imageEntiere",
+    "label": "Montrer l’image entière (affiche)",
+    "type": "bool"
+   },
+   {
+    "name": "espace",
+    "label": "Espace (jogoo = général, fonds = Fonds Eboussi Boulaga)",
+    "type": "select",
+    "options": [
+     "jogoo",
+     "fonds"
+    ]
+   },
+   {
     "name": "contenu",
     "label": "Texte",
     "type": "markdown",
@@ -788,6 +802,16 @@ const LISTE: EntitySchema[] = [
    {
     "name": "type",
     "label": "Type",
+    "type": "text"
+   },
+   {
+    "name": "image",
+    "label": "Image (facultative)",
+    "type": "image"
+   },
+   {
+    "name": "imageLegende",
+    "label": "Légende de l’image",
     "type": "text"
    },
    {
