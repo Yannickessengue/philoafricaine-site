@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 const JUSTIFIE = '[text-align:justify] [hyphens:auto]';
 const chapeau: Classes = {
   p: `mb-4 text-[1.05rem] leading-relaxed text-ink ${JUSTIFIE}`,
-  pFort: 'my-5 border-l-2 border-terra pl-4 font-brand text-[1.05rem] font-bold leading-snug text-terra-deep',
+  pFort: 'mx-auto my-7 max-w-[34rem] text-center font-brand text-[1.16rem] font-bold leading-snug text-terra-deep',
   ul: 'mb-4 space-y-1.5 text-[1.05rem] leading-relaxed text-ink',
   ol: 'mb-4 list-decimal space-y-1.5 pl-5 text-[1.05rem] leading-relaxed text-ink',
   li: 'relative pl-5 before:absolute before:left-0 before:text-terra before:content-["✱"] [ol_&]:pl-0 [ol_&]:before:content-none',
@@ -31,7 +31,7 @@ const chapeau: Classes = {
 const colonnes: Classes = {
   ...chapeau,
   p: `mb-3 text-[0.94rem] leading-relaxed text-ink-soft ${JUSTIFIE}`,
-  pFort: 'my-5 border-l-2 border-terra pl-4 font-brand text-[0.98rem] font-bold leading-snug text-terra-deep [break-inside:avoid]',
+  pFort: 'my-6 text-center font-brand text-[0.98rem] font-bold leading-snug text-terra-deep [break-inside:avoid]',
   ul: 'mb-3 space-y-1.5 text-[0.94rem] leading-relaxed text-ink-soft',
   ol: 'mb-3 list-decimal space-y-1.5 pl-5 text-[0.94rem] leading-relaxed text-ink-soft',
   h2: 'display-title mb-2 text-[1.05rem] leading-tight text-terra [break-after:avoid]',
