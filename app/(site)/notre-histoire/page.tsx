@@ -78,6 +78,16 @@ export default async function NotreHistoire() {
                           {e.lieu && e.lieu !== '—' && <p className="mt-1 text-sm text-ink/70">{e.lieu}</p>}
                           {e.presentation && <p className="mt-3 max-w-2xl text-left leading-relaxed text-ink/85">{e.presentation}</p>}
                           {e.intervenants && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/65">{e.intervenants}</p>}
+                          {e.attestation && (
+                            <p className="mt-4">
+                              <a
+                                className="inline-flex items-center gap-2 bg-gold px-4 py-2.5 font-brand text-[0.7rem] font-bold uppercase tracking-[0.1em] text-ink transition-colors hover:bg-ink hover:text-paper"
+                                href={e.attestation}
+                              >
+                                Obtenir mon attestation de participation
+                              </a>
+                            </p>
+                          )}
                         </div>
                       </div>
                       {e.photos.length > 0 && <Galerie images={[...e.photos]} titre={e.titre} />}

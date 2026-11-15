@@ -161,6 +161,10 @@ export default config({
         intervenants: fields.text({ label: 'Intervenants', multiline: true }),
         affiche: fields.text({ label: 'Affiche (chemin de l’image)', description: 'Ex. : /medias/histoire/mon-evenement/affiche.jpg' }),
         miniature: fields.text({ label: 'Miniature (facultatif)', description: 'Image montrée dans le bandeau « Notre histoire » de l’accueil. Ex. : /medias/histoire/mon-evenement/affiche.jpg. Vide : choix automatique.' }),
+        attestation: fields.text({
+          label: 'Page d’attestation (facultatif)',
+          description: 'Adresse de la page où les intervenant·e·s obtiennent leur attestation. Ex. : /palabre-bidima/attestation',
+        }),
         photos: fields.array(fields.text({ label: 'Photo (chemin)' }), { label: 'Galerie de photos', itemLabel: (p) => p.value }),
       },
     }),

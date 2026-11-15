@@ -243,15 +243,135 @@ const mots = (s: string) =>
    Registre provisoire, établi d’après les intervenant·e·s annoncé·e·s : à compléter avec le programme définitif
    (titres des communications, autres intervenant·e·s). Ajouter les nouvelles entrées à la fin. */
 export const PARTICIPANTS_BIDIMA: Participant[] = [
-  { nom: 'Sylvère Mbondobari', interventions: [{ nature: 'Conférence inaugurale' }] },
-  { nom: 'Brigitte Nga Ondigui', alias: ['Brigitte Ondigui'], interventions: [{ nature: 'Performance' }] },
-  { nom: 'David-Le-Duc Tiaha', alias: ['David Le Duc Tiaha', 'David Leduc Tiaha', 'David Tiaha'], interventions: [{ nature: 'Communication' }, { nature: 'Comité d’organisation' }] },
-  { nom: 'Charles Romain Mbele', interventions: [{ nature: 'Communication' }] },
-  { nom: 'Joseph Tonda', interventions: [{ nature: 'Communication' }] },
-  { nom: 'Ulrich Metende', interventions: [{ nature: 'Communication' }] },
-  { nom: 'Amélie Aristelle Ekassi', alias: ['Amélie Ekassi'], interventions: [{ nature: 'Communication' }] },
-  { nom: 'Pierre Tchimabi', interventions: [{ nature: 'Communication' }] },
-  { nom: 'Yannick Essengue', interventions: [{ nature: 'Communication' }, { nature: 'Comité d’organisation' }] },
+  {
+    nom: 'David-Le-Duc Tiaha',
+    affiliation: 'Collège international de philosophie · Fonds Ricœur',
+    alias: ['David Le Duc Tiaha', 'David Leduc Tiaha', 'David Tiaha'],
+    interventions: [
+      { nature: 'Allocution d’ouverture', cadre: 'Mot de bienvenue' },
+      { nature: 'Keynote', titre: 'Espérer et instituer le possible. Une philosophie de la libération chez Bidima', cadre: 'Session 1' },
+      { nature: 'Comité d’organisation' },
+    ],
+  },
+  {
+    nom: 'Yannick Essengue',
+    affiliation: 'Université Toulouse 2 Jean Jaurès · Groupe JOGOO · CIAP',
+    interventions: [
+      { nature: 'Mot d’introduction', cadre: 'Allocution d’ouverture' },
+      { nature: 'Communication', titre: 'Question(s) (de) biopolitique(s)', cadre: 'Session 3' },
+      { nature: 'Synthèse et allocution de clôture' },
+      { nature: 'Comité d’organisation' },
+    ],
+  },
+  {
+    nom: 'Sylvère Mbondobari',
+    affiliation: 'Université Bordeaux Montaigne, chaire Diasporas africaines et transculturalité',
+    interventions: [{ nature: 'Conférence inaugurale (keynote)', titre: 'Jean Godefroy Bidima : un critique de la postcolonie ?' }],
+  },
+  {
+    nom: 'Brigitte Nga Ondigui',
+    affiliation: 'Université du Québec à Montréal',
+    alias: ['Brigitte Ondigui'],
+    interventions: [{ nature: 'Performance', titre: 'Traversées de M’mouatisations' }, { nature: 'Comité d’organisation' }],
+  },
+  {
+    nom: 'Pierre Tchimabi',
+    affiliation: 'ENS, Université de Maroua',
+    interventions: [
+      { nature: 'Présidence de séance', cadre: 'Session 1 · La palabre : médiation, droit et réparation' },
+      {
+        nature: 'Communication',
+        titre: 'L’art et la « traversée » comme espaces d’émancipation : pour une imagination afrofuturiste de la démocratie chez Jean Godefroy Bidima',
+        cadre: 'Session 3',
+      },
+    ],
+  },
+  {
+    nom: 'Ulrich Metende',
+    affiliation: 'Laboratoire des Afriques innovantes, UQAM · Groupe JOGOO',
+    interventions: [{ nature: 'Communication', titre: 'Jean Godefroy Bidima, un philosophe de la médiation', cadre: 'Session 1' }, { nature: 'Comité d’organisation' }],
+  },
+  {
+    nom: 'Fanjasoa Louisette Rasoloniaina',
+    affiliation: 'EVCAU – ÉCHELLES, ENSAPVS / Université Paris Cité',
+    alias: ['Louisette Rasoloniaina'],
+    interventions: [{ nature: 'Communication', titre: 'Reprise de la biopolitique avec Bidima. Du régime de véridiction au régime de réalité', cadre: 'Session 1' }],
+  },
+  {
+    nom: 'Emmanuel M. Banywesize',
+    affiliation: 'Université de Lubumbashi',
+    alias: ['Emmanuel Banywesize', 'Emma Banywesize'],
+    interventions: [{ nature: 'Communication', titre: 'La démocratie : une écologie des limites pour « sauvegarder de la vie »', cadre: 'Session 1' }],
+  },
+  {
+    nom: 'Amélie Aristelle Ekassi',
+    affiliation: 'ENS de Yaoundé',
+    alias: ['Amélie Ekassi'],
+    interventions: [
+      { nature: 'Présidence de séance', cadre: 'Session 2 · Biopolitique et démocratie en sursis' },
+      { nature: 'Communication', titre: 'La dissimultanéité selon Jean Godefroy Bidima : l’intempestif dans les sociétés post-coloniales', cadre: 'Session 3' },
+    ],
+  },
+  {
+    nom: 'Charles Romain Mbele',
+    affiliation: 'ENS, Université de Yaoundé I',
+    interventions: [
+      { nature: 'Keynote', titre: 'L’éloge de la voyoucratie et de la ploutocratie chez Jean Godefroy Bidima', cadre: 'Session 2' },
+      { nature: 'Présidence de séance', cadre: 'Session 3 · Traversée, temporalité et critique postcoloniale' },
+    ],
+  },
+  {
+    nom: 'Philippe Nguemeta',
+    affiliation: 'Université de Yaoundé I',
+    interventions: [{ nature: 'Communication', titre: 'Droit, violence et coopération chez Bidima', cadre: 'Session 2' }],
+  },
+  {
+    nom: 'Kalēnge Yamukēna Yantūmbi',
+    affiliation: 'ISES de Lubumbashi / Université libre panafricaine',
+    interventions: [
+      { nature: 'Communication', titre: 'Réparer le lien et sauver la vie. Épistémologie de la palabre comme dispositif biopolitique de sortie de la violence', cadre: 'Session 2' },
+    ],
+  },
+  {
+    nom: 'Jean-Paul II Djoum',
+    affiliation: 'Université de Yaoundé I',
+    alias: ['Jean Paul Djoum'],
+    interventions: [{ nature: 'Communication', titre: 'La palabre : un ferment à la démocratisation de l’espace public africain à partir de Bidima ?', cadre: 'Session 2' }],
+  },
+  {
+    nom: 'Marthe Lele-Mavie',
+    affiliation: 'Université de Garoua',
+    alias: ['Marthe Lele Mavie'],
+    interventions: [
+      { nature: 'Communication', titre: 'La traversée de la vision traditionnelle de l’arbre à palabre chez Bidima et la discussion critique chez Popper', cadre: 'Session 2' },
+    ],
+  },
+  {
+    nom: 'Isidore Laohoue',
+    affiliation: 'Université de Douala',
+    alias: ['Isidore Laohoué'],
+    interventions: [{ nature: 'Communication', titre: 'Du discours de maîtrise à l’ontologie du chantage', cadre: 'Session 2' }],
+  },
+  {
+    nom: 'Vincent Sosthène Fouda',
+    affiliation: 'Université Catholique de Lille',
+    interventions: [{ nature: 'Propos sur Bidima', titre: 'Jean Godefroy Bidima, philosophe', cadre: 'Session 3' }],
+  },
+  {
+    nom: 'Tsanga Tsinemankh',
+    affiliation: 'Université de Yaoundé I',
+    alias: ['Tsinemang Tsanga', 'Tchinemang Ignace Bertrand'],
+    interventions: [{ nature: 'Communication', titre: 'De l’art de la traversée à l’art du croisement : dialogue avec Jean Godefroy Bidima', cadre: 'Session 3' }],
+  },
+  {
+    nom: 'Marcelle Christelle Flora Bakary',
+    affiliation: 'Université Alassane Ouattara de Bouaké',
+    alias: ['Marcelle Christelle Bakary', 'Marcelle Bakary'],
+    interventions: [
+      { nature: 'Communication', titre: 'Démocratie et renaissance africaine : une pensée à panser au regard de Jean Godefroy Bidima', cadre: 'Session 3' },
+      { nature: 'Comité d’organisation' },
+    ],
+  },
 ];
 
 export type Signataire = { nom: string; role: string; signature: string };
@@ -298,19 +418,23 @@ export const EVENEMENTS: Record<string, Evenement> = {
     cle: 'palabre-bidima',
     prefixe: 'PJB26',
     page: '/palabre-bidima/attestation',
-    surtitre: 'Journée d’étude · Collège international de philosophie, 21 octobre 2026',
+    surtitre: 'Journée d’étude · Paris, 21 octobre 2026',
     avant: 'Le comité scientifique et le comité d’organisation de la journée d’étude',
     titre: 'Palabre autour de Jean Godefroy Bidima. Leçons de biopolitique : la démocratie en sursis ?',
     apres:
-      'organisée par le Collège international de philosophie, le Groupe JOGOO et le Conseil Inter-Africain de Philosophie (CIAP), et tenue le 21 octobre 2026 au Campus Condorcet (Aubervilliers) et en ligne, attestent la participation de',
+      'organisée par le Collège international de philosophie, le Groupe JOGOO et le Conseil Inter-Africain de Philosophie (CIAP), et tenue le 21 octobre 2026 au Fonds Ricœur (Institut protestant de théologie, Paris) et en ligne, attestent la participation de',
     lieu: 'Paris',
     logos: [
       { fichier: 'att-logo-ciph.png', hauteur: 46 },
       { fichier: 'att-logo-jogoo.png', hauteur: 40 },
     ],
     signataires: [
-      { nom: 'Yannick Essengue', role: 'Groupe JOGOO\nPour le comité d’organisation', signature: 'essengue' },
-      { nom: 'Pr David-Le-Duc Tiaha', role: 'Pour le comité scientifique', signature: 'tiaha' },
+      { nom: 'Yannick Essengue', role: 'Université Toulouse 2 Jean Jaurès · Groupe JOGOO\nPour le comité d’organisation', signature: 'essengue' },
+      {
+        nom: 'Pr David-Le-Duc Tiaha',
+        role: 'Directeur de programme au Collège international de philosophie\nChercheur associé au Fonds Ricœur',
+        signature: 'tiaha',
+      },
     ],
     participants: PARTICIPANTS_BIDIMA,
     contact: 'philoafricaine@gmail.com',

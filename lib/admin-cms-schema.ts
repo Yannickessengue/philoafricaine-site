@@ -1234,6 +1234,11 @@ const LISTE: EntitySchema[] = [
     "type": "text"
    },
    {
+    "name": "attestation",
+    "label": "Page d’attestation (ex. : /palabre-bidima/attestation)",
+    "type": "text"
+   },
+   {
     "name": "photos",
     "label": "Galerie de photos",
     "type": "lines",
