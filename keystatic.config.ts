@@ -205,6 +205,10 @@ export default config({
         motsCles: fields.text({ label: 'Mots-clés', description: 'Séparés par des virgules' }),
         resume: fields.text({ label: 'Résumé court (cartes)', multiline: true }),
         couverture: image('Couverture', 'publications'),
+        vignette: fields.text({
+          label: 'Vignette de partage (facultatif)',
+          description: 'Carte large (16/9) utilisée comme image de partage sur les réseaux. Ex. : /medias/publications/vignettes/mon-ouvrage.jpg',
+        }),
         lienLibelle: fields.text({ label: 'Libellé du lien externe' }),
         lienUrl: fields.url({ label: 'URL du lien externe' }),
         contenu: texte('Note de lecture', 'publications'),

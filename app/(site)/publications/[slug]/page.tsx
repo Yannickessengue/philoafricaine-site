@@ -18,7 +18,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const p = await reader.collections.publications.read(slug);
   if (!p) return {};
   const description = p.resume || extrait(corpsBrut('publications', slug), 160);
-  return { title: p.titre, description, ...partage(p.titre, description, 'Publications') };
+  const meta = partage(p.titre, description, 'Publications');
+  // Si une vignette 16/9 a été préparée pour cette note, elle sert telle quelle aux partages.
+  if (p.vignette) {
+    const img = { url: p.vignette, width: 1200, height: 675, alt: p.titre };
+    meta.openGraph = { ...meta.openGraph, images: [img] };
+    meta.twitter = { ...meta.twitter, images: [img.url] };
+  }
+  return { title: p.titre, description, ...meta };
 }
 
 export default async function Publication({ params }: { params: Promise<{ slug: string }> }) {

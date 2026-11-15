@@ -480,6 +480,11 @@ const LISTE: EntitySchema[] = [
     "type": "image"
    },
    {
+    "name": "vignette",
+    "label": "Vignette de partage 16/9 (ex. : /medias/publications/vignettes/ouvrage.jpg)",
+    "type": "text"
+   },
+   {
     "name": "lienLibelle",
     "label": "Libellé du lien externe",
     "type": "text"

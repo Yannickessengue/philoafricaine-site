@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { SITE } from '@/lib/site';
 import { apercuEdito } from '@/lib/apercu';
 import { reader, getEditos, dateFr, motsCles, sansEmail } from '@/lib/content';
-import { decouper, rendre, versNoeud, type Classes } from '@/components/Prose';
+import { decouper, rendre, versNoeud, type Classes, paragraphes } from '@/components/Prose';
 import { Partage } from '@/components/Partage';
 import { Commentaires } from '@/components/Commentaires';
 import { typo } from '@/lib/typo';
@@ -60,8 +60,9 @@ export default async function Edito({ params }: { params: Promise<{ slug: string
   const suivant = pos > 0 ? tous[pos - 1] : undefined;
   const url = `${SITE}/edito/${slug}`;
   const partage = { url, titre: e.titre, accroche: e.accroche ?? undefined, hashtags: motsCles(e.motsCles), pdf: e.pdf || `/edito/${slug}/pdf` };
-  const refs = (e.references ?? '').split(/\n\s*\n/).map((r) => r.trim()).filter(Boolean);
-  const conclusion = e.conclusion ? decouper(versNoeud(e.conclusion)).chapeau : [];
+  // Les champs multilignes de l’éditeur séparent les paragraphes par un simple retour à la ligne.
+  const refs = (e.references ?? '').split(/\n+/).map((r) => r.trim()).filter(Boolean);
+  const conclusion = e.conclusion ? decouper(versNoeud(paragraphes(e.conclusion))).chapeau : [];
 
   return (
     <>

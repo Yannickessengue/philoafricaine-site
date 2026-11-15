@@ -74,6 +74,11 @@ export function rendre(noeuds: RenderableTreeNode | RenderableTreeNode[], c: Cla
   return Markdoc.renderers.react(liste, React, { components: composantsRendu });
 }
 
+/** Dans les champs multilignes de l’éditeur, chaque ligne est un paragraphe. */
+export function paragraphes(texte?: string | null) {
+  return (texte ?? '').replace(/\n+/g, '\n\n');
+}
+
 export function versNoeud(texte?: string | null) {
   return Markdoc.parse(texte ?? '');
 }

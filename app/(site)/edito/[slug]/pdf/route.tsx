@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { paragraphes } from '@/components/Prose';
 import path from 'node:path';
 import Markdoc, { type Node } from '@markdoc/markdoc';
 import { Document, Font, Image, Link, Page, StyleSheet, Text, View, renderToBuffer } from '@react-pdf/renderer';
@@ -66,7 +67,7 @@ const s = StyleSheet.create({
   li: { flexDirection: 'row', marginTop: 4 },
   puce: { width: 14, color: TERRA },
   section: { fontFamily: 'Montserrat', fontWeight: 800, fontSize: 8, letterSpacing: 2, textTransform: 'uppercase', color: OR, marginTop: 24, marginBottom: 2 },
-  ref: { fontSize: 9.5, marginTop: 4 },
+  ref: { fontSize: 8.6, lineHeight: 1.35, marginTop: 4 },
   pied: { position: 'absolute', bottom: 28, left: 62, right: 62, flexDirection: 'row', justifyContent: 'space-between', fontFamily: 'Montserrat', fontWeight: 600, fontSize: 7, color: '#999' },
 });
 
@@ -177,7 +178,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
   const [nom, ...fonction] = signature.split(/\s+·\s+|,\s+/);
   const [photo, portrait, logo] = await Promise.all([image(origine, e.image), image(origine, e.portrait), image(origine, '/medias/site/jogoo/logo-jogoo-header.png')]);
   const date = e.date ? new Date(e.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }) : '';
-  const refs = (e.references ?? '').split(/\n\s*\n/).map((r) => r.trim()).filter(Boolean);
+  // Les champs multilignes de l’éditeur séparent les paragraphes par un simple retour à la ligne.
+  const refs = (e.references ?? '').split(/\n+/).map((r) => r.trim()).filter(Boolean);
   const url = `${SITE}/edito/${slug}`;
 
   const doc = (
@@ -219,17 +221,34 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
         {e.conclusion && (
           <View>
             <Text style={s.section}>Conclusion</Text>
-            {blocs(Markdoc.parse(e.conclusion))}
+            {blocs(Markdoc.parse(paragraphes(e.conclusion)))}
           </View>
         )}
         {refs.length > 0 && (
           <View>
             <Text style={s.section}>Références</Text>
-            {refs.map((r, i) => (
-              <Text key={i} style={s.ref}>
-                {Markdoc.parse(r).children.map((c) => c.children.map(enLigne))}
-              </Text>
-            ))}
+            {/* à partir de quatre références, deux colonnes comme sur le site */}
+            {refs.length >= 4 ? (
+              <View style={{ flexDirection: 'row' }}>
+                {[refs.slice(0, Math.ceil(refs.length / 2)), refs.slice(Math.ceil(refs.length / 2))]
+                  .filter((colonne) => colonne.length > 0)
+                  .map((colonne, c) => (
+                    <View key={c} style={{ flexGrow: 1, flexBasis: 1, paddingRight: c === 0 ? 9 : 0, paddingLeft: c === 0 ? 0 : 9 }}>
+                      {colonne.map((r, i) => (
+                        <Text key={i} style={s.ref}>
+                          {Markdoc.parse(r).children.map((x) => x.children.map(enLigne))}
+                        </Text>
+                      ))}
+                    </View>
+                  ))}
+              </View>
+            ) : (
+              refs.map((r, i) => (
+                <Text key={i} style={s.ref}>
+                  {Markdoc.parse(r).children.map((x) => x.children.map(enLigne))}
+                </Text>
+              ))
+            )}
           </View>
         )}
         <Text style={[s.p, { marginTop: 22, fontSize: 9, color: '#777' }]}>
