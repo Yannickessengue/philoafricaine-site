@@ -16,9 +16,11 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const P = (f: string) => path.join(process.cwd(), 'lib/pdf', f);
-const img = (f: string) => `data:image/png;base64,${fs.readFileSync(P(f)).toString('base64')}`;
+const img = (f: string) => fs.readFileSync(P(f));
 /** Signature déposée dans lib/pdf (att-signature-<nom>.png), si elle existe. */
 const signature = (n: string) => (fs.existsSync(P(`att-signature-${n}.png`)) ? img(`att-signature-${n}.png`) : undefined);
+/** Signature fournie par une variable d’environnement, en « data URL ». */
+const depuisEnv = (v?: string) => (v ? Buffer.from(v.replace(/^data:image\/[a-z+]+;base64,/i, ''), 'base64') : undefined);
 let pret = false;
 function polices() {
   if (pret) return;
@@ -67,8 +69,8 @@ function Attestation({ p, refe, civilite, ev }: { p: Participant; refe: string; 
   const masse = p.interventions.reduce((n, i) => n + 26 + (i.titre ?? '').length + (i.cadre ?? '').length + i.nature.length, 0);
   const taille = masse > 420 ? 12.5 : masse > 260 ? 13.6 : masse > 150 ? 15 : 16;
   const [gauche, droite] = ev.signataires;
-  const sb = process.env[`ATTESTATION_SIGNATURE_${gauche.signature.toUpperCase()}`] || signature(gauche.signature);
-  const sg = process.env[`ATTESTATION_SIGNATURE_${droite.signature.toUpperCase()}`] || signature(droite.signature);
+  const sb = depuisEnv(process.env[`ATTESTATION_SIGNATURE_${gauche.signature.toUpperCase()}`]) ?? signature(gauche.signature);
+  const sg = depuisEnv(process.env[`ATTESTATION_SIGNATURE_${droite.signature.toUpperCase()}`]) ?? signature(droite.signature);
   return (
     <Document title={`Attestation de participation · ${p.nom}`} author="Groupe JOGOO" subject={ev.titre}>
       <Page size="A4" orientation="landscape" style={s.page}>
@@ -163,7 +165,13 @@ export async function POST(req: Request) {
   if (r === 'plusieurs') return NextResponse.json({ erreur: 'Plusieurs personnes correspondent : saisissez votre nom complet, tel qu’il figure au programme.' }, { status: 409 });
   polices();
   const refe = reference(r.index, ev.prefixe);
-  const pdf = await renderToBuffer(<Attestation p={r.p} refe={refe} civilite={civilite} ev={ev} />);
+  let pdf: Buffer;
+  try {
+    pdf = await renderToBuffer(<Attestation p={r.p} refe={refe} civilite={civilite} ev={ev} />);
+  } catch (e) {
+    console.error('attestation', refe, e);
+    return NextResponse.json({ erreur: `L’attestation n’a pas pu être produite. Écrivez à ${ev.contact} en indiquant le numéro ${refe}.` }, { status: 500 });
+  }
   return new Response(new Uint8Array(pdf), {
     headers: {
       'Content-Type': 'application/pdf',

@@ -245,7 +245,7 @@ const mots = (s: string) =>
 export const PARTICIPANTS_BIDIMA: Participant[] = [
   {
     nom: 'David-Le-Duc Tiaha',
-    affiliation: 'Collège international de philosophie · Fonds Ricœur',
+    affiliation: 'Collège international de philosophie · Conseil scientifique du Fonds Ricœur',
     alias: ['David Le Duc Tiaha', 'David Leduc Tiaha', 'David Tiaha'],
     interventions: [
       { nature: 'Allocution d’ouverture', cadre: 'Mot de bienvenue' },
@@ -367,10 +367,7 @@ export const PARTICIPANTS_BIDIMA: Participant[] = [
     nom: 'Marcelle Christelle Flora Bakary',
     affiliation: 'Université Alassane Ouattara de Bouaké',
     alias: ['Marcelle Christelle Bakary', 'Marcelle Bakary'],
-    interventions: [
-      { nature: 'Communication', titre: 'Démocratie et renaissance africaine : une pensée à panser au regard de Jean Godefroy Bidima', cadre: 'Session 3' },
-      { nature: 'Comité d’organisation' },
-    ],
+    interventions: [{ nature: 'Comité d’organisation' }],
   },
 ];
 
@@ -432,7 +429,7 @@ export const EVENEMENTS: Record<string, Evenement> = {
       { nom: 'Yannick Essengue', role: 'Université Toulouse 2 Jean Jaurès · Groupe JOGOO\nPour le comité d’organisation', signature: 'essengue' },
       {
         nom: 'Pr David-Le-Duc Tiaha',
-        role: 'Directeur de programme au Collège international de philosophie\nChercheur associé au Fonds Ricœur',
+        role: 'Directeur de programme au Collège international de philosophie\nMembre du Conseil scientifique du Fonds Ricœur',
         signature: 'tiaha',
       },
     ],
