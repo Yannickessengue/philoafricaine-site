@@ -10,7 +10,8 @@ const nextConfig: NextConfig = {
     '/og': ['./lib/og/**/*'],
     '/api/jogoo-ai': ['./bibliotheque-chercheurs/**/*'],
     '/edito/[slug]/pdf': ['./lib/pdf/**/*'],
-    '/api/attestation': ['./lib/pdf/**/*'],
+    // pdfkit charge Helvetica à la création du document : à inclure pour les routes PDF exécutées à la demande
+    '/api/attestation': ['./lib/pdf/**/*', './node_modules/pdfkit/js/standard-fonts/**/*'],
   },
   // Polices immuables : mises en cache un an par le navigateur
   async headers() {

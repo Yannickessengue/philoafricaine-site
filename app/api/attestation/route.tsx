@@ -182,43 +182,8 @@ export async function POST(req: Request) {
   });
 }
 
-/* Diagnostic temporaire : /api/attestation?diagnostic=1 — à retirer une fois la panne Vercel comprise. */
-async function diagnostic() {
-  const etapes: Record<string, unknown> = { node: process.version, cwd: process.cwd() };
-  try {
-    etapes.fichiers = fs.readdirSync(path.join(process.cwd(), 'lib/pdf')).map((f) => `${f}:${fs.statSync(P(f)).size}`);
-  } catch (e) {
-    etapes.fichiers = `ERREUR ${(e as Error).message}`;
-  }
-  const essai = async (nom: string, doc: Parameters<typeof renderToBuffer>[0]) => {
-    try {
-      const b = await renderToBuffer(doc);
-      etapes[nom] = `ok ${b.length}`;
-    } catch (e) {
-      etapes[nom] = `ERREUR ${(e as Error).name}: ${(e as Error).message}`;
-    }
-  };
-  await essai('1-texte-nu', <Document><Page size="A4"><Text>Bonjour</Text></Page></Document>);
-  try {
-    polices();
-    etapes['2-polices'] = 'enregistrées';
-  } catch (e) {
-    etapes['2-polices'] = `ERREUR ${(e as Error).message}`;
-  }
-  await essai('3-garamond', <Document><Page size="A4"><Text style={{ fontFamily: 'Garamond' }}>Bonjour</Text></Page></Document>);
-  await essai('4-jost', <Document><Page size="A4"><Text style={{ fontFamily: 'Jost', fontWeight: 600 }}>Bonjour</Text></Page></Document>);
-  try {
-    await essai('5-image', <Document><Page size="A4"><Image src={img('att-logo-jogoo.png')} style={{ height: 40 }} /></Page></Document>);
-  } catch (e) {
-    etapes['5-image'] = `ERREUR lecture ${(e as Error).message}`;
-  }
-  await essai('6-paysage', <Document><Page size="A4" orientation="landscape"><Text>Bonjour</Text></Page></Document>);
-  return NextResponse.json(etapes);
-}
-
 export async function GET(req: Request) {
   const params = new URL(req.url).searchParams;
-  if (params.get('diagnostic')) return diagnostic();
   const ref = params.get('ref') ?? '';
   const r = parReference(ref);
   if (!r) return NextResponse.json({ valide: false }, { status: 404 });
