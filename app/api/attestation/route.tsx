@@ -190,7 +190,7 @@ async function diagnostic() {
   } catch (e) {
     etapes.fichiers = `ERREUR ${(e as Error).message}`;
   }
-  const essai = async (nom: string, doc: React.ReactElement) => {
+  const essai = async (nom: string, doc: Parameters<typeof renderToBuffer>[0]) => {
     try {
       const b = await renderToBuffer(doc);
       etapes[nom] = `ok ${b.length}`;
