@@ -441,9 +441,9 @@ export const EVENEMENTS: Record<string, Evenement> = {
 export const reference = (i: number, prefixe: string = COLLOQUE.prefixe) => `${prefixe}-${String(i + 1).padStart(3, '0')}`;
 
 /** Retrouve une personne d’après le nom saisi (ordre des mots, accents et casse indifférents). */
-export function chercher(saisie: string, liste: Participant[] = PARTICIPANTS): { index: number; p: Participant } | 'aucun' | 'plusieurs' {
+export function chercher(saisie: string, liste: Participant[] = PARTICIPANTS): { index: number; p: Participant } | 'incomplet' | 'aucun' | 'plusieurs' {
   const s = new Set(mots(saisie));
-  if (s.size < 2) return 'aucun';
+  if (s.size < 2) return 'incomplet';
   const trouves: number[] = [];
   liste.forEach((p, i) => {
     const ok = [p.nom, ...(p.alias ?? [])].some((g) => {

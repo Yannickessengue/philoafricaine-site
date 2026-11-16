@@ -157,6 +157,8 @@ export async function POST(req: Request) {
   const ev = EVENEMENTS[String(d.evenement ?? 'colloque-eboussi')];
   if (!ev) return NextResponse.json({ erreur: 'Événement inconnu.' }, { status: 400 });
   const r = chercher(nom, ev.participants);
+  if (r === 'incomplet')
+    return NextResponse.json({ erreur: 'Saisissez votre prénom et votre nom, tels qu’ils figurent au programme.' }, { status: 422 });
   if (r === 'aucun')
     return NextResponse.json(
       { erreur: `Ce nom ne figure pas au programme. Vérifiez l’orthographe (prénom et nom, tels qu’au programme) ou écrivez à ${ev.contact}.` },
