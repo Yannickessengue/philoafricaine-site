@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Externe } from './Consentement';
 
 /**
@@ -25,10 +25,19 @@ export function VideoMinute({
   affiche?: string | null;
 }) {
   const [lecture, setLecture] = useState(false);
-  const [langue, setLangue] = useState<'en' | 'fr'>('en');
+  const [langue, setLangue] = useState<'en' | 'fr'>(fichierFr ? 'fr' : 'en');
   const video = useRef<HTMLVideoElement>(null);
   const reprise = useRef(0);
   const poster = affiche || integration?.vignette || undefined;
+
+  // Le pack de langues du site traduit le texte, jamais les sous-titres incrustés :
+  // dès que la page est lue dans une autre langue que le français, on sert la version anglaise.
+  useEffect(() => {
+    if (!fichierFr) return;
+    const cookie = document.cookie.match(/(?:^|;\s*)googtrans=([^;]*)/);
+    const cible = cookie ? decodeURIComponent(cookie[1]).split('/').filter(Boolean).pop() : null;
+    if (cible && cible !== 'fr') setLangue('en');
+  }, [fichierFr]);
 
   if (fichier) {
     const deuxVersions = Boolean(fichierFr);
