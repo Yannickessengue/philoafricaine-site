@@ -12,7 +12,13 @@ TITRES = ["La Crise du Muntu", "La crise du Muntu", "Christianisme sans fétiche
           "Critique de la raison nègre", "De la postcolonie", "Sortir de la grande nuit", "Brutalisme",
           "Essai sur la problématique philosophique dans l’Afrique actuelle", "Sur la « philosophie africaine »",
           "Bantu Philosophy", "Nations nègres et culture", "Cahier d’un retour au pays natal", "Discours sur le colonialisme",
-          "Peau noire, masques blancs", "Les Damnés de la terre", "L’Aventure ambiguë", "The Invention of Africa", "L’Invention de l’Afrique"]
+          "Peau noire, masques blancs", "Les Damnés de la terre", "L’Aventure ambiguë", "The Invention of Africa", "L’Invention de l’Afrique",
+          # Ajouts de novembre 2026
+          "La Philosophie bantu-rwandaise de l’Être", "La philosophie bantu-rwandaise de l’Être",
+          "African Religions and Philosophy", "Il n’y a pas d’avenir sans pardon", "No Future Without Forgiveness",
+          "De langue à langue", "Universaliser", "En quête d’Afrique(s)", "L’Élan vital",
+          "Chroniques de l’intranquillité", "Le Fagot de ma mémoire", "Le fagot de ma mémoire",
+          "Les Conférences nationales", "Ubuntu. Entretien avec Françoise Blum"]
 # Sous-titres usuels, pris dans l'italique quand ils suivent le titre
 SOUS = [". Authenticité africaine et philosophie", ". Révélation et domination", ". Au-delà des querelles", ". L’enjeu de Dieu en Afrique",
         ". Une affaire à suivre", ". African Authenticity and Philosophy"]

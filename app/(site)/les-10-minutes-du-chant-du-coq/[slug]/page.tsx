@@ -3,7 +3,7 @@ import { reader, dateFr, motsCles } from '@/lib/content';
 import { getMinutes, integrationVideo, MINUTE } from '@/lib/minutes';
 import { partage } from '@/lib/apercu';
 import { SITE } from '@/lib/site';
-import { Prose } from '@/components/Prose';
+import { Prose, decouper, rendre, versNoeud } from '@/components/Prose';
 import { Partage } from '@/components/Partage';
 import { VideoMinute } from '@/components/VideoMinute';
 
@@ -62,7 +62,7 @@ export default async function Episode({ params }: { params: Promise<{ slug: stri
             <h2 className="kicker">Pour aller plus loin</h2>
             <ul className="mt-3 space-y-2 text-[0.95rem] text-ink-soft">
               {refs.map((r, i) => (
-                <li key={i}>{r.replace(/\*/g, '')}</li>
+                <li key={i}>{rendre(decouper(versNoeud(r)).chapeau, { p: 'inline' })}</li>
               ))}
             </ul>
           </section>

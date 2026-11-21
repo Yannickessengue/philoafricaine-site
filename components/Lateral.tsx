@@ -2,6 +2,7 @@ import { getEditos, getAgenda, getRevue, reader, dateFr, sousEmbargo } from '@/l
 import { getAppels } from '@/components/Appels';
 import { toutesLesNotes } from '@/lib/notes';
 import { CANDIDATURES_CLOSES } from '@/lib/postes';
+import { italiques } from '@/components/Titres';
 
 /* Menu latéral des Actualités : rappelle les autres rubriques du site (rendez-vous, édito,
    appels, Revue, lectures, lettre d'information, réseaux). Il reste visible au défilement. */
@@ -98,7 +99,7 @@ export async function Lateral({ sansAgenda = false }: { sansAgenda?: boolean }) 
                 <span className="w-1 shrink-0 bg-terra" aria-hidden="true" />
                 <span className="min-w-0">
                   <span className="block font-brand text-[0.68rem] font-bold uppercase tracking-wide text-terra-deep">{a.entry.dateAffichee || dateFr(a.entry.date)}</span>
-                  <span className="mt-0.5 block text-[0.85rem] leading-snug text-ink">{a.entry.intitule}</span>
+                  <span className="mt-0.5 block text-[0.85rem] leading-snug text-ink">{italiques(a.entry.intitule)}</span>
                   {a.entry.lieu && <span className="block text-xs text-ink/50">{a.entry.lieu}</span>}
                 </span>
               </li>

@@ -1,6 +1,7 @@
 import { reader } from '@/lib/content';
 import { EnTete } from '@/components/ui';
 import { Galerie, AfficheZoom } from '@/components/Galerie';
+import { italiques } from '@/components/Titres';
 
 export const metadata = {
   title: 'Notre histoire',
@@ -74,9 +75,9 @@ export default async function NotreHistoire() {
                             <span className={enSalle ? 'text-terra' : ''}>{TYPES[e.categorie] ?? e.categorie}</span>
                             {e.format && e.format !== '—' && <> · {e.format}</>} · {e.dateAffichee}
                           </p>
-                          <h3 className="mt-1 text-left font-brand text-xl font-bold leading-snug text-ink sm:text-2xl">{e.titre}</h3>
+                          <h3 className="mt-1 text-left font-brand text-xl font-bold leading-snug text-ink sm:text-2xl">{italiques(e.titre)}</h3>
                           {e.lieu && e.lieu !== '—' && <p className="mt-1 text-sm text-ink/70">{e.lieu}</p>}
-                          {e.presentation && <p className="mt-3 max-w-2xl text-left leading-relaxed text-ink/85">{e.presentation}</p>}
+                          {e.presentation && <p className="mt-3 max-w-2xl text-left leading-relaxed text-ink/85">{italiques(e.presentation)}</p>}
                           {e.intervenants && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/65">{e.intervenants}</p>}
                           {e.attestation && (
                             <p className="mt-4">

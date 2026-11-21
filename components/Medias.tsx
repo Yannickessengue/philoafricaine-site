@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Externe } from './Consentement';
+import { italiques } from '@/components/Titres';
 
 const idYoutube = (url: string) => url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)?.[1];
 /** Adresse intégrable : YouTube (sans cookies) ou WebTV de l’université de Rouen (permaliens UbiCast). */
@@ -165,7 +166,7 @@ export function LecteurPodcast({ episodes, complet = false }: { episodes: Episod
               <span key={b} className={`w-[3px] bg-gold ${joue ? 'podcast-barre' : 'h-1'}`} style={{ animationDelay: `${b * 0.15}s` }} />
             ))}
           </span>
-          Podcast · {ep.serie ?? 'Philosophie africaine'}
+          Podcast · {italiques(ep.serie ?? 'Philosophie africaine')}
         </p>
         <p className="relative mt-3 font-brand text-lg font-bold leading-snug text-white">{ep.titre}</p>
         {ep.description && <p className="relative mt-2 text-[0.86rem] leading-relaxed text-paper/70">{ep.description}</p>}

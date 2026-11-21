@@ -2,6 +2,7 @@ import { getActualites, getAgenda, reader, dateFr, sansEmail } from '@/lib/conte
 import { EnTete, TitreSection, Lieu } from '@/components/ui';
 import { debut, rendre, type Classes } from '@/components/Prose';
 import { Lateral } from '@/components/Lateral';
+import { italiques } from '@/components/Titres';
 
 export const metadata = { title: 'Actualités', description: 'Ce qui vient de paraître, ce qui se prépare, ce qui se discute.' };
 export const revalidate = 3600;
@@ -72,7 +73,7 @@ export default async function Actualites() {
                 <time className="text-sm font-semibold uppercase tracking-wide text-paper/70" dateTime={prochain.entry.date ?? undefined}>
                   {prochain.entry.dateAffichee || dateFr(prochain.entry.date)}
                 </time>
-                <p className="mt-2 max-w-2xl font-serif text-xl italic leading-snug text-paper sm:text-2xl">{prochain.entry.intitule}</p>
+                <p className="mt-2 max-w-2xl font-serif text-xl italic leading-snug text-paper sm:text-2xl">{italiques(prochain.entry.intitule)}</p>
                 {prochain.entry.lieu && (
                   <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-paper/70">
                     <Lieu />
@@ -191,7 +192,7 @@ export default async function Actualites() {
                       {a.entry.dateAffichee || dateFr(a.entry.date)}
                       {a.entry.aConfirmer && <span className="ml-2 font-normal normal-case text-ink/45">· date à confirmer</span>}
                     </time>
-                    <p className="mt-1 max-w-2xl text-[0.97rem] leading-snug text-ink">{a.entry.intitule}</p>
+                    <p className="mt-1 max-w-2xl text-[0.97rem] leading-snug text-ink">{italiques(a.entry.intitule)}</p>
                     {(a.entry.lieu || a.entry.heure) && <p className="mt-0.5 text-sm text-ink/55">{[a.entry.heure, a.entry.lieu].filter(Boolean).join(' · ')}</p>}
                     {a.entry.presentation && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">{a.entry.presentation}</p>}
                     <LiensRdv a={a} />

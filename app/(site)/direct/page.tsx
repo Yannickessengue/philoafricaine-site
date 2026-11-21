@@ -1,5 +1,6 @@
 import { getAgenda, dateFr } from '@/lib/content';
 import { Externe } from '@/components/Consentement';
+import { italiques } from '@/components/Titres';
 
 export const metadata = {
   title: 'En direct',
@@ -57,7 +58,7 @@ export default async function Direct() {
                         {a.entry.aConfirmer ? 'Date à préciser' : a.entry.dateAffichee || dateFr(a.entry.date)}
                         {a.entry.heure ? ` · ${a.entry.heure}` : ''}
                       </p>
-                      <p className="mt-1 leading-snug text-paper/90">{a.entry.intitule}</p>
+                      <p className="mt-1 leading-snug text-paper/90">{italiques(a.entry.intitule)}</p>
                       {a.entry.inscription && (
                         <a href={`/inscription/${a.slug}`} className="mt-1.5 inline-block text-xs font-bold uppercase tracking-wide text-gold underline underline-offset-2 hover:text-white">
                           S’inscrire

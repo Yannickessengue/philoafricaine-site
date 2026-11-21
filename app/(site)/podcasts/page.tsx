@@ -2,6 +2,7 @@ import { EnTete } from '@/components/ui';
 import { partage } from '@/lib/apercu';
 import { LecteurPodcast } from '@/components/Medias';
 import { getPodcasts } from '@/lib/podcasts';
+import { italiques } from '@/components/Titres';
 
 export const metadata = {
   title: 'Podcasts',
@@ -20,7 +21,7 @@ export default async function Podcasts() {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <p className="font-brand text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft">
             {episodes.length} épisode{episodes.length > 1 ? 's' : ''}
-            {series.length > 0 && ` · ${series.join(' · ')}`}
+            {series.length > 0 && series.map((s, i) => <span key={i}> · {italiques(s)}</span>)}
           </p>
           <a href="/podcasts/rss.xml" className="inline-flex items-center gap-2 bg-ink px-4 py-2 font-brand text-[0.7rem] font-bold uppercase tracking-[0.12em] text-paper hover:bg-terra">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

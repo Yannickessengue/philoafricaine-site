@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { italiques } from './Titres';
 
 export type MomentHistoire = { slug: string; annee: string; date: string; titre: string; lieu: string; image: string | null; enSalle: boolean };
 
@@ -30,7 +31,7 @@ export function DefileHistoire({ moments }: { moments: MomentHistoire[] }) {
       </span>
       <span className="flex flex-1 flex-col p-3.5">
         <span className="font-brand text-[0.62rem] font-bold uppercase tracking-[0.14em] text-ink/50">{m.date}</span>
-        <span className="mt-1 line-clamp-3 text-left font-brand text-sm font-bold leading-snug text-ink group-hover:text-terra-deep">{m.titre}</span>
+        <span className="mt-1 line-clamp-3 text-left font-brand text-sm font-bold leading-snug text-ink group-hover:text-terra-deep">{italiques(m.titre)}</span>
         {m.lieu && <span className="mt-auto line-clamp-1 pt-2 text-xs text-ink/55">{m.lieu}</span>}
       </span>
     </a>

@@ -12,6 +12,7 @@ import { fragment } from '@/lib/gabarits';
 import { toutesLesNotes } from '@/lib/notes';
 import { AgendaAccueil } from '@/components/AgendaAccueil';
 import { DefileHistoire } from '@/components/DefileHistoire';
+import { italiques } from '@/components/Titres';
 
 export const revalidate = 3600;
 
@@ -112,7 +113,7 @@ export default async function Accueil() {
               {aLaUne.entry.dateAffichee || dateFr(aLaUne.entry.date)}
               {aLaUne.entry.heure ? ` · ${aLaUne.entry.heure}` : ''}
             </p>
-            {aLaUne.entry.presentation && <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed text-paper/80">{aLaUne.entry.presentation}</p>}
+            {aLaUne.entry.presentation && <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed text-paper/80">{italiques(aLaUne.entry.presentation)}</p>}
             <div className="mt-7 flex flex-wrap gap-3">
               <a href="/direct" className="inline-flex items-center gap-2 bg-terra px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-white hover:text-ink">
                 <span className="h-2 w-2 rounded-full bg-white" /> Regarder en direct sur le site
