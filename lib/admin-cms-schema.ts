@@ -1051,8 +1051,14 @@ const LISTE: EntitySchema[] = [
    },
    {
     "name": "fichierVideo",
-    "label": "Ou fichier vidéo (MP4, 5 min, 100 Mo au plus)",
+    "label": "Ou fichier vidéo (MP4, 10 min, 100 Mo au plus)",
     "type": "file"
+   },
+   {
+    "name": "fichierVideoFr",
+    "label": "Version sous-titrée en français (facultatif)",
+    "type": "file",
+    "help": "les sous-titres étant incrustés, une seconde version permet de basculer entre les deux"
    },
    {
     "name": "affiche",

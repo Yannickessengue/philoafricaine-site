@@ -1,30 +1,86 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Externe } from './Consentement';
 
-/** Lecteur de « Les 10 minutes du chant du coq » : fichier MP4 du site, ou vidéo YouTube / Vimeo / WebTV après accord. */
+/**
+ * Lecteur de « Les 10 minutes du chant du coq » : fichier MP4 du site, ou vidéo
+ * YouTube / Vimeo / WebTV après accord. Les sous-titres étant incrustés dans
+ * l'image, deux fichiers peuvent coexister ; le sélecteur reprend la lecture
+ * là où elle en était.
+ */
 export function VideoMinute({
   titre,
   fichier,
+  fichierFr,
   integration,
   lien,
   affiche,
 }: {
   titre: string;
   fichier?: string | null;
+  fichierFr?: string | null;
   integration?: { src: string; service: string; vignette: string | null } | null;
   lien?: string | null;
   affiche?: string | null;
 }) {
   const [lecture, setLecture] = useState(false);
+  const [langue, setLangue] = useState<'en' | 'fr'>('en');
+  const video = useRef<HTMLVideoElement>(null);
+  const reprise = useRef(0);
   const poster = affiche || integration?.vignette || undefined;
-  if (fichier)
-    return (
-      <video className="aspect-video w-full bg-black" controls preload="metadata" poster={poster} playsInline>
-        <source src={fichier} type="video/mp4" />
-      </video>
+
+  if (fichier) {
+    const deuxVersions = Boolean(fichierFr);
+    const source = deuxVersions && langue === 'fr' ? fichierFr! : fichier;
+    const changer = (vers: 'en' | 'fr') => {
+      if (vers === langue) return;
+      reprise.current = video.current?.currentTime ?? 0;
+      setLangue(vers);
+    };
+    const bouton = (vers: 'en' | 'fr', texte: string) => (
+      <button
+        type="button"
+        onClick={() => changer(vers)}
+        aria-pressed={langue === vers}
+        className={`px-3 py-1.5 font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] transition-colors ${
+          langue === vers ? 'bg-paper text-ink' : 'bg-paper/10 text-paper/75 hover:bg-paper/20'
+        }`}
+      >
+        {texte}
+      </button>
     );
+    return (
+      <div>
+        <video
+          ref={video}
+          key={source}
+          className="aspect-video w-full bg-black"
+          controls
+          preload="metadata"
+          poster={poster}
+          playsInline
+          onLoadedMetadata={(e) => {
+            if (reprise.current > 0) {
+              e.currentTarget.currentTime = reprise.current;
+              reprise.current = 0;
+              void e.currentTarget.play().catch(() => {});
+            }
+          }}
+        >
+          <source src={source} type="video/mp4" />
+        </video>
+        {deuxVersions && (
+          <div className="mt-2 flex items-center gap-2">
+            <span className="font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] text-paper/45">Sous-titres</span>
+            {bouton('en', 'English')}
+            {bouton('fr', 'Français')}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="relative aspect-video w-full overflow-hidden bg-ink">
       {lecture && integration ? (
