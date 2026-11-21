@@ -1058,7 +1058,12 @@ const LISTE: EntitySchema[] = [
     "name": "fichierVideoFr",
     "label": "Version sous-titrée en français (facultatif)",
     "type": "file",
-    "help": "les sous-titres étant incrustés, une seconde version permet de basculer entre les deux"
+    "help": "les sous-titres étant incrustés, chaque langue demande son propre fichier"
+   },
+   {
+    "name": "fichierVideoEs",
+    "label": "Version sous-titrée en espagnol (facultatif)",
+    "type": "file"
    },
    {
     "name": "affiche",

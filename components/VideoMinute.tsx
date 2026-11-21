@@ -5,14 +5,19 @@ import { Externe } from './Consentement';
 
 /**
  * Lecteur de « Les 10 minutes du chant du coq » : fichier MP4 du site, ou vidéo
- * YouTube / Vimeo / WebTV après accord. Les sous-titres étant incrustés dans
- * l'image, deux fichiers peuvent coexister ; le sélecteur reprend la lecture
- * là où elle en était.
+ * YouTube / Vimeo / WebTV après accord. Les sous-titres sont incrustés dans
+ * l'image, donc insensibles au pack de langues : plusieurs versions peuvent
+ * coexister, la page sert celle qui correspond à la langue de lecture, et le
+ * sélecteur reprend la lecture là où elle en était.
  */
+type Code = 'fr' | 'en' | 'es';
+const LIBELLES: Record<Code, string> = { fr: 'Français', en: 'English', es: 'Español' };
+
 export function VideoMinute({
   titre,
   fichier,
   fichierFr,
+  fichierEs,
   integration,
   lien,
   affiche,
@@ -20,45 +25,45 @@ export function VideoMinute({
   titre: string;
   fichier?: string | null;
   fichierFr?: string | null;
+  fichierEs?: string | null;
   integration?: { src: string; service: string; vignette: string | null } | null;
   lien?: string | null;
   affiche?: string | null;
 }) {
   const [lecture, setLecture] = useState(false);
-  const [langue, setLangue] = useState<'en' | 'fr'>(fichierFr ? 'fr' : 'en');
   const video = useRef<HTMLVideoElement>(null);
   const reprise = useRef(0);
   const poster = affiche || integration?.vignette || undefined;
 
-  // Le pack de langues du site traduit le texte, jamais les sous-titres incrustés :
-  // dès que la page est lue dans une autre langue que le français, on sert la version anglaise.
+  const versions = (
+    [
+      ['fr', fichierFr],
+      ['en', fichier],
+      ['es', fichierEs],
+    ] as Array<[Code, string | null | undefined]>
+  ).filter(([, f]) => Boolean(f)) as Array<[Code, string]>;
+  const defaut: Code = versions.find(([c]) => c === 'fr') ? 'fr' : (versions[0]?.[0] ?? 'en');
+  const [langue, setLangue] = useState<Code>(defaut);
+
+  // Le pack de langues traduit le texte, jamais les sous-titres incrustés : on suit
+  // la langue demandée quand elle existe, l'anglais sinon.
   useEffect(() => {
-    if (!fichierFr) return;
+    if (versions.length < 2) return;
     const cookie = document.cookie.match(/(?:^|;\s*)googtrans=([^;]*)/);
     const cible = cookie ? decodeURIComponent(cookie[1]).split('/').filter(Boolean).pop() : null;
-    if (cible && cible !== 'fr') setLangue('en');
-  }, [fichierFr]);
+    if (!cible || cible === 'fr') return;
+    const dispo = versions.map(([c]) => c);
+    setLangue(dispo.includes(cible as Code) ? (cible as Code) : dispo.includes('en') ? 'en' : dispo[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [versions.length]);
 
-  if (fichier) {
-    const deuxVersions = Boolean(fichierFr);
-    const source = deuxVersions && langue === 'fr' ? fichierFr! : fichier;
-    const changer = (vers: 'en' | 'fr') => {
+  if (fichier || versions.length) {
+    const source = versions.find(([c]) => c === langue)?.[1] ?? fichier!;
+    const changer = (vers: Code) => {
       if (vers === langue) return;
       reprise.current = video.current?.currentTime ?? 0;
       setLangue(vers);
     };
-    const bouton = (vers: 'en' | 'fr', texte: string) => (
-      <button
-        type="button"
-        onClick={() => changer(vers)}
-        aria-pressed={langue === vers}
-        className={`px-3 py-1.5 font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] transition-colors ${
-          langue === vers ? 'bg-paper text-ink' : 'bg-paper/10 text-paper/75 hover:bg-paper/20'
-        }`}
-      >
-        {texte}
-      </button>
-    );
     return (
       <div>
         <video
@@ -79,11 +84,22 @@ export function VideoMinute({
         >
           <source src={source} type="video/mp4" />
         </video>
-        {deuxVersions && (
-          <div className="mt-2 flex items-center gap-2">
+        {versions.length > 1 && (
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <span className="font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] text-paper/45">Sous-titres</span>
-            {bouton('en', 'English')}
-            {bouton('fr', 'Français')}
+            {versions.map(([code]) => (
+              <button
+                key={code}
+                type="button"
+                onClick={() => changer(code)}
+                aria-pressed={langue === code}
+                className={`px-3 py-1.5 font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] transition-colors ${
+                  langue === code ? 'bg-paper text-ink' : 'bg-paper/10 text-paper/75 hover:bg-paper/20'
+                }`}
+              >
+                {LIBELLES[code]}
+              </button>
+            ))}
           </div>
         )}
       </div>
