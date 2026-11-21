@@ -26,9 +26,12 @@ const nextConfig: NextConfig = {
       { source: '/palabre-bidima', destination: '/notre-histoire#palabre-autour-de-jean-godefroy-bidima-2026', statusCode: 301 },
       { source: '/edito/moderation', destination: '/keystatic', permanent: false },
       { source: '/newsletter/:path*', destination: '/', permanent: false },
-      // « La minute du chant du coq » devient « Les 5 minutes du chant du coq »
-      { source: '/la-minute-du-chant-du-coq', destination: '/les-5-minutes-du-chant-du-coq', statusCode: 301 },
-      { source: '/la-minute-du-chant-du-coq/:slug*', destination: '/les-5-minutes-du-chant-du-coq/:slug*', statusCode: 301 },
+      // « La minute du chant du coq » devient « Les 10 minutes du chant du coq »
+      { source: '/la-minute-du-chant-du-coq', destination: '/les-10-minutes-du-chant-du-coq', statusCode: 301 },
+      { source: '/la-minute-du-chant-du-coq/:slug*', destination: '/les-10-minutes-du-chant-du-coq/:slug*', statusCode: 301 },
+      // La rubrique passe de cinq à dix minutes (novembre 2026)
+      { source: '/les-5-minutes-du-chant-du-coq', destination: '/les-10-minutes-du-chant-du-coq', statusCode: 301 },
+      { source: '/les-5-minutes-du-chant-du-coq/:slug*', destination: '/les-10-minutes-du-chant-du-coq/:slug*', statusCode: 301 },
     ];
   },
 };

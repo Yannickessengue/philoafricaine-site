@@ -13,7 +13,7 @@ export const metadata = {
 const PRINCIPE: [string, string, string][] = [
   ['01', 'Un concept', 'Ubuntu, Muntu, reprise de soi, ethnophilosophie, palabre… une notion clé de la philosophie africaine, à chaque fois.'],
   ['02', 'Un philosophe', 'Une chercheuse ou un chercheur qui la travaille, et qui l’explique en ses propres mots.'],
-  ['03', 'Cinq minutes', 'Le temps d’un café : une vidéo courte, une fiche écrite, des références pour aller plus loin.'],
+  ['03', 'Dix minutes', 'Le temps d’un café : une vidéo courte, une fiche écrite, des références pour aller plus loin.'],
 ];
 
 export default async function Minutes() {
@@ -33,7 +33,7 @@ export default async function Minutes() {
             Rubrique vidéo
           </p>
           <h1 className="mt-4 max-w-2xl font-brand text-4xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-6xl">
-            Les 5 minutes
+            Les 10 minutes
             <br />
             <span className="font-serif text-[1.05em] font-bold normal-case italic text-gold">du chant du coq</span>
           </h1>
@@ -106,7 +106,7 @@ export default async function Minutes() {
               <p className="mt-1 text-ink/75">Il sera annoncé dans notre newsletter.</p>
             </div>
             <a
-              href={`mailto:philoafricaine@gmail.com?subject=${encodeURIComponent('Les 5 minutes du chant du coq — proposition')}&body=${encodeURIComponent('Concept proposé :\nPhilosophe pressenti (vous, ou une autre personne) :\nQuelques mots sur l’angle choisi :\n')}`}
+              href={`mailto:philoafricaine@gmail.com?subject=${encodeURIComponent('Les 10 minutes du chant du coq — proposition')}&body=${encodeURIComponent('Concept proposé :\nPhilosophe pressenti (vous, ou une autre personne) :\nQuelques mots sur l’angle choisi :\n')}`}
               className="bg-ink px-6 py-3 font-brand text-xs font-bold uppercase tracking-[0.12em] text-paper hover:bg-terra"
             >
               Proposer un concept ou intervenir

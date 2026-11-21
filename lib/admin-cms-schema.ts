@@ -990,10 +990,10 @@ const LISTE: EntitySchema[] = [
  {
   "key": "minutes",
   "singular": "Épisode",
-  "plural": "Les 5 minutes du chant du coq",
+  "plural": "Les 10 minutes du chant du coq",
   "route": "minutes",
   "publicPaths": [
-   "/les-5-minutes-du-chant-du-coq"
+   "/les-10-minutes-du-chant-du-coq"
   ],
   "titleField": "titre",
   "contentField": "contenu",

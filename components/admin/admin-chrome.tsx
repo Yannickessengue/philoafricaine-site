@@ -119,7 +119,7 @@ const GROUPS: Group[] = [
       { href: "/admin/appels", label: "Appels à contributions", icon: ic.megaphone },
       { href: "/admin/postes", label: "Appels à postes", icon: ic.briefcase },
       { href: "/admin/videos", label: "Médiathèque", icon: ic.play },
-      { href: "/admin/minutes", label: "Les 5 minutes du chant du coq", icon: ic.play },
+      { href: "/admin/minutes", label: "Les 10 minutes du chant du coq", icon: ic.play },
       { href: "/admin/podcasts", label: "Podcasts", icon: ic.play },
     ],
   },

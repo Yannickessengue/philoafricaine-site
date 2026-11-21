@@ -1,15 +1,15 @@
 import { reader } from '@/lib/content';
 
-/** Épisodes de « Les 5 minutes du chant du coq », du plus récent au plus ancien. */
+/** Épisodes de « Les 10 minutes du chant du coq », du plus récent au plus ancien. */
 export async function getMinutes() {
   const tous = await reader.collections.minutes.all();
   return tous.sort((a, b) => (b.entry.date ?? '').localeCompare(a.entry.date ?? ''));
 }
 
 export const MINUTE = {
-  titre: 'Les 5 minutes du chant du coq',
-  devise: 'Un concept, un philosophe, cinq minutes.',
-  base: '/les-5-minutes-du-chant-du-coq',
+  titre: 'Les 10 minutes du chant du coq',
+  devise: 'Un concept, un philosophe, dix minutes.',
+  base: '/les-10-minutes-du-chant-du-coq',
 };
 
 /** Adresse de lecture intégrée (YouTube sans cookies, WebTV de Rouen) ou null. */

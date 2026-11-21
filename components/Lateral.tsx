@@ -17,7 +17,7 @@ const DECOUVRIR: [string, string, string, string][] = [
   ['/direct', 'En direct', 'Conférences retransmises sur le site', '/medias/site/vignettes/portrait-dessine-orange.jpg'],
   ['/sous-sites/jogoo-ai', 'JOGOO AI', 'Interroger la bibliothèque du Groupe', '/medias/site/vignettes/coq-penseur.jpg'],
   ['/sous-sites/fonds-eboussi-boulaga', 'Fonds Eboussi Boulaga', 'Archives, activités, Eboussi Studies', '/medias/site/vignettes/logo-fonds-2026.jpg'],
-  ['/les-5-minutes-du-chant-du-coq', 'Les 5 minutes du chant du coq', 'Un concept, un philosophe, cinq minutes', '/medias/site/vignettes/coq-penseur-gauche.jpg'],
+  ['/les-10-minutes-du-chant-du-coq', 'Les 10 minutes du chant du coq', 'Un concept, un philosophe, dix minutes', '/medias/site/vignettes/coq-penseur-gauche.jpg'],
   ['/podcasts', 'Podcasts', 'Écouter la philosophie africaine', '/medias/site/vignettes/couverture-podcast.jpg'],
 ];
 

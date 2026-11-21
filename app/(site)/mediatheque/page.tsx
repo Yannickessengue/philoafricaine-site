@@ -9,10 +9,10 @@ const F = '/medias/site/jogoo/fonds-eboussi';
 // Les trois portes d'entrée : chaque carte porte son propre visuel
 const UNE: { href: string; genre: string; titre: string; texte: string; action: string; image: string; contenir?: boolean; fond: string }[] = [
   {
-    href: '/les-5-minutes-du-chant-du-coq',
+    href: '/les-10-minutes-du-chant-du-coq',
     genre: 'Vidéo',
-    titre: 'Les 5 minutes du chant du coq',
-    texte: 'Un concept, un philosophe, cinq minutes.',
+    titre: 'Les 10 minutes du chant du coq',
+    texte: 'Un concept, un philosophe, dix minutes.',
     action: 'Regarder',
     image: '/medias/site/jogoo/coq-penseur-gauche.png',
     contenir: true,
