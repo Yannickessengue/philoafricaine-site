@@ -26,7 +26,7 @@ export default async function Episode({ params }: { params: Promise<{ slug: stri
   if (!m) notFound();
   const { node } = await m.contenu();
   const integration = integrationVideo(m.video);
-  const refs = (m.references ?? '').split(/\n\s*\n/).map((r) => r.trim()).filter(Boolean);
+  const refs = (m.references ?? '').split(/\n+/).map((r) => r.trim()).filter(Boolean);
   const autres = tous.filter((x) => x.slug !== slug).slice(0, 3);
   return (
     <>
