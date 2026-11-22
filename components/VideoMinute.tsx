@@ -67,7 +67,10 @@ export function VideoMinute({
   }, [versions.length]);
 
   if (fichier || versions.length) {
-    const source = versions.find(([c]) => c === langue)?.[1] ?? fichier!;
+    // Le suffixe force les navigateurs à oublier une réponse mise en cache avant la
+    // mise en ligne des fichiers (un 404 gardé en cache empêchait la lecture).
+    const fichierChoisi = versions.find(([c]) => c === langue)?.[1] ?? fichier!;
+    const source = fichierChoisi.startsWith('/') ? `${fichierChoisi}?v=2` : fichierChoisi;
     const changer = (vers: Code) => {
       if (vers === langue) return;
       reprise.current = video.current?.currentTime ?? 0;
