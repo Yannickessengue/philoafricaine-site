@@ -1066,6 +1066,21 @@ const LISTE: EntitySchema[] = [
     "type": "file"
    },
    {
+    "name": "fichierVideoPt",
+    "label": "Version sous-titrée en portugais (facultatif)",
+    "type": "file"
+   },
+   {
+    "name": "fichierVideoDe",
+    "label": "Version sous-titrée en allemand (facultatif)",
+    "type": "file"
+   },
+   {
+    "name": "fichierVideoSw",
+    "label": "Version sous-titrée en swahili (facultatif)",
+    "type": "file"
+   },
+   {
     "name": "affiche",
     "label": "Image d’affiche de la vidéo",
     "type": "image"

@@ -10,14 +10,17 @@ import { Externe } from './Consentement';
  * coexister, la page sert celle qui correspond à la langue de lecture, et le
  * sélecteur reprend la lecture là où elle en était.
  */
-type Code = 'fr' | 'en' | 'es';
-const LIBELLES: Record<Code, string> = { fr: 'Français', en: 'English', es: 'Español' };
+type Code = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'sw';
+const LIBELLES: Record<Code, string> = { fr: 'Français', en: 'English', es: 'Español', pt: 'Português', de: 'Deutsch', sw: 'Kiswahili' };
 
 export function VideoMinute({
   titre,
   fichier,
   fichierFr,
   fichierEs,
+  fichierPt,
+  fichierDe,
+  fichierSw,
   integration,
   lien,
   affiche,
@@ -26,6 +29,9 @@ export function VideoMinute({
   fichier?: string | null;
   fichierFr?: string | null;
   fichierEs?: string | null;
+  fichierPt?: string | null;
+  fichierDe?: string | null;
+  fichierSw?: string | null;
   integration?: { src: string; service: string; vignette: string | null } | null;
   lien?: string | null;
   affiche?: string | null;
@@ -40,6 +46,9 @@ export function VideoMinute({
       ['fr', fichierFr],
       ['en', fichier],
       ['es', fichierEs],
+      ['pt', fichierPt],
+      ['de', fichierDe],
+      ['sw', fichierSw],
     ] as Array<[Code, string | null | undefined]>
   ).filter(([, f]) => Boolean(f)) as Array<[Code, string]>;
   const defaut: Code = versions.find(([c]) => c === 'fr') ? 'fr' : (versions[0]?.[0] ?? 'en');

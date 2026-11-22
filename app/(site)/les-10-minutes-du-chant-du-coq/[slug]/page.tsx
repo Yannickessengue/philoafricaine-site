@@ -36,7 +36,7 @@ export default async function Episode({ params }: { params: Promise<{ slug: stri
             ← {MINUTE.titre}
           </a>
           <div className="mt-5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)]">
-            <VideoMinute titre={m.titre} fichier={m.fichierVideo} fichierFr={m.fichierVideoFr} fichierEs={m.fichierVideoEs} integration={integration} lien={m.video} affiche={m.affiche} />
+            <VideoMinute titre={m.titre} fichier={m.fichierVideo} fichierFr={m.fichierVideoFr} fichierEs={m.fichierVideoEs} fichierPt={m.fichierVideoPt} fichierDe={m.fichierVideoDe} fichierSw={m.fichierVideoSw} integration={integration} lien={m.video} affiche={m.affiche} />
           </div>
         </div>
       </section>
