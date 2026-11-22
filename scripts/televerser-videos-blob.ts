@@ -21,6 +21,8 @@ const FICHIERS = [
   'ubuntu-du-mot-a-la-notion.mp4',
   'ubuntu-du-mot-a-la-notion-fr.mp4',
   'ubuntu-du-mot-a-la-notion-es.mp4',
+  'ubuntu-du-mot-a-la-notion-pt.mp4',
+  'ubuntu-du-mot-a-la-notion-de.mp4',
   'ubuntu-du-mot-a-la-notion-sw.mp4',
 ];
 
