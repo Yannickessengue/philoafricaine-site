@@ -86,6 +86,7 @@ export function VideoMinute({
           preload="metadata"
           poster={poster}
           playsInline
+          src={source}
           onLoadedMetadata={(e) => {
             if (reprise.current > 0) {
               e.currentTarget.currentTime = reprise.current;
@@ -93,9 +94,7 @@ export function VideoMinute({
               void e.currentTarget.play().catch(() => {});
             }
           }}
-        >
-          <source src={source} type="video/mp4" />
-        </video>
+        />
         {versions.length > 1 && (
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <span className="font-brand text-[0.68rem] font-bold uppercase tracking-[0.12em] text-paper/45">Sous-titres</span>
