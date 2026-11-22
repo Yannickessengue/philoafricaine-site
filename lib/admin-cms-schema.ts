@@ -92,6 +92,11 @@ const LISTE: EntitySchema[] = [
     "type": "text"
    },
    {
+    "name": "imageCredit",
+    "label": "Crédit de l’image",
+    "type": "text"
+   },
+   {
     "name": "signature",
     "label": "Signature",
     "type": "text"

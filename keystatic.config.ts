@@ -57,6 +57,7 @@ export default config({
         exergueAuteur: fields.text({ label: 'Auteur de la citation' }),
         image: image('Image principale', 'editos'),
         imageDescription: fields.text({ label: 'Description de l’image' }),
+        imageCredit: fields.text({ label: 'Crédit de l’image' }),
         signature: fields.text({ label: 'Signature', description: 'Nom, fonction, institution' }),
         portrait: image('Portrait du signataire', 'editos'),
         pdf: fichier('PDF de l’édito', 'editos'),

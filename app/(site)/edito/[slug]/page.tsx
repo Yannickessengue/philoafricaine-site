@@ -97,7 +97,12 @@ export default async function Edito({ params }: { params: Promise<{ slug: string
             <div className="cadre aspect-[7/5] border border-ink/10">
               <img alt={e.imageDescription ?? ''} src={e.image} />
             </div>
-            {e.imageDescription && <figcaption className="mt-2 text-xs italic text-ink/50">{e.imageDescription}</figcaption>}
+            {(e.imageDescription || e.imageCredit) && (
+              <figcaption className="mt-2 text-xs italic text-ink/50">
+                {e.imageDescription}
+                {e.imageCredit && ` — ${e.imageCredit}`}
+              </figcaption>
+            )}
           </figure>
         )}
 
